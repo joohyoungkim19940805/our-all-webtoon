@@ -5,4 +5,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'OAW'
+rootProject.name = 'our-all-webtoon'

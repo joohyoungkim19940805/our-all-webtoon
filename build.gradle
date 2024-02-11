@@ -1,17 +1,17 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-	id 'org.springframework.boot' version '3.3.0-SNAPSHOT'
+	id 'java'
+	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'org.jetbrains.kotlin.jvm' version '1.9.22'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
 }
 
 group = 'com.our.all.webtoon'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 21
 
-java {
-	sourceCompatibility = '21'
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
 }
 
 repositories {
@@ -21,18 +21,26 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.withType(KotlinCompile) {
-	kotlinOptions {
-		freeCompilerArgs += '-Xjsr305=strict'
-		jvmTarget = '21'
-	}
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0'
+	implementation 'org.postgresql:r2dbc-postgresql:1.0.2.RELEASE'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
+	implementation 'fr.inria.gforge.spoon:spoon-core:10.4.2'
+	implementation 'org.postgresql:postgresql:10.4.2'
+	implementation 'software.amazon.awssdk:netty-nio-client:2.21.10'
+	implementation 'software.amazon.awssdk:s3:2.21.10'
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+	implementation 'com.google.guava:guava:32.1.1-jre'
 }
