@@ -53,7 +53,7 @@ import spoon.reflect.reference.CtTypeReference;
  */
 
 @ComponentScan(basePackages = {
-								"com.radcns.bird_plus.*"
+								"com.our.all.webtoon.*"
 							  })
 @SpringBootApplication
 @EnableR2dbcAuditing

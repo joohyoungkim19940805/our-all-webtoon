@@ -9,9 +9,15 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 21
 
 configurations {
-  compileOnly {
-    extendsFrom annotationProcessor
-  }
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+configurations.all {
+	exclude 'org.slf4j:jcl-over-slf4j'
+	exclude 'org.slf4j:jul-to-slf4j'
+	exclude 'org.slf4j:log4j-over-slf4j'
+	exclude 'org.slf4j:logback-classic'
 }
 
 repositories {
@@ -43,4 +49,8 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 	implementation 'com.google.guava:guava:32.1.1-jre'
+	implementation 'org.tinylog:tinylog-api:2.7.0'
+	implementation 'org.tinylog:tinylog-impl:2.7.0'
+	implementation 'org.tinylog:tinylog-jul:2.7.0'
+	runtimeOnly 'org.tinylog:slf4j-tinylog:2.7.0'
 }
