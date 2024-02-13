@@ -96,7 +96,7 @@ public class OruAllWebtoonApp implements ApplicationRunner
 		   		.isTest(false) // 테스트 여부, true인 경우 가장 먼저 조회되는 테이블 한 건만을 대상으로 엔티티와 레포지토리 클래스를 생성
 		   		.tableNameToEntityStartCharAt(2) // ex) 0으로 설정시 == SY_FILE_ICON => SyFileIconEntity로 엔티티 생성/ 2 또는 3으로 설정시 == SY_FILE_ICON => FileIconEntity로 생성됨
 		   		.defaultRootPath( List.of("src", "main", "java") ) // java 경로
-		   		.defaultPackageRootPath( List.of("com", "radcns", "bird_plus") ) // 프로젝트 루트 경로, 이 경우 entity 패키지는 com.radcns.bird_plus.entity로 생성 됨
+		   		.defaultPackageRootPath( List.of("com", "our", "all", "webtoon") ) // 프로젝트 루트 경로, 이 경우 entity 패키지는 com.radcns.bird_plus.entity로 생성 됨
 		   		.entityClassLastName("Entity") // 끝에 붙을 식별 이름 ex) SY_FILE_ICON => FileIcon{끝에 붙을 식별 이름} => FileIconEntity
 		   		.entityClassFieldColumnAnnotationType(Column.class) // 필드에 붙을 컬럼 어노테이션 ex) private UUID id => @Column private UUID id;
 		   		.entityClassFieldPkAnnotationType(Id.class) // PK인 필드에 붙을 어노테이션, 단 pk가 2개 이상이거나 없는 경우 스킵하도록 되어 있음 
