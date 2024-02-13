@@ -12,12 +12,14 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	all*.exclude module: 'org.slf4j:jcl-over-slf4j'
+	all*.exclude module: 'org.slf4j:jul-to-slf4j'
+	all*.exclude module: 'org.slf4j:log4j-over-slf4j'
+	all*.exclude module: 'org.slf4j:logback-classic'
+	all*.exclude module: 'spring-boot-starter-logging'
 }
 configurations.all {
-	exclude 'org.slf4j:jcl-over-slf4j'
-	exclude 'org.slf4j:jul-to-slf4j'
-	exclude 'org.slf4j:log4j-over-slf4j'
-	exclude 'org.slf4j:logback-classic'
+	
 }
 
 repositories {

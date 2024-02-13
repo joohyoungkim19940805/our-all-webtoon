@@ -62,6 +62,8 @@ public class OruAllWebtoonApp implements ApplicationRunner
 {
     public static void main(String[] args) {
     	System.setProperty("jasypt.encryptor.password", System.getenv("MY_SERVER_PASSWORD"));
+		System.setProperty("tinylog.configurationloader", "com.our.all.webtoon.util.PropertiesConfigurationLoader");
+        
 		SpringApplication.run(OruAllWebtoonApp.class, args);
 
 	}
@@ -80,6 +82,7 @@ public class OruAllWebtoonApp implements ApplicationRunner
     private static AutoDbMappingGenerater autoDbMappingGenerater = null;
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+
 		String profiles = System.getenv("MY_SERVER_PROFILES");
 		if( (profiles != null &&! profiles.equals("local")) || autoDbMappingGenerater != null) {
 			return;
