@@ -16,6 +16,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 @Builder(toBuilder = true)
@@ -24,10 +25,10 @@ import org.springframework.data.relational.core.mapping.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table("ac_account_log")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @With
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document
 public class AccountLogEntity {
     @Column("account_id")
     private Long accountId;

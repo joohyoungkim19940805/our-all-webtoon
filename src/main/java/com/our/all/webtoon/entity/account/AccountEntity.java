@@ -21,8 +21,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -30,9 +32,9 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @With
 @ToString
-@Table("ac_account")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection="account")
 public class AccountEntity implements TokenTemplate {
     @Id
     @Column("id")
