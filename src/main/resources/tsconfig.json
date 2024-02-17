@@ -1,15 +1,17 @@
 {
     "compilerOptions": {
-		"moduleResolution": "Node",
+		"moduleResolution": "bundler",
     	"noImplicitAny": true,
 		"sourceMap": true,
 		"esModuleInterop": true,
 		"allowJs": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
+		"allowSyntheticDefaultImports": false,
+		"noEmit": true,
 		"module": "esnext",
 		"isolatedModules": true,
-		"target": "es5",
+		"target": "es6",
 		"lib": [
 		  "dom", 
 		  "dom.Iterable",
@@ -30,6 +32,6 @@
 			"@root/*": ["./view/*"]
     	},
 		"skipLibCheck": true,
-		"typeRoots": ["./node_modules/@types", "./types"]
+		"typeRoots": ["./node_modules/@types", "./types"],
     }
 }

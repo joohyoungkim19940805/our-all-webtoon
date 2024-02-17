@@ -13,11 +13,11 @@ import com.mongodb.reactivestreams.client.MongoClients;
 @EnableReactiveMongoRepositories(basePackages = "com.our.all.webtoon.repository")
 public class ReactiveMongoConfiguration extends AbstractReactiveMongoConfiguration {
 
-	private String databaseName = "our-all-webtoon";
+	private String databaseName = "our_all_webtoon";
 	
 	@Override
     public MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb+srv://oozu1994:MUp9yP6SY42o8n7C@our-all-webtoon.kjxfgr6.mongodb.net/?retryWrites=true&w=majority");
+        return MongoClients.create("mongodb+srv://application:3pv58lNGspSpaDkv@our-all-webtoon.kjxfgr6.mongodb.net/?retryWrites=true&w=majority");
     }
     @Bean
     public ReactiveMongoTemplate reactiveMongoTemplate() {

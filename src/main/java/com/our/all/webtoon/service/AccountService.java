@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.security.StandardSecureDigestAlgorithms;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,31 +78,30 @@ public class AccountService  {
         var createdDate = new Date();
         
         var token = Jwts.builder()
-        		.serializeToJsonWith(new JacksonSerializer<Map<String,?>>(this.om))
-                .setClaims(claims)
-                .setIssuer(tokenTemplate.getIssuer())
-                .setSubject(tokenTemplate.getSubject())
-                .setIssuedAt(createdDate)
-                .setId(UUID.randomUUID().toString())
+        		.json(new JacksonSerializer<Map<String,?>>(this.om))
+                .claims(claims)
+        		.issuer(tokenTemplate.getIssuer())
+                .subject(tokenTemplate.getSubject())
+                .issuedAt(createdDate)
+                .id(UUID.randomUUID().toString())
                 //.setHeaderParams(Map.of("typ", "jwt", "alg", "HS256"))
                 //.signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
-                .setHeaderParams(Map.of(
+                .header().add(Map.of(
                 		"typ", "jwt", 
                 		"alg", "RS256", 
                 		"name", tokenTemplate.getName(),
                 		"jwtIssuerType", type.name())
-                )
-                .signWith(keyPair.getPrivate(), SignatureAlgorithm.RS256);
+                ).and()
+                .signWith(keyPair.getPrivate(), StandardSecureDigestAlgorithms.findBySigningKey(keyPair.getPrivate()));
         
         Date expirationDate = null;
         if(type.equals(JwtIssuerType.BOT)) {
         	expirationDate = new Date(new Date().getTime() + LocalDate.of(9000, 12, 31).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli());
-        	token.setExpiration(expirationDate);
         }else {
         	var expirationTimeInMilliseconds = type.getSecond() * 1000;
             expirationDate = new Date(new Date().getTime() + expirationTimeInMilliseconds);
-        	token.setExpiration(expirationDate);
         }
+        token.expiration(expirationDate);
         return Token.builder()
                 .token(token.compact())
                 .issuedAt(createdDate)
@@ -117,6 +117,7 @@ public class AccountService  {
 	    		.switchIfEmpty(
 	    			Mono.error(new AccountException(Result._103))
 	    		).flatMap(account -> {
+	    			
 	    			if ( ! account.getIsEnabled()) {
 	        			// 이메일 전송이 오래걸리므로 응답에 3~6초씩 걸림
 						// 병목이 발생하지 않도록 별도 스레드를 통해 처리한다.
@@ -125,32 +126,18 @@ public class AccountService  {
 	        			})
 	        			.subscribeOn(Schedulers.boundedElastic())
 	        			.subscribe();
-	        			/*
-	        			Mono.just(account)
-						.publishOn(Schedulers.boundedElastic())
-						.subscribe(e->{
-							mailService.sendAccountVerifyTemplate(e);
-						});
-						*/
+
 	    				return Mono.error(new AccountException(Result._101));
 	    			}else if(accountInfo.getPassword() == null || ! passwordEncoder.encode(accountInfo.getPassword()).equals(account.getPassword())) {
 	    				return Mono.error(new AccountException(Result._102));
 	             	}else {
 	             		AccountLogEntity accountLogEntity = AccountLogEntity.builder()
-	             			.accountId(account.getId())
+	             			.accountId(account.getAccountId())
 	             			.ip(optional.get().getAddress().getHostAddress())
 	             			.build();
-	             		return accountLogRepository.existsByIp(accountLogEntity.getIp()).flatMap(existsByIp->{
-	             			account.setIsDifferentIp( ! existsByIp);
-	             			if(account.getIsFirstLogin()) {
-	             				if(existsByIp) {
-	             					account.setIsFirstLogin(false);
-	             				}
-	             				account.setIsDifferentIp(false);
-	             			}
-	             			return accountRepository.save(account)
-	             				.flatMap(e->accountLogRepository.save(accountLogEntity));
-	             		}).flatMap(e -> Mono.just(generateAccessToken(account, JwtIssuerType.ACCOUNT).toBuilder()
+
+             			return accountLogRepository.save(accountLogEntity)
+             			.flatMap(e -> Mono.just(generateAccessToken(account, JwtIssuerType.ACCOUNT).toBuilder()
 	                     			//.userId(account.getId())
 	                     			.build())
 	             		);
@@ -166,19 +153,15 @@ public class AccountService  {
         				.roles(List.of(Role.ROLE_USER, Role.ROLE_GUEST))
         			    .isEnabled(false)
         			    .build())
-    			.flatMap(account -> accountRepository.save(account));
-    	/*
-    			return accountRepository.saveAll(
-			accountMono.map(account -> 
-    	    	account.toBuilder()
-    				.password(passwordEncoder.encode(account.getPassword()))
-    				.roles(List.of(Role.ROLE_USER, Role.ROLE_GUEST))
-    			    .isEnabled(true)
-    			    .createAt(LocalDateTime.now())
-    			    .build()
-        	)
-    	);
-    	*/
+    			.flatMap(account -> accountRepository.save(account))
+    			.doOnSuccess(account-> {
+    				Mono.fromRunnable(()->{
+    					mailService.sendAccountVerifyTemplate(account);
+    				})
+    				.subscribeOn(Schedulers.boundedElastic())
+    				.subscribe();
+    			})
+    			;
     }
     
     public Mono<AccountEntity> convertRequestToAccount(ServerRequest request) {
@@ -191,4 +174,5 @@ public class AccountService  {
 	    			.switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
     			});
     }
+    
 }

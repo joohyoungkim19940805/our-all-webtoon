@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postcss:watch": "postcss src/style.css --dir public --watch",
-    "dev-build": "tsc && webpack --watch ",
-    "build": "tsc && webpack"
+    "dev-build": "tsc && webpack --config webpack.config.dev.js --watch ",
+    "build": "tsc && webpack --config webpack.config.prd.js"
   },
   "repository": {
     "type": "git",
@@ -21,37 +21,35 @@
   "homepage": "https://github.com/joohyoungkim19940805/our-all-webtoon#readme",
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
-    "cssnano": "^5.0.15",
-    "grunt": "^1.4.1",
-    "postcss": "^8.4.5",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "autoprefixer": "^10.4.17",
+    "aws-sdk": "^2.1528.0",
+    "css-loader": "^6.8.1",
+    "cssnano": "^5.1.15",
+    "gitlog": "^4.0.8",
+    "grunt": "^1.6.1",
+    "postcss": "^8.4.35",
     "postcss-cli": "^9.1.0",
     "postcss-import": "^14.0.2",
+    "postcss-loader": "^8.1.0",
     "postcss-mixins": "^9.0.1",
     "postcss-nested": "^5.0.6",
-    "postcss-preset-env": "^7.2.0",
+    "postcss-preset-env": "^7.8.3",
+    "postcss-short": "^5.0.0",
+    "style-loader": "^3.3.3",
     "stylelint": "^14.3.0",
     "stylelint-config-standard": "^24.0.0",
-    "css-loader": "^6.8.1",
-    "style-loader": "^3.3.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.2",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-		"@typescript-eslint/parser": "^6.13.1",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1",
-    "gitlog": "^4.0.8",
-    "aws-sdk": "^2.1528.0"
+    "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
     "rxjs": "^7.8.1"
   },
   "browserslist": [
     "defaults"
-  ],
-  "stylelint": {
-    "rules": {
-      "color-no-invalid-hex": true
-    }
-  }
+  ]
 }
