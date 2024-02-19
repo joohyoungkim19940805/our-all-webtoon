@@ -1,14 +1,12 @@
 {
 	"compilerOptions": {
 		"moduleResolution": "bundler",
-		"noImplicitAny": false,
+    	"noImplicitAny": true,
 		"sourceMap": true,
 		"esModuleInterop": true,
 		"allowJs": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
-		"allowSyntheticDefaultImports": false,
-		"noEmit": true,
 		"module": "esnext",
 		"isolatedModules": true,
 		"target": "es6",
@@ -23,7 +21,7 @@
 			"ES2020",
 			"esnext"
 		],
-		"outDir": "view/js/ts",
+    	"outDir": "src/main/resources/ts/dist",
 		"baseUrl": ".",
 		"paths": {
 			"*": [
@@ -39,6 +37,7 @@
 				"./view/*"
 			]
 		},
+		"skipLibCheck": true,
 		"typeRoots": [
 			"./node_modules/@types",
 			"./types"
@@ -48,5 +47,6 @@
 				"name": "typescript-plugin-css-modules"
 			}
 		]
-	}
+	},
+	
 }

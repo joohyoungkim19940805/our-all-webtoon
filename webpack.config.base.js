@@ -1,5 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 /**
  * development
@@ -10,11 +11,11 @@ const TerserPlugin = require('terser-webpack-plugin');
  */
 module.exports = {
 	entry: {
-		testPageRenderer: "./src/main/resources/js/page/test.ts"
+		testPageRenderer: "./src/main/resources/view/page/test.ts"
 	},
 	output: {
 		filename: "[name].js",
-		path: path.resolve(__dirname, './view/js/dist')
+		path: path.resolve(__dirname, './src/main/resources/static/js/dist')
 	},
 	module: {
 		rules: [
@@ -25,8 +26,28 @@ module.exports = {
 			},
 			{
 				test: /\.css$/i,
-				use: ["style-loader", "css-loader", "postcss-loader"],
+				use: [
+					"style-loader", 
+					"css-loader", 
+					"postcss-loader"
+				],
 				exclude: /node_modules/,
+			},
+			{
+				test: /\.module.css$/i,
+				use: [
+					'style-loader',
+					{
+						loader: 'css-loader',
+						options: {
+							modules: true,
+							// 0 => 불러올 로더 없음 (기본 값)
+							// 1 => postcss-loader
+							importLoaders: 1,
+						},
+					},
+					'postcss-loader'
+				]
 			},
 			{
 				test: /\.{png|jpg}$/,
@@ -35,16 +56,6 @@ module.exports = {
 			}
 		],
 	},
-	plugin: [
-		"postcss-syntactic-sugar",
-		"postcss-non-standard",
-		[
-			"postcss-preset-env",
-			{
-				// plugin options
-			},
-		],
-	],
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {

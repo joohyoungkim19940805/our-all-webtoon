@@ -1,7 +1,5 @@
-import styles from './test.module.css';
-console.log(styles.div);
 
 document.body.append(Object.assign(document.createElement('div'), {
-    className: `${styles.div}`,
+    className: `aaa`,
     textContent: 'test'
 }))

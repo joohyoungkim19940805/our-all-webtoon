@@ -59,7 +59,7 @@ export const s3EncryptionUtil = new class S3EncryptionUtil{
 		.then(buffer=>new Uint8Array(buffer))
 	}
 
-	async exportKey(exportType : KeyFormat, key : CryptoKey){
+	async exportKey(exportType : Exclude<KeyFormat, "jwk">, key : CryptoKey){
 		return window.crypto.subtle.exportKey(exportType, key).then(exportKey => {
 			return new Promise( resolve => resolve(String.fromCharCode(...new Uint8Array( (exportKey as ArrayBuffer) ))) ) as Promise<string>;
 		}).then(exportKeyString => {
