@@ -10,10 +10,7 @@ const TerserPlugin = require('terser-webpack-plugin');
  */
 module.exports = {
 	entry: {
-		mainPageRenderer: "./view/js/renderer/mainPageRenderer.js",
-		multipleChattingViewRenderer: "./view/js/renderer/multipleChattingViewRenderer.js",
-		multipleNoticeBoardViewRenderer: "./view/js/renderer/multipleNoticeBoardViewRenderer.js",
-		workspace3DPageRenderer : "./view/js/renderer/workspace3DPageRenderer.ts"
+		testPageRenderer: "./src/main/resources/js/page/test.ts"
 	},
 	output: {
 		filename: "[name].js",
@@ -21,7 +18,7 @@ module.exports = {
 	},
 	module: {
 		rules: [
-		  	{
+			{
 				test: /\.ts$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
@@ -38,7 +35,7 @@ module.exports = {
 			}
 		],
 	},
-	plugin:[
+	plugin: [
 		"postcss-syntactic-sugar",
 		"postcss-non-standard",
 		[
@@ -49,22 +46,23 @@ module.exports = {
 		],
 	],
 	resolve: {
+		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {
-			'@component' : path.resolve(__dirname, './view/js/component/'),
-			'@handler' : path.resolve(__dirname, './view/js/handler/'),
-			'@root' : path.resolve(__dirname, './view')
+			'@component': path.resolve(__dirname, './view/js/component/'),
+			'@handler': path.resolve(__dirname, './view/js/handler/'),
+			'@root': path.resolve(__dirname, './view')
 		}
 	},
 	optimization: {
 		minimize: false,
 		minimizer: [
 			new TerserPlugin({
-			extractComments: false,
-			terserOptions: {
-				format: {
-					comments: false,
+				extractComments: false,
+				terserOptions: {
+					format: {
+						comments: false,
+					},
 				},
-			},
 			}),
 		],
 	},

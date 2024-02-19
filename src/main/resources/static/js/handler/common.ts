@@ -1,10 +1,6 @@
 export default new class Common{
 	#keyRegx = /[A-Z]?[a-z]+|[0-9]+|[A-Z]+(?![a-z])/g;
 
-	constructor(){
-
-	}
-
 	jsonToSaveElementDataset(data : object, element : HTMLElement){
 		if( ! element){
 			throw new Error('element is undefined')
@@ -35,24 +31,13 @@ export default new class Common{
 			}, {} as {[index: string] : string} ))
 		})
 	}
-	/**
-	 * @returns {Promise<String>}
-	 */
-	async getProjectPathPromise(){
-		return await window.myAPI.getProjectPath().then((data) => {
-			return data
-		}).catch(error=>{
-			console.error(error);
-			return '';
-		})
-	}
 
-	processingElementPosition(element, target){
+	processingElementPosition(element : HTMLElement, target : HTMLElement | DOMRect){
 		let rect;
-		if(this.isElement(target, HTMLElement)){
-			rect = target.getBoundingClientRect();
-		}else{
+		if(target instanceof DOMRect){ // this.isElement(target, HTMLElement)){
 			rect = target;
+		}else{
+			rect = target.getBoundingClientRect();
 		}
 
 		let {x, y, height, width} = rect;
@@ -70,6 +55,7 @@ export default new class Common{
 		}
 		
 	}
+	/*
     isElement(targetObject, checkClazz){
         let check = Object.getPrototypeOf(targetObject)
         let isElement = false;
@@ -84,19 +70,19 @@ export default new class Common{
         }
         return isElement;
     }
-
-	shortenBytes(byte) {
+	*/
+	shortenBytes(byte : number) {
 		const rank = byte > 0 ? Math.floor((Math.log2(byte)/10)) : 0;
 		const rankText = ( (rank > 0 ? 'KMGTPEZY'[rank - 1] : '') || (rank >= 9 ? 'Y' : '') ) + 'B';
 		const size = Math.floor(byte / Math.pow(1024, (rank >= 9 ? 8 : rank) ));
-		return {size, rank, rankText};
+		return {size, rank, rankText} as const;
 	}
 
 	/**
 	 * 
 	 * @param {Array<string>} text 
 	 */
-	showToastMessage(textList){
+	showToastMessage(textList : Array<string>){
 		let div = Object.assign(document.createElement('div'), {
 			className: 'toast_message'
 		});
@@ -108,7 +94,7 @@ export default new class Common{
 			if( ! div.isConnected) return;
 			clearInterval(appendAwait);
 			setTimeout(() => {
-				div.style.opacity = 0;
+				div.style.opacity = '0';
 				div.ontransitionend = () => {
 					div.remove();
 				}

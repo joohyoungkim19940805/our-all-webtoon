@@ -26,7 +26,7 @@ public class MainRouter implements MainRouterSwgger{
 	public RouterFunction<ServerResponse> index(IndexHandler indexHandler){
 
     	return route( GET("/"), req -> ServerResponse.temporaryRedirect(URI.create("/login-page")).build() )
-    			//.and(route( GET("/test").and(accept(MediaType.APPLICATION_JSON)), mainHandler::test ))
+    			.and(route( GET("/test").and(accept(MediaType.APPLICATION_JSON)), indexHandler::test ))
 				.and(route( GET("/index").and(accept(MediaType.TEXT_HTML)), indexHandler::index))
     			.and(route( GET("/login"), req -> ServerResponse.temporaryRedirect(URI.create("/login-page")).build() ))
 				.and(route( GET("/login-page").and(accept(MediaType.TEXT_HTML)), indexHandler::loginPage ))

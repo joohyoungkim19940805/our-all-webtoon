@@ -51,7 +51,9 @@ public class IndexHandler {
 	
 	@Autowired
 	private JwtVerifyHandler jwtVerifyHandler;
-	
+	public Mono<ServerResponse> test(ServerRequest request){
+		return ok().contentType(MediaType.TEXT_HTML).render("/test.html");
+	}
 	public Mono<ServerResponse> index(ServerRequest request){
 		return ok().contentType(MediaType.TEXT_HTML).render("/index.html");
 	}

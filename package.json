@@ -21,6 +21,7 @@
   "homepage": "https://github.com/joohyoungkim19940805/our-all-webtoon#readme",
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
+    "@types/node": "20.11.19",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "autoprefixer": "^10.4.17",
@@ -37,19 +38,19 @@
     "postcss-nested": "^5.0.6",
     "postcss-preset-env": "^7.8.3",
     "postcss-short": "^5.0.0",
+    "rollup-plugin-postcss": "^4.0.2",
     "style-loader": "^3.3.3",
     "stylelint": "^14.3.0",
     "stylelint-config-standard": "^24.0.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.3.2",
+    "typescript": "^5.3.3",
+    "typescript-plugin-css-modules": "^5.1.0",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^4.15.1",
+    "tslint": "^6.1.3"
   },
   "dependencies": {
     "rxjs": "^7.8.1"
-  },
-  "browserslist": [
-    "defaults"
-  ]
+  }
 }
