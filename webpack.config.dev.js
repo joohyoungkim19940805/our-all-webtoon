@@ -11,13 +11,16 @@ module.exports = merge(baseConfig, {
 		minimize: false,
 		minimizer: [
 			new TerserPlugin({
-			extractComments: false,
-			terserOptions: {
-				format: {
-					comments: false,
+				extractComments: false,
+				terserOptions: {
+					format: {
+						comments: false,
+					},
 				},
-			},
 			}),
 		],
 	},
+	performance: {
+		hints: false
+	}
 })

@@ -1,7 +1,7 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
+const cssnano = require('cssnano');
 /**
  * development
  * cheap-module-source-map
@@ -27,9 +27,27 @@ module.exports = {
 			{
 				test: /\.css$/i,
 				use: [
-					"style-loader", 
-					"css-loader", 
-					"postcss-loader"
+					"style-loader",
+					{
+						loader: 'css-loader',
+						options: {
+							modules: true,
+							// 0 => 불러올 로더 없음 (기본 값)
+							// 1 => postcss-loader
+							importLoaders: 1,
+						},
+					},
+					{
+						loader: "postcss-loader",
+						options: {
+							postcssOptions: {
+								minimize: false,
+								plugins: [
+									require('cssnano'),
+								],
+							},
+						},
+					},
 				],
 				exclude: /node_modules/,
 			},
@@ -46,8 +64,19 @@ module.exports = {
 							importLoaders: 1,
 						},
 					},
-					'postcss-loader'
-				]
+					{
+						loader: "postcss-loader",
+						options: {
+							postcssOptions: {
+								minimize: false,
+								plugins: [
+									require('cssnano'),
+								],
+							},
+						},
+					},
+				],
+				exclude: /node_modules/,
 			},
 			{
 				test: /\.{png|jpg}$/,
@@ -63,21 +92,5 @@ module.exports = {
 			'@handler': path.resolve(__dirname, './view/js/handler/'),
 			'@root': path.resolve(__dirname, './view')
 		}
-	},
-	optimization: {
-		minimize: false,
-		minimizer: [
-			new TerserPlugin({
-				extractComments: false,
-				terserOptions: {
-					format: {
-						comments: false,
-					},
-				},
-			}),
-		],
-	},
-	performance: {
-		hints: false
 	}
 }

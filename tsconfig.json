@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"moduleResolution": "bundler",
-    	"noImplicitAny": true,
+		"noImplicitAny": true,
 		"sourceMap": true,
 		"esModuleInterop": true,
 		"allowJs": true,
@@ -21,8 +21,8 @@
 			"ES2020",
 			"esnext"
 		],
-    	"outDir": "src/main/resources/ts/dist",
-		"baseUrl": ".",
+		"outDir": "src/main/resources/ts/dist",
+		"baseUrl": "./src/main/resources/view",
 		"paths": {
 			"*": [
 				"node_modules/*"
@@ -46,7 +46,14 @@
 			{
 				"name": "typescript-plugin-css-modules"
 			}
-		]
+		],
 	},
-	
+	"include": [
+		"./src/main/resources/view/*.ts",
+		"./src/main/resources/view/**/*.ts",
+		"index.d.ts"
+	],
+	"exclude": [
+		"node_modues"
+	]
 }
