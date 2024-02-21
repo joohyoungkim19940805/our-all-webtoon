@@ -4,6 +4,9 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { merge } = require('webpack-merge');
 const baseConfig = require('./webpack.config.base');
 
+const StylelintPlugin = require('stylelint-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = merge(baseConfig, {
 	mode: 'development',
 	devtool: 'source-map',
@@ -22,5 +25,16 @@ module.exports = merge(baseConfig, {
 	},
 	performance: {
 		hints: false
-	}
+	},
+	plugins: [
+		new StylelintPlugin({
+			cache: false,
+			configFile: path.resolve(__dirname, '.stylelintrc.js'),
+			extensions: 'css',
+			fix: true
+		}),
+		new MiniCssExtractPlugin({
+			filename: './static/css/styles.css'
+		}),
+	]
 })

@@ -21,8 +21,8 @@
 			"ES2020",
 			"esnext"
 		],
-		"outDir": "src/main/resources/ts/dist",
-		"baseUrl": "./src/main/resources/view",
+		"outDir": "./static/ts/dist",
+		"baseUrl": "./view",
 		"paths": {
 			"*": [
 				"node_modules/*"
@@ -49,8 +49,8 @@
 		],
 	},
 	"include": [
-		"./src/main/resources/view/*.ts",
-		"./src/main/resources/view/**/*.ts",
+		"./view/*.ts",
+		"./view/**/*.ts",
 		"index.d.ts"
 	],
 	"exclude": [

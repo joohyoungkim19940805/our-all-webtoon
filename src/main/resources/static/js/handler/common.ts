@@ -1,7 +1,6 @@
-export default new class Common{
+export default new class common{
 	#keyRegx = /[A-Z]?[a-z]+|[0-9]+|[A-Z]+(?![a-z])/g;
-
-	jsonToSaveElementDataset(data : object, element : HTMLElement){
+	jsontosaveelementdataset(data : object, element : htmlelement){
 		if( ! element){
 			throw new Error('element is undefined')
 		} else if(element.nodeType != Node.ELEMENT_NODE){
@@ -17,7 +16,8 @@ export default new class Common{
 			resolve(element);
 		})
 	}
-	async underbarNameToCamelName(obj : object){
+
+	async underbarnametocamelname(obj : object){
 		return new Promise(resolve => {
 			resolve(Object.entries(obj).reduce((total, [k,v]) => {
 				let key = k.split('_').map((e,i)=>{
@@ -32,11 +32,13 @@ export default new class Common{
 		})
 	}
 
-	processingElementPosition(element : HTMLElement, target : HTMLElement | DOMRect){
+	processingelementposition(element : htmlelement, target : htmlelement | domrect){
 		let rect;
 		if(target instanceof DOMRect){ // this.isElement(target, HTMLElement)){
 			rect = target;
-		}else{
+		}
+
+else{
 			rect = target.getBoundingClientRect();
 		}
 
@@ -45,16 +47,21 @@ export default new class Common{
 		let elementLeft = (x - element.clientWidth)
 		if(elementTop > 0){
 			element.style.top = elementTop + 'px';
-		}else{
+		}
+
+else{
 			element.style.top = y + height + 'px';
 		}
 		if(elementLeft > 0){
 			element.style.left = elementLeft + 'px'
-		}else{
+		}
+
+else{
 			element.style.left = x + width + 'px';
 		}
 		
 	}
+
 	/*
     isElement(targetObject, checkClazz){
         let check = Object.getPrototypeOf(targetObject)
@@ -71,8 +78,8 @@ export default new class Common{
         return isElement;
     }
 	*/
-	shortenBytes(byte : number) {
-		const rank = byte > 0 ? Math.floor((Math.log2(byte)/10)) : 0;
+	shortenbytes(byte : number) {
+		const rank = byte > 0 ? Math.floor((Math.log2(byte)/10)) : 0;rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10
 		const rankText = ( (rank > 0 ? 'KMGTPEZY'[rank - 1] : '') || (rank >= 9 ? 'Y' : '') ) + 'B';
 		const size = Math.floor(byte / Math.pow(1024, (rank >= 9 ? 8 : rank) ));
 		return {size, rank, rankText} as const;
@@ -82,7 +89,7 @@ export default new class Common{
 	 * 
 	 * @param {Array<string>} text 
 	 */
-	showToastMessage(textList : Array<string>){
+	showtoastmessage(textlist : array<string>){
 		let div = Object.assign(document.createElement('div'), {
 			className: 'toast_message'
 		});
@@ -103,4 +110,4 @@ export default new class Common{
 
 	}
 
-}
+}}

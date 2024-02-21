@@ -1,4 +1,4 @@
-import styles from './test.module.css';
+import styles from './test3.css';
 console.log(styles.div);
 import { a } from './test2';
 console.log(a);

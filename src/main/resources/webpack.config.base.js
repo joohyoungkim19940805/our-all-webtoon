@@ -1,7 +1,7 @@
+
 const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const cssnano = require('cssnano');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 /**
  * development
  * cheap-module-source-map
@@ -11,23 +11,23 @@ const cssnano = require('cssnano');
  */
 module.exports = {
 	entry: {
-		testPageRenderer: "./src/main/resources/view/page/test.ts"
+		testPageRenderer: "./view/page/test.ts"
 	},
 	output: {
 		filename: "[name].js",
-		path: path.resolve(__dirname, './src/main/resources/static/js/dist')
+		path: path.resolve(__dirname, './static/js/dist')
 	},
 	module: {
 		rules: [
 			{
 				test: /\.ts$/,
-				use: 'ts-loader',
+				use: ['postcss-loader', 'ts-loader'],
 				exclude: /node_modules/,
 			},
 			{
 				test: /\.css$/i,
 				use: [
-					"style-loader",
+					MiniCssExtractPlugin.loader,
 					{
 						loader: 'css-loader',
 						options: {
@@ -35,44 +35,17 @@ module.exports = {
 							// 0 => 불러올 로더 없음 (기본 값)
 							// 1 => postcss-loader
 							importLoaders: 1,
+							sourceMap: true,
+							url: false
 						},
 					},
 					{
 						loader: "postcss-loader",
 						options: {
 							postcssOptions: {
-								minimize: false,
-								plugins: [
-									require('cssnano'),
-								],
+								minimize: false
 							},
-						},
-					},
-				],
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.module.css$/i,
-				use: [
-					'style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							modules: true,
-							// 0 => 불러올 로더 없음 (기본 값)
-							// 1 => postcss-loader
-							importLoaders: 1,
-						},
-					},
-					{
-						loader: "postcss-loader",
-						options: {
-							postcssOptions: {
-								minimize: false,
-								plugins: [
-									require('cssnano'),
-								],
-							},
+							sourceMap: true
 						},
 					},
 				],
@@ -92,5 +65,5 @@ module.exports = {
 			'@handler': path.resolve(__dirname, './view/js/handler/'),
 			'@root': path.resolve(__dirname, './view')
 		}
-	}
+	},
 }
