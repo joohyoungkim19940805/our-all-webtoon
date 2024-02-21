@@ -2,7 +2,6 @@
   "name": "our-all-webtoon",
   "version": "1.0.0",
   "description": "our all webtoon",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postcss:watch": "postcss src/style.css --dir public --watch",

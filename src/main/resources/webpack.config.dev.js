@@ -30,11 +30,12 @@ module.exports = merge(baseConfig, {
 		new StylelintPlugin({
 			cache: false,
 			configFile: path.resolve(__dirname, '.stylelintrc.js'),
-			extensions: 'css',
-			fix: true
+			context: path.resolve(__dirname, '/static/css'),
+			files: '**/*.css',
 		}),
 		new MiniCssExtractPlugin({
-			filename: './static/css/styles.css'
-		}),
+			filename: '[name].css',
+			chunkFilename: '[id].css'
+		})
 	]
 })

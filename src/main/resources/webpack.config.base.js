@@ -21,49 +21,27 @@ module.exports = {
 		rules: [
 			{
 				test: /\.ts$/,
-				use: ['postcss-loader', 'ts-loader'],
+				use: ['ts-loader'],
 				exclude: /node_modules/,
 			},
 			{
 				test: /\.css$/i,
-				use: [
-					MiniCssExtractPlugin.loader,
-					{
-						loader: 'css-loader',
-						options: {
-							modules: true,
-							// 0 => 불러올 로더 없음 (기본 값)
-							// 1 => postcss-loader
-							importLoaders: 1,
-							sourceMap: true,
-							url: false
-						},
-					},
-					{
-						loader: "postcss-loader",
-						options: {
-							postcssOptions: {
-								minimize: false
-							},
-							sourceMap: true
-						},
-					},
-				],
+				use:[MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
 				exclude: /node_modules/,
 			},
 			{
 				test: /\.{png|jpg}$/,
 				use: ['file-loader'],
-				exclude: path.resolve(__dirname, './view/image/')
+				exclude: path.resolve(__dirname, 'view/image/')
 			}
 		],
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {
-			'@component': path.resolve(__dirname, './view/js/component/'),
-			'@handler': path.resolve(__dirname, './view/js/handler/'),
-			'@root': path.resolve(__dirname, './view')
+			'@component': path.resolve(__dirname, 'view/component/'),
+			'@handler': path.resolve(__dirname, 'view/handler/'),
+			'@root': path.resolve(__dirname, 'view')
 		}
 	},
 }
