@@ -1,8 +1,8 @@
-import styles from './test3.css';
+import styles from './test3.module.css';
 console.log(styles.div);
 import { a } from './test2';
 console.log(a);
 document.body.append(Object.assign(document.createElement('div'), {
-    className: `aaa`,
+    className: `${styles.div}`,
     textContent: 'test'
 }))
