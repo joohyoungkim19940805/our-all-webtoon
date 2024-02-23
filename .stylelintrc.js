@@ -8,6 +8,7 @@ module.exports = {
     "block-no-empty": true,
     "color-no-invalid-hex": true,
     "comment-no-empty": true,
+    "no-extra-semicolons": true,
     "declaration-block-no-duplicate-properties": [
       true,
       {
@@ -32,6 +33,8 @@ module.exports = {
     "selector-pseudo-element-no-unknown": true,
     "selector-type-no-unknown": true,
     "string-no-newline": true,
-    "unit-no-unknown": true
+    "unit-no-unknown": true,
+    "declaration-block-semicolon-newline-after": "always",
+    "block-closing-brace-newline-before": "always"
   }
 };

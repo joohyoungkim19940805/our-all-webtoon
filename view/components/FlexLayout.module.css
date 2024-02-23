@@ -6,10 +6,9 @@ flex-layout {
     overflow-wrap: revert-layer;
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-flex-layout::-webkit-scrollbar {
-    display: none;
+    &::-webkit-scrollbar{
+        display: none;
+    }
 }
 
 flex-layout[data-direction="column"] {
@@ -20,13 +19,13 @@ flex-layout[data-direction="row"] {
     flex-direction: row;
 }
 
-flex-layout>.flux-layout-content[data-is_resize="true"] {
+flex-layout>.flex-layout-content[data-is_resize="true"] {
     flex: 1 1 0%;
     box-sizing: border-box;
     overflow: hidden;
 }
 
-flex-layout>.flux-layout-content[data-is_resize="false"] {
+flex-layout>.flex-layout-content[data-is_resize="false"] {
     flex: 0 0 0%;
     box-sizing: border-box;
     overflow: hidden;

@@ -1,6 +1,7 @@
-export default new class common{
+export default new class Common{
 	#keyRegx = /[A-Z]?[a-z]+|[0-9]+|[A-Z]+(?![a-z])/g;
-	jsontosaveelementdataset(data : object, element : htmlelement){
+
+	jsonToSaveElementDataset(data : object, element : HTMLElement){
 		if( ! element){
 			throw new Error('element is undefined')
 		} else if(element.nodeType != Node.ELEMENT_NODE){
@@ -16,8 +17,7 @@ export default new class common{
 			resolve(element);
 		})
 	}
-
-	async underbarnametocamelname(obj : object){
+	async underbarNameToCamelName(obj : object){
 		return new Promise(resolve => {
 			resolve(Object.entries(obj).reduce((total, [k,v]) => {
 				let key = k.split('_').map((e,i)=>{
@@ -32,13 +32,11 @@ export default new class common{
 		})
 	}
 
-	processingelementposition(element : htmlelement, target : htmlelement | domrect){
+	processingElementPosition(element : HTMLElement, target : HTMLElement | DOMRect){
 		let rect;
 		if(target instanceof DOMRect){ // this.isElement(target, HTMLElement)){
 			rect = target;
-		}
-
-else{
+		}else{
 			rect = target.getBoundingClientRect();
 		}
 
@@ -47,21 +45,16 @@ else{
 		let elementLeft = (x - element.clientWidth)
 		if(elementTop > 0){
 			element.style.top = elementTop + 'px';
-		}
-
-else{
+		}else{
 			element.style.top = y + height + 'px';
 		}
 		if(elementLeft > 0){
 			element.style.left = elementLeft + 'px'
-		}
-
-else{
+		}else{
 			element.style.left = x + width + 'px';
 		}
 		
 	}
-
 	/*
     isElement(targetObject, checkClazz){
         let check = Object.getPrototypeOf(targetObject)
@@ -78,8 +71,8 @@ else{
         return isElement;
     }
 	*/
-	shortenbytes(byte : number) {
-		const rank = byte > 0 ? Math.floor((Math.log2(byte)/10)) : 0;rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10rankbyte0Math.floorMath.log2/10
+	shortenBytes(byte : number) {
+		const rank = byte > 0 ? Math.floor((Math.log2(byte)/10)) : 0;
 		const rankText = ( (rank > 0 ? 'KMGTPEZY'[rank - 1] : '') || (rank >= 9 ? 'Y' : '') ) + 'B';
 		const size = Math.floor(byte / Math.pow(1024, (rank >= 9 ? 8 : rank) ));
 		return {size, rank, rankText} as const;
@@ -89,7 +82,7 @@ else{
 	 * 
 	 * @param {Array<string>} text 
 	 */
-	showtoastmessage(textlist : array<string>){
+	showToastMessage(textList : Array<string>){
 		let div = Object.assign(document.createElement('div'), {
 			className: 'toast_message'
 		});
@@ -110,4 +103,4 @@ else{
 
 	}
 
-}}
+}

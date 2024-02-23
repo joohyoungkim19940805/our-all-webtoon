@@ -5,7 +5,7 @@ import { longTypeButton } from '../components/Buttons'
 import { Observable, Subject, map } from 'rxjs';
 console.log(a);
 document.body.append(Object.assign(document.createElement('div'), {
-    className: `${styles.div}`,
+    className: `${styles.div} ${styles.aaa}`,
     textContent: 'test'
 }))
 longTypeButton.pipe(map(button => {

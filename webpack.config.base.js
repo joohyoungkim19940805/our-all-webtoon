@@ -15,7 +15,7 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js",
-		path: path.resolve(__dirname, './static/js/dist')
+		path: path.resolve(__dirname, './src/main/resources/static/dist')
 	},
 	module: {
 		rules: [
@@ -26,7 +26,25 @@ module.exports = {
 			},
 			{
 				test: /\.css$/i,
-				use:[MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+				use:[
+					MiniCssExtractPlugin.loader, 
+					{
+						loader : 'css-loader', 
+						options: { 
+							modules: true,
+							importLoaders: 1 
+						}
+					},
+					{
+						loader: "postcss-loader",
+						options: {
+							postcssOptions: {
+								minimize: false
+							},
+							sourceMap: true
+						},
+					},
+				],
 				exclude: /node_modules/,
 			},
 			{

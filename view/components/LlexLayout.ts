@@ -1,4 +1,4 @@
-import flexLayout from './flexLayout.module.css.css'
+import flexLayout from './FlexLayout.module.css'
 /**
  * 
  */
@@ -29,7 +29,7 @@ export const column: FlexDirectionModelType = {
     resizeCursor: 'ns-resize'
 }
 
-class FlexLayout extends HTMLElement {
+export class FlexLayout extends HTMLElement {
 
     static get observedAttributes() {
         return ['data-direction'];
@@ -143,12 +143,12 @@ class FlexLayout extends HTMLElement {
             childElementList = [...childElementList]
         }
         childElementList.forEach(_childElement => {
-            if (_childElement.nodeType != Node.ELEMENT_NODE || (_childElement as Element).classList.contains(flexLayout.resizePanelClass)) {
+            if (_childElement.nodeType != Node.ELEMENT_NODE || (_childElement as Element).classList.contains(flexLayout['flex-resize-panel'])) {
                 return;
             }
             const childElement = _childElement as HTMLElement;
             let __resizePanel = (childElement as any).__resizePanel;
-            childElement.classList.add(flexLayout.childClass)
+            childElement.classList.add(flexLayout['flex-layout-content'])
             let resizePanel = __resizePanel;
             if (!resizePanel) {
                 resizePanel = this.#createResizePanel();
@@ -197,7 +197,7 @@ class FlexLayout extends HTMLElement {
     #createResizePanel() {
         // panel_width가 반드시 필요한지 확인 할 것 2023 06 20
         let resizePanel = Object.assign(document.createElement('div'), {
-            className: flexLayout.resizePanelClass,
+            className: flexLayout['flex-resize-panel'],
             innerHTML: `
 				<div class="${flexLayout.hover}">
 				</div>
@@ -514,5 +514,3 @@ class FlexLayout extends HTMLElement {
         return target.dataset.flex_visibility == 'v';
     }
 }
-
-export default FlexLayout;

@@ -1,4 +1,7 @@
 .div {
     display: flex;
     align-self: flex-end;
+    &.aaa{
+        color:red;
+    }
 }
