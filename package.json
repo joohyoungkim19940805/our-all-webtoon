@@ -4,8 +4,9 @@
   "description": "our all webtoon",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-server": "webpack serve --config webpack.config.dev.js",
     "postcss:watch": "postcss src/style.css --dir public --watch",
-    "dev-build": "tsc && webpack --config webpack.config.dev.js --watch ",
+    "dev-watch": "tsc && webpack --config webpack.config.dev.js --watch ",
     "build": "tsc && webpack --config webpack.config.prd.js"
   },
   "repository": {

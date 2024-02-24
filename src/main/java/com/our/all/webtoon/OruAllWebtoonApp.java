@@ -20,8 +20,6 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 public class OruAllWebtoonApp {
 	public static void main(String[] args) {
 		System.setProperty("jasypt.encryptor.password", System.getenv("MY_SERVER_PASSWORD"));
-		System.setProperty("tinylog.configurationloader", "com.our.all.webtoon.util.PropertiesConfigurationLoader");
-
 		SpringApplication.run(OruAllWebtoonApp.class, args);
 
 	}

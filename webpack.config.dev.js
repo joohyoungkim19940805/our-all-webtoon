@@ -3,13 +3,31 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 const { merge } = require('webpack-merge');
 const baseConfig = require('./webpack.config.base');
-
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
+console.log('test ::: ' , path.join(__dirname, 'src/main/resources/static/dist'))
 module.exports = merge(baseConfig, {
 	mode: 'development',
 	devtool: 'source-map',
+	devServer: {
+		static : {
+			directory: path.join(__dirname, 'src/main/resources/static/dist'),
+		},
+		watchFiles: {
+			paths: [
+				path.join(__dirname,'./src/main/resources/static/dist/*.js'), 
+				path.join(__dirname,'./src/main/resources/static/dist/*.css')
+			]
+		},
+		host: 'localhost',
+        port: 8018,
+        proxy: {
+            "**": {
+				target: "https://localhost:8443",
+				secure: false
+			}
+        }
+	},
 	optimization: {
 		minimize: false,
 		minimizer: [
@@ -22,6 +40,7 @@ module.exports = merge(baseConfig, {
 				},
 			}),
 		],
+		moduleIds: 'named'
 	},
 	performance: {
 		hints: false

@@ -6,10 +6,16 @@ import { Observable, Subject, map } from 'rxjs';
 console.log(a);
 document.body.append(Object.assign(document.createElement('div'), {
     className: `${styles.div} ${styles.aaa}`,
-    textContent: 'test'
+    textContent: 'test2zzzzz3a'
 }))
 longTypeButton.pipe(map(button => {
-    button.textContent = 'abcd';
+    button.textContent = 'aswewes';
+    return button;
+})).subscribe(button => {
+    document.body.append(button);
+})
+longTypeButton.pipe(map(button => {
+    button.textContent = 'aswewes222';
     return button;
 })).subscribe(button => {
     document.body.append(button);
@@ -17,7 +23,7 @@ longTypeButton.pipe(map(button => {
 
 
 let btn = Object.assign(document.createElement('button'),{
-    textContent : 'aaaaaaa', 
+    textContent : 'aa', 
 });
 
 const subject = new Subject();

@@ -12,11 +12,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	all*.exclude module: 'org.slf4j:jcl-over-slf4j'
-	all*.exclude module: 'org.slf4j:jul-to-slf4j'
-	all*.exclude module: 'org.slf4j:log4j-over-slf4j'
-	all*.exclude module: 'org.slf4j:logback-classic'
-	all*.exclude module: 'spring-boot-starter-logging'
 }
 configurations.all {
 	
@@ -31,7 +26,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	compileOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -50,8 +45,4 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 	implementation 'com.google.guava:guava:32.1.1-jre'
-	implementation 'org.tinylog:tinylog-api:2.7.0'
-	implementation 'org.tinylog:tinylog-impl:2.7.0'
-	implementation 'org.tinylog:tinylog-jul:2.7.0'
-	runtimeOnly 'org.tinylog:slf4j-tinylog:2.7.0'
 }
