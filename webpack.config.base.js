@@ -59,7 +59,7 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {
-			'@component': path.resolve(__dirname, 'view/component/'),
+			'@components': path.resolve(__dirname, 'view/components/'),
 			'@handler': path.resolve(__dirname, 'view/handler/'),
 			'@root': path.resolve(__dirname, 'view')
 		}

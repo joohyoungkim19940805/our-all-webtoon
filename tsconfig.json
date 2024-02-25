@@ -27,11 +27,11 @@
 			"*": [
 				"node_modules/*"
 			],
-			"@component/*": [
-				"./view/js/component/*"
+			"@components/*": [
+				"./view/components/*"
 			],
 			"@handler/*": [
-				"./view/js/handler/*"
+				"./view/handler/*"
 			],
 			"@root/*": [
 				"./view/*"

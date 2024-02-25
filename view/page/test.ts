@@ -1,35 +1,59 @@
 import styles from './test3.module.css';
-console.log(styles.div);
-import { a } from './test2';
-import { longTypeButton } from '../components/Buttons'
-import { Observable, Subject, map } from 'rxjs';
-console.log(a);
+import { button } from '../components/button/buttons'
+import { input } from '../components/input/input';
+import { Observable, Subject, map, fromEvent, flatMap, mergeMap } from 'rxjs';
+
 document.body.append(Object.assign(document.createElement('div'), {
-    className: `${styles.div} ${styles.aaa}`,
+    className: `${styles.div}`,
     textContent: 'test2zzzzz3a'
 }))
-longTypeButton.pipe(map(button => {
-    button.textContent = 'aswewes';
-    return button;
-})).subscribe(button => {
+
+button({
+    width : 'long'
+}).pipe(mergeMap(button => {
+    button.textContent = 'long type button';
     document.body.append(button);
-})
-longTypeButton.pipe(map(button => {
-    button.textContent = 'aswewes222';
-    return button;
-})).subscribe(button => {
-    document.body.append(button);
+    return fromEvent(button, 'click');
+})).subscribe({
+    next : (x) => {
+        console.log(x);
+    },
+    error: (error) => {
+        console.error(error);
+    },
+    complete : () => {
+        console.log('complate!!')
+    }
 })
 
+button().pipe(map(button => {
+    button.textContent = 'asd';
+    button.onclick = () => {
+        subject.next('aaaaaa');
+    }
+    return button;
+})).subscribe({
+    next : (button) => {
+        document.body.append(button);
+    },
+    error: (error) => {
+        console.error(error);
+    },
+    complete : () => {
+        console.log('complate!!')
+    }
+})
+input({type : 'search'}).pipe(map(input => {
+    input.value = 'abcd';
+    return input
+})).subscribe(input => {
+    document.body.append(document.createElement('br'))
+    document.body.append(input);
+})
 
-let btn = Object.assign(document.createElement('button'),{
-    textContent : 'aa', 
-});
 
 const subject = new Subject();
-btn.onclick = () => {
-    subject.next('aaaaaa');
-}
+
 
 subject.subscribe((e)=>{
     console.log(e, 111111);
@@ -50,5 +74,3 @@ subject.subscribe((e)=>{
 subject.subscribe((e)=>{
     console.log(e, 555);
 })
-
-document.body.append(btn);
