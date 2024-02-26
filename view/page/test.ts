@@ -51,6 +51,9 @@ input({type : 'search'}).pipe(map(input => {
     document.body.append(input);
 })
 
+input({placeholder : '입력하세요'}).subscribe(input => {
+    document.body.append(input);
+})
 
 const subject = new Subject();
 
