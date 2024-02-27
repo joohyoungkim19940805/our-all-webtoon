@@ -1,5 +1,5 @@
 import styles from './test3.module.css';
-import { button } from '../components/button/buttons'
+import { button } from '../components/button/button'
 import { input } from '../components/input/input';
 import { Observable, Subject, map, fromEvent, flatMap, mergeMap } from 'rxjs';
 

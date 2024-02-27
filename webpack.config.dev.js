@@ -5,6 +5,8 @@ const { merge } = require('webpack-merge');
 const baseConfig = require('./webpack.config.base');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
 console.log('test ::: ', path.join(__dirname, 'src/main/resources/static/dist'))
 module.exports = merge(baseConfig, {
 	mode: 'development',
@@ -44,17 +46,5 @@ module.exports = merge(baseConfig, {
 	},
 	performance: {
 		hints: false
-	},
-	plugins: [
-		new StylelintPlugin({
-			cache: false,
-			configFile: path.resolve(__dirname, '.stylelintrc.js'),
-			context: path.resolve(__dirname, '/static/css'),
-			files: '**/*.css',
-		}),
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].css'
-		})
-	]
+	}
 })
