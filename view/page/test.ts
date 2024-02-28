@@ -1,5 +1,5 @@
 import styles from './test3.module.css';
-import { button } from '../components/button/buttons'
+import { button } from '../components/button/button'
 import { input } from '../components/input/input';
 import { Observable, Subject, map, fromEvent, flatMap, mergeMap } from 'rxjs';
 
@@ -51,6 +51,9 @@ input({type : 'search'}).pipe(map(input => {
     document.body.append(input);
 })
 
+input({placeholder : '입력하세요'}).subscribe(input => {
+    document.body.append(input);
+})
 
 const subject = new Subject();
 

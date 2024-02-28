@@ -1,6 +1,9 @@
 
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const StylelintPlugin = require('stylelint-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 /**
  * development
@@ -59,9 +62,26 @@ module.exports = {
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {
-			'@components': path.resolve(__dirname, 'view/components/'),
-			'@handler': path.resolve(__dirname, 'view/handler/'),
-			'@root': path.resolve(__dirname, 'view')
-		}
+			'@components' : path.resolve(__dirname, './view/components'),
+			'@container' : path.resolve(__dirname, './view/container'),
+			'@wrapper' : path.resolve(__dirname, './view/wrapper'),
+			'@handler' : path.resolve(__dirname, './view/handler'),
+			'@root' : path.resolve(__dirname, './view')
+		},
+		plugins: [
+			new TsconfigPathsPlugin({ configFile: './tsconfig.json' })
+		]
 	},
+	plugins: [
+		new StylelintPlugin({
+			cache: false,
+			configFile: path.resolve(__dirname, '.stylelintrc.js'),
+			context: path.resolve(__dirname, '/static/css'),
+			files: '**/*.css',
+		}),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[id].css'
+		}),
+	]
 }

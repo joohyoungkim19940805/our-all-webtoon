@@ -1,15 +1,18 @@
 {
 	"compilerOptions": {
-		"moduleResolution": "bundler",
+		"moduleResolution": "NodeNext",
 		"noImplicitAny": true,
 		"sourceMap": true,
 		"esModuleInterop": true,
 		"allowJs": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
-		"module": "esnext",
+		"removeComments": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"module": "NodeNext",
 		"isolatedModules": true,
-		"target": "es6",
+		"target": "ES6",
 		"lib": [
 			"dom",
 			"dom.Iterable",
@@ -22,13 +25,22 @@
 			"esnext"
 		],
 		"outDir": "./src/main/resources/static/ts/dist",
-		"baseUrl": "./view",
+		"baseUrl": ".",
 		"paths": {
 			"*": [
-				"node_modules/*"
+				"./view/node_modules/*"
 			],
 			"@components/*": [
 				"./view/components/*"
+			],
+			"@components": [
+				"./view/components"
+			],
+			"@container/*":[
+				"./view/container/*"
+			],
+			"@wrapper/*":[
+				"./view/wrapper/*"
 			],
 			"@handler/*": [
 				"./view/handler/*"
@@ -37,7 +49,6 @@
 				"./view/*"
 			]
 		},
-		"skipLibCheck": true,
 		"typeRoots": [
 			"./node_modules/@types",
 			"./types"
@@ -49,8 +60,8 @@
 		],
 	},
 	"include": [
-		"./view/*.ts",
-		"./view/**/*.ts",
+		"./**/*.ts",
+		"./**/*.tsx"
 	],
 	"exclude": [
 		"node_modues"

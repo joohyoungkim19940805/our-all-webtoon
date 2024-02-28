@@ -8,11 +8,11 @@ export type ButtonStyle = {
 };
 
 export const button = ( ({size = 'initial', type = 'standard'} : ButtonStyle = {}) => {
-	let promise = new Promise<HTMLLinkElement>(res=>{
-		let button = Object.assign(document.createElement('button'), {
+	let promise = new Promise<HTMLAnchorElement>(res=>{
+		let link = Object.assign(document.createElement('a'), {
 			//className:`${styles[`button-${type}`]} ${styles[size]}`
 		});
-		res(button);
+		res(link);
 	})
 	return from(promise)
 })
