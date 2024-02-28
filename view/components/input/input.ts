@@ -24,7 +24,7 @@ export type InputStyle = {
 
 }
 
-export const input = (({type = 'text', autocomplete = 'on'} : InputStyle = {}) => {
+export const input = ( ({type = 'text', autocomplete = 'on'} : InputStyle = {}) => {
 	let promise = new Promise<HTMLInputElement>(res =>{
 		let input = Object.assign(document.createElement('input'), {
 			className: `${styles["input-standard"]}`,

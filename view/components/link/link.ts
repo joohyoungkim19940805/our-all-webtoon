@@ -1,5 +1,5 @@
 import { from, of, Observable } from 'rxjs';
-import styles from './button.module.css'
+import styles from './link.module.css'
 
 // components -> container -> wrapper
 export type ButtonStyle = {
@@ -8,9 +8,9 @@ export type ButtonStyle = {
 };
 
 export const button = ( ({size = 'initial', type = 'standard'} : ButtonStyle = {}) => {
-	let promise = new Promise<HTMLButtonElement>(res=>{
+	let promise = new Promise<HTMLLinkElement>(res=>{
 		let button = Object.assign(document.createElement('button'), {
-			className:`${styles[`button-${type}`]} ${styles[size]}`
+			//className:`${styles[`button-${type}`]} ${styles[size]}`
 		});
 		res(button);
 	})

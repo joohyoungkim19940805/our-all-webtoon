@@ -9,7 +9,7 @@ document.body.append(Object.assign(document.createElement('div'), {
 }))
 
 button({
-    width : 'long'
+    size : 'long'
 }).pipe(mergeMap(button => {
     button.textContent = 'long type button';
     document.body.append(button);
