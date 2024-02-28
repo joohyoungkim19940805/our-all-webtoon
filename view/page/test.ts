@@ -1,6 +1,6 @@
 import styles from './test3.module.css';
-import { button } from '../components/button/button'
-import { input } from '../components/input/input';
+import { button } from '../components/button/Button'
+import { input } from '../components/input/Input';
 import { Observable, Subject, map, fromEvent, flatMap, mergeMap } from 'rxjs';
 
 document.body.append(Object.assign(document.createElement('div'), {
@@ -9,7 +9,7 @@ document.body.append(Object.assign(document.createElement('div'), {
 }))
 
 button({
-    size : 'long'
+    size : 'middle'
 }).pipe(mergeMap(button => {
     button.textContent = 'long type button';
     document.body.append(button);
@@ -43,7 +43,7 @@ button().pipe(map(button => {
         console.log('complate!!')
     }
 })
-input({type : 'search'}).pipe(map(input => {
+input({type : 'search'}, {lineColor : 'bright-grey'}).pipe(map(input => {
     input.value = 'abcd';
     return input
 })).subscribe(input => {
@@ -51,7 +51,7 @@ input({type : 'search'}).pipe(map(input => {
     document.body.append(input);
 })
 
-input({placeholder : '입력하세요'}).subscribe(input => {
+input({placeholder : '입력하세요'}, {lineColor : 'bright-grey'}).subscribe(input => {
     document.body.append(input);
 })
 

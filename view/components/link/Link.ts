@@ -1,5 +1,5 @@
 import { from, of, Observable } from 'rxjs';
-import styles from './link.module.css'
+import styles from './Link.module.css'
 
 // components -> container -> wrapper
 export type ButtonStyle = {

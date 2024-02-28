@@ -1,15 +1,18 @@
-
+:root{
+    --bg-mode: initial;
+    /*#343434;*/
+}
 html{
     font-size: 1.8vmax;
-	font-family: serif;
+    font-family: serif;
 }
 body, html{
     width: 100dvw;
     height: 100dvh;
     margin: 0;
-	display: inline-flex;
-	flex-direction: column;
-	scrollbar-width: none;
+    display: inline-flex;
+    flex-direction: column;
+    scrollbar-width: none;
     user-select: none;
     overflow: hidden;
 }
@@ -17,9 +20,9 @@ body, html{
 summary{
     list-style: none ;
 
-	&&::marker{
-		display: none;
-	}
+    &&::marker{
+        display: none;
+    }
 }
 
 ul {
@@ -34,12 +37,12 @@ ul {
 }
 
 label{
-	font-size: 1.2rem;
-	font-weight: bold;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 input, button{
-	outline: none;
+    outline: none;
     background: none;
     border: none;
 }

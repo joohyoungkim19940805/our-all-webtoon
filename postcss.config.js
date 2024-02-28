@@ -7,7 +7,9 @@ module.exports = {
 			]
 		}),
 		require('postcss-preset-env')({ stage: 1 }),
-		require("postcss-reporter")({ clearReportedMessages: true }),
+		require('postcss-reporter')({ clearReportedMessages: true }),
+		require('postcss-css-variables')({preserve: true}),
+		require('postcss-mixins'),
 		require('cssnano'),
 		
 	],

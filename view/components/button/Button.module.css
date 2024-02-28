@@ -1,0 +1,26 @@
+
+.button{
+	cursor: pointer;
+	&&.standard{
+		border: revert;
+		border-color: #464646;
+		color: #b9b9b9;
+		background-color: var(--bg-mode);
+		outline: none;
+	}
+	&&.initial{
+		width:initial
+	}
+	&&.inherit{
+		width:inherit;
+	}
+	&&.long{
+		width: 100%;
+	}
+	&&.middle{
+		width: 50%;
+	}
+	&&.short{
+		width: 20%;
+    }
+}

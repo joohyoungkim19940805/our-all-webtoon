@@ -1,7 +1,7 @@
 import { from } from "rxjs";
-import styles from './input.module.css'
+import styles from './Input.module.css'
 
-export type InputStyle = {
+export type InputAttribute = {
 	type? : 'hidden' | 'radio' | 'checbox' | 'text' | 'search' | 'textarea' | 'date' | 'datetime-local',
 	placeholder? : string,
 	/** @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete */
@@ -24,14 +24,17 @@ export type InputStyle = {
 		'impp' | 'url' | 'photo' | 'webauthn' | ''
 }
 
-<<<<<<< HEAD
-export const input = ( ({type = 'text', autocomplete = 'on'} : InputStyle = {}) => {
-=======
-export const input = (({type = 'text', autocomplete = 'on', placeholder = ''} : InputStyle = {}) => {
->>>>>>> fb504cc731ae9d7ce2a721ab908ab49e2a4efb90
+export type InputStyle = {
+	lineColor: 'pale-red' | 'bright-purple' | 'bright-grey' | 'translucent-grey'
+	stylyType?: 'standard'
+}
+export const input = ((
+	{type = 'text', autocomplete = 'on', placeholder = ''} : InputAttribute,
+	{stylyType = 'standard', lineColor} : InputStyle
+) => {
 	let promise = new Promise<HTMLInputElement>(res =>{
 		let input = Object.assign(document.createElement('input'), {
-			className: `${styles["input-standard"]}`,
+			className: `${styles.input} ${styles[stylyType]} ${styles[lineColor]}`,
 			type,
 			placeholder
 		})
