@@ -10,6 +10,7 @@ module.exports = {
 		require('postcss-reporter')({ clearReportedMessages: true }),
 		require('postcss-css-variables')({preserve: true}),
 		require('postcss-mixins'),
+		require('@csstools/postcss-cascade-layers'),
 		require('cssnano'),
 		
 	],

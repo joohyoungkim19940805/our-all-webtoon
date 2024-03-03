@@ -1,12 +1,24 @@
 
 .button{
 	cursor: pointer;
-	&&.standard{
-		border: revert;
+	background-color: #343434;
+	border-color: #464646;
+	color: #b9b9b9;
+	/*max-width: fit-content;*/
+	min-width: fit-content;
+	display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+	&&[color-mode="black"]{
+		background-color: #343434;
 		border-color: #464646;
 		color: #b9b9b9;
-		background-color: var(--bg-mode);
-		outline: none;
+	}
+	&&.standard{
+		border: revert;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	&&.initial{
 		width:initial
@@ -22,5 +34,16 @@
 	}
 	&&.short{
 		width: 20%;
-    }
+    
+	}
+	&&.spin:not(:hover) > *{
+		transition: 1s transform;
+		transform: rotate(0deg);
+	}
+	&&.spin:hover > *{
+		color: #9f6b6b;
+		transition: 1s transform;
+		transform: rotate(270deg);
+	}
+
 }

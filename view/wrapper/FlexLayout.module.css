@@ -3,7 +3,7 @@ flex-layout {
     height: 100%;
     width: 100%;
     overflow: auto;
-    overflow-wrap: revert-layer;
+    overflow-wrap: revert;
     -ms-overflow-style: none;
     scrollbar-width: none;
     &::-webkit-scrollbar{

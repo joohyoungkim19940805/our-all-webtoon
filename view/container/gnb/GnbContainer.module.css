@@ -1,0 +1,5 @@
+.gnb-container{
+	display: flex;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+}

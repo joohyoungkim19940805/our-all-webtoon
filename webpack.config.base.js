@@ -55,12 +55,22 @@ module.exports = {
 				test: /\.{png|jpg}$/,
 				use: ['file-loader'],
 				exclude: path.resolve(__dirname, 'view/image/')
+			},
+			{ 
+				test: /\.svg$/, 
+				use: [
+					{
+						loader: 'svg-inline-loader',
+						options: {classPrefix: true, idPrefix: true}
+					}
+				]
 			}
 		],
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".css"],
 		alias: {
+			'@svg' : path.resolve(__dirname, './view/svg'),
 			'@components' : path.resolve(__dirname, './view/components'),
 			'@container' : path.resolve(__dirname, './view/container'),
 			'@wrapper' : path.resolve(__dirname, './view/wrapper'),
@@ -76,7 +86,7 @@ module.exports = {
 			cache: false,
 			configFile: path.resolve(__dirname, '.stylelintrc.js'),
 			context: path.resolve(__dirname, '/static/css'),
-			files: '**/*.css',
+			files: ['**/*.css', './*.css', './view/*.css'],
 		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css',

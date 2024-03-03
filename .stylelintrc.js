@@ -8,7 +8,6 @@ module.exports = {
     "block-no-empty": true,
     "color-no-invalid-hex": true,
     "comment-no-empty": true,
-    "no-extra-semicolons": true,
     "declaration-block-no-duplicate-properties": [
       true,
       {
@@ -26,7 +25,6 @@ module.exports = {
     "no-duplicate-at-import-rules": true,
     "no-duplicate-selectors": true,
     "no-empty-source": true,
-    "no-extra-semicolons": true,
     "no-invalid-double-slash-comments": true,
     "property-no-unknown": true,
     "selector-pseudo-class-no-unknown": true,
@@ -34,7 +32,5 @@ module.exports = {
     "selector-type-no-unknown": true,
     "string-no-newline": true,
     "unit-no-unknown": true,
-    "declaration-block-semicolon-newline-after": "always",
-    "block-closing-brace-newline-before": "always"
   }
 };

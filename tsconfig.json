@@ -30,14 +30,14 @@
 			"*": [
 				"./view/node_modules/*"
 			],
-			"@components/*": [
-				"./view/components/*"
-			],
-			"@components": [
-				"./view/components"
+			"@svg/*":[
+				"./view/svg/*"
 			],
 			"@container/*":[
 				"./view/container/*"
+			],
+			"@components/*": [
+				"./view/components/*"
 			],
 			"@wrapper/*":[
 				"./view/wrapper/*"

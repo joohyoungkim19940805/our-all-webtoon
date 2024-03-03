@@ -30,7 +30,9 @@ export const column: FlexDirectionModelType = {
 }
 
 export class FlexLayout extends HTMLElement {
-
+    static {
+        window.customElements.define('flex-layout', this);
+    }
     static get observedAttributes() {
         return ['data-direction'];
     }
@@ -114,7 +116,7 @@ export class FlexLayout extends HTMLElement {
                 return;
             }
             const target = _target as HTMLElement
-            if ((target as any).__resizePanel || !target.hasAttribute('data-is_resize')) {
+            if ( ! (target as any).__resizePanel || ! target.hasAttribute('data-is_resize')) {
                 return;
             }
             const __resizePanel = (target as any).__resizePanel
@@ -130,8 +132,9 @@ export class FlexLayout extends HTMLElement {
 
     private parentSize = 0;
 
-    constructor() {
+    constructor(attribute = {}) {
         super();
+        Object.assign(this, attribute)
         this.addResizePanel(this.children)
         let observer = new MutationObserver((mutationList, observer) => {
             mutationList.forEach((mutation) => this.addResizePanel(mutation.addedNodes))
@@ -147,12 +150,17 @@ export class FlexLayout extends HTMLElement {
                 return;
             }
             const childElement = _childElement as HTMLElement;
+            // 2024 03 03 수정 is_resize default false로 수정
+            if( ! childElement.hasAttribute('data-is_resize'))
+                childElement.dataset.is_resize = 'false'
+
             let __resizePanel = (childElement as any).__resizePanel;
             childElement.classList.add(flexLayout['flex-layout-content'])
             let resizePanel = __resizePanel;
             if (!resizePanel) {
                 resizePanel = this.#createResizePanel();
                 __resizePanel = resizePanel;
+                (childElement as any).__resizePanel = __resizePanel;
                 resizePanel.__resizeTarget = childElement;
             }
             childElement.after(resizePanel);
@@ -284,6 +292,7 @@ export class FlexLayout extends HTMLElement {
             if (!targetElement || targetElement.dataset.is_resize == 'false' || (resizeTarget.dataset.is_resize == 'true' && 30 < movement)) {
                 targetElement = resizeTarget;
             }
+            if( ! targetElement) return;
             let targetMinSize = parseFloat(window.getComputedStyle(targetElement).getPropertyValue(minSizeName)) || 0;
             let targetRect = targetElement.getBoundingClientRect();
             let targetSize = targetRect[this.direction.sizeName] as number + movement
@@ -296,6 +305,7 @@ export class FlexLayout extends HTMLElement {
             ) {
                 nextElement = resizePanel.nextElementSibling
             }
+            if( ! nextElement) return;
             let nextElementMinSize = parseFloat(window.getComputedStyle(nextElement).getPropertyValue(minSizeName)) || 0;
             let nextElementRect = nextElement.getBoundingClientRect();
             let nextElementSize = nextElementRect[this.direction.sizeName] + (movement * -1);
@@ -321,6 +331,7 @@ export class FlexLayout extends HTMLElement {
     }
 
     findNotCloseFlexContent(target: any, direction: string) {
+        if(!target) return;
         const isCloseCheck = () => {
             if (target.dataset.is_resize == 'false') {
                 return true;
