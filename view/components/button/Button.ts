@@ -23,7 +23,9 @@ export const button = ( (
 			className:`${styles.button} ${styles[styleType]} ${styles[size]}`,
 			type
 		});
-		if(animation) button.classList.add(styles[animation]);
+		/*if(animation) {
+			button.classList.add(styles[animation]);
+		}*/
 		res(button);
 		
 	})

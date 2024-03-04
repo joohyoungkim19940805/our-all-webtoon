@@ -2,17 +2,27 @@
 .button{
 	cursor: pointer;
 	background-color: #343434;
-	border-color: #464646;
-	color: #b9b9b9;
 	/*max-width: fit-content;*/
 	min-width: fit-content;
 	display: flex;
     flex-direction: column;
     justify-content: space-around;
+	font-size: 1rem;
+	/*다크모드 // 컬러 모드 개발 전까지 임시*/
+	border-color: #464646;
+	/*다크모드 // 컬러 모드 개발 전까지 임시*/
+	color: #b9b9b9;
+	&& > svg{
+		/*다크모드 // 컬러 모드 개발 전까지 임시*/
+		color:#cbc3e3;
+	}
 	&&[color-mode="black"]{
 		background-color: #343434;
 		border-color: #464646;
 		color: #b9b9b9;
+		&& > svg{
+			color: #af91b3;
+		}
 	}
 	&&.standard{
 		border: revert;
@@ -27,23 +37,23 @@
 		width:inherit;
 	}
 	&&.long{
-		width: 100%;
+		width: 99.999%;
 	}
 	&&.middle{
-		width: 50%;
+		width: 49.999%;
 	}
 	&&.short{
-		width: 20%;
+		width: 19.999%;
     
 	}
-	&&.spin:not(:hover) > *{
-		transition: 1s transform;
-		transform: rotate(0deg);
-	}
-	&&.spin:hover > *{
+	&&.spin > * {
 		color: #9f6b6b;
 		transition: 1s transform;
 		transform: rotate(270deg);
+	}
+	&&:not(.spin) > *{
+		transition: 1s transform;
+		transform: rotate(0deg);
 	}
 
 }

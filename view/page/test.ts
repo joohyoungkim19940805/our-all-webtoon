@@ -11,9 +11,16 @@ let contentElement = Object.assign(document.createElement('div'),{
 });
 
 bottom.subscribe(e=>{
-	root.replaceChildren(contentElement,e.bottom);
+	e.bottom.dataset.grow = '0.094'
+	//e.bottom.dataset.grow = '0.2'
+	root.replaceChildren(contentElement, e.bottom);
 })
 
 root.append(contentElement);
 
 document.body.append(root);
+
+let testLayout = Object.assign(document.createElement('div'), {
+
+});
+document.body.append()
