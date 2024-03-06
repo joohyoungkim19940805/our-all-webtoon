@@ -4,7 +4,14 @@
     overflow-wrap: anywhere;
 	/*다크모드 // 컬러 모드 개발 전까지 임시*/
 	border-color: #464646;
+	background-color: #343434;
 	&&[color-mode="black"]{
 		border-color: #464646;	
+	}	
+	&& .gnb-button:nth-child(5n){
+		border-right:none;
+	}
+	&& .gnb-button:nth-child(5n+1){
+		border-left:none;
 	}
 }

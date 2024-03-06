@@ -9,11 +9,14 @@ export type FlexDirectionModelType = {
     resizeCursor: 'ew-resize' | 'ns-resize'
 }
 
+export type ResizePanelMode = 'center-cylinder';
+
 type Movement = {
     x: number,
     y: number
 }
 
+type SizeStyleName = 'minWidth' | 'minHeight' | 'clientWidth' | 'clientHeight';
 
 export const row: FlexDirectionModelType = {
     xy: 'x',
@@ -37,10 +40,17 @@ export class FlexLayout extends HTMLElement {
         return ['data-direction'];
     }
 
-    private isLoaded = false;
-    private growLimit = 0;
+    #isLoaded = false;
+    #growLimit = 0;
+    #direction: FlexDirectionModelType = column;
 
+    #forResizeList: Array<HTMLElement> = [];
 
+    #totalMovement = 0;
+
+    #parentSize = 0;
+
+    #flexChildMapper = {}; get flexChildMapper(){return this.#flexChildMapper}
 
     //#shrinkDefault = 1;
     //#basisDefault = '0%';
@@ -73,11 +83,11 @@ export class FlexLayout extends HTMLElement {
 
             const currentMinSize = parseFloat(currentStyle.getPropertyValue(
                 'min' +
-                this.direction.sizeName.charAt(0).toUpperCase() +
-                this.direction.sizeName.substring(1))
+                this.#direction.sizeName.charAt(0).toUpperCase() +
+                this.#direction.sizeName.substring(1))
             );
 
-            let currentSize = targetRect[this.direction.sizeName as keyof DOMRect] as number;
+            let currentSize = targetRect[this.#direction.sizeName as keyof DOMRect] as number;
 
             //if( ! isNaN(currentFlexGrow) && ( currentFlexGrow == 0 || (currentSize == 0 || currentMinSize >= currentSize) )){
             if (currentSize == 0 || currentMinSize >= currentSize) {
@@ -111,26 +121,23 @@ export class FlexLayout extends HTMLElement {
 
     private resizeChangeObserver = new MutationObserver((mutationList, observer) => {
         mutationList.forEach((mutation) => {
-            const { target: _target } = mutation;
+            console.log(mutation);
+            const { target: _target, attributeName } = mutation;
             if (_target.nodeType !== Node.ELEMENT_NODE) {
                 return;
             }
             const target = _target as HTMLElement
-            if ( ! (target as any).__resizePanel || ! target.hasAttribute('data-is_resize')) {
-                return;
+                if ( ! (target as any).__resizePanel || ! target.hasAttribute('data-is_resize')) {
+                    return;
+                }
+                const __resizePanel = (target as any).__resizePanel as HTMLElement;
+            if(attributeName === 'data-is_resize'){
+                __resizePanel.style.display = target.dataset.is_resize == 'true' ? '' : 'none';
+            }else if(attributeName === 'data-panel_mode'){
+                __resizePanel.classList.add(flexLayout[(target.dataset.panel_mode || '') as ResizePanelMode])
             }
-            const __resizePanel = (target as any).__resizePanel
-            __resizePanel.style.display = target.dataset.is_resize == 'true' ? '' : 'none';
         })
     });
-
-    private direction: FlexDirectionModelType = column;
-
-    private forResizeList: Array<HTMLElement> = [];
-
-    private totalMovement = 0;
-
-    private parentSize = 0;
 
     constructor(attribute = {}) {
         super();
@@ -151,24 +158,26 @@ export class FlexLayout extends HTMLElement {
             }
             const childElement = _childElement as HTMLElement;
             // 2024 03 03 수정 is_resize default false로 수정
-            if( ! childElement.hasAttribute('data-is_resize'))
-                childElement.dataset.is_resize = 'false'
-
-            let __resizePanel = (childElement as any).__resizePanel;
+            let __resizePanel = (childElement as any).__resizePanel as HTMLElement;
             childElement.classList.add(flexLayout['flex-layout-content'])
+            if( ! childElement.hasAttribute('data-is_resize')){
+                childElement.dataset.is_resize = 'false'
+            }
             let resizePanel = __resizePanel;
             if (!resizePanel) {
                 resizePanel = this.#createResizePanel();
                 __resizePanel = resizePanel;
                 (childElement as any).__resizePanel = __resizePanel;
-                resizePanel.__resizeTarget = childElement;
+                (resizePanel as any).__resizeTarget = childElement;
             }
             childElement.after(resizePanel);
-
+            if(childElement.hasAttribute('data-panel_mode')){
+                __resizePanel.classList.add(flexLayout[(childElement.dataset.panel_mode || '') as ResizePanelMode])
+            }
             __resizePanel.style.display = childElement.dataset.is_resize == 'true' ? '' : 'none';
 
             this.resizeChangeObserver.observe(childElement, {
-                attributeFilter: ['data-is_resize'],
+                attributeFilter: ['data-is_resize', 'data-panel_mode'],
                 attributeOldValue: true
             });
             this.visibleObserver.observe(childElement, {
@@ -177,19 +186,19 @@ export class FlexLayout extends HTMLElement {
             });
         });
         this.growChangeObserver.disconnect();
-        this.forResizeList = [...this.children]
+        this.#forResizeList = [...this.children]
             .filter(e => e.hasAttribute('data-is_resize')) as Array<HTMLElement>;
-        this.forResizeList.forEach(e => {
+        this.#forResizeList.forEach(e => {
             this.growChangeObserver.observe(e, {
                 attributeFilter: ['data-grow'],
             })
         })
-        this.growLimit = this.forResizeList.length;
+        this.#growLimit = this.#forResizeList.length;
         this.remain();
     }
     connectedCallback() {
-        if (!this.isLoaded) {
-            this.isLoaded = true;
+        if (!this.#isLoaded) {
+            this.#isLoaded = true;
             /*
             document.addEventListener('DOMContentLoaded', (event) => {
     
@@ -199,7 +208,7 @@ export class FlexLayout extends HTMLElement {
     }
 
     disconnectedCallback() {
-        this.isLoaded = false;
+        this.#isLoaded = false;
     }
 
     #createResizePanel() {
@@ -222,24 +231,24 @@ export class FlexLayout extends HTMLElement {
      * @param {HTMLElement} resizePanel 
      */
     #addResizePanelEvent(resizePanel: HTMLElement) {
-        this.totalMovement = 0;
-        this.parentSize = 0;
+        this.#totalMovement = 0;
+        this.#parentSize = 0;
         let prevTouchEvent: TouchEvent | undefined;
 
         new Array('mousedown', 'touchstart').forEach(eventName => {
             resizePanel.addEventListener(eventName, (event) => {
-                this.totalMovement = 0;
+                this.#totalMovement = 0;
                 prevTouchEvent = undefined;
-                this.parentSize = this.getBoundingClientRect()[this.direction.sizeName as keyof DOMRect] as number;
+                this.#parentSize = this.getBoundingClientRect()[this.#direction.sizeName as keyof DOMRect] as number;
                 resizePanel.setAttribute('data-is_mouse_down', '');
                 resizePanel.querySelector('.hover')?.setAttribute('data-is_hover', '');
-                document.body.style.cursor = this.direction.resizeCursor;
+                document.body.style.cursor = this.#direction.resizeCursor;
             }, { passive: eventName == 'touchstart' })
         })
         new Array('mouseup', 'touchend').forEach(eventName => {
             window.addEventListener(eventName, (event) => {
-                this.totalMovement = 0;
-                this.parentSize = 0;
+                this.#totalMovement = 0;
+                this.#parentSize = 0;
                 prevTouchEvent = undefined;
                 resizePanel.removeAttribute('data-is_mouse_down');
                 resizePanel.querySelector('.hover')?.removeAttribute('data-is_hover');
@@ -251,8 +260,8 @@ export class FlexLayout extends HTMLElement {
             })
             resizePanel.addEventListener(eventName, () => {
                 resizePanel.removeAttribute('data-is_mouse_down');
-                this.totalMovement = 0;
-                this.parentSize = 0;
+                this.#totalMovement = 0;
+                this.#parentSize = 0;
                 prevTouchEvent = undefined;
             })
         })
@@ -283,10 +292,10 @@ export class FlexLayout extends HTMLElement {
 
     moveMouseFlex(resizePanel: HTMLElement, moveEvent: Movement) {
         return new Promise(resolve => {
-            let movement = moveEvent[this.direction.xy];
-            this.totalMovement += moveEvent[this.direction.xy];
+            let movement = moveEvent[this.#direction.xy];
+            this.#totalMovement += moveEvent[this.#direction.xy];
             const resizeTarget = (resizePanel as any).__resizeTarget as HTMLElement
-            let minSizeName = 'min' + this.direction.sizeName.charAt(0).toUpperCase() + this.direction.sizeName.substring(1);
+            let minSizeName = 'min' + this.#direction.sizeName.charAt(0).toUpperCase() + this.#direction.sizeName.substring(1);
 
             let targetElement = this.findNotCloseFlexContent(resizeTarget, 'previousElementSibling');
             if (!targetElement || targetElement.dataset.is_resize == 'false' || (resizeTarget.dataset.is_resize == 'true' && 30 < movement)) {
@@ -295,7 +304,7 @@ export class FlexLayout extends HTMLElement {
             if( ! targetElement) return;
             let targetMinSize = parseFloat(window.getComputedStyle(targetElement).getPropertyValue(minSizeName)) || 0;
             let targetRect = targetElement.getBoundingClientRect();
-            let targetSize = targetRect[this.direction.sizeName] as number + movement
+            let targetSize = targetRect[this.#direction.sizeName] as number + movement
 
             let nextElement = this.findNotCloseFlexContent(resizePanel.nextElementSibling, 'nextElementSibling');
 
@@ -308,19 +317,19 @@ export class FlexLayout extends HTMLElement {
             if( ! nextElement) return;
             let nextElementMinSize = parseFloat(window.getComputedStyle(nextElement).getPropertyValue(minSizeName)) || 0;
             let nextElementRect = nextElement.getBoundingClientRect();
-            let nextElementSize = nextElementRect[this.direction.sizeName] + (movement * -1);
+            let nextElementSize = nextElementRect[this.#direction.sizeName] + (movement * -1);
 
             if (this.isOverMove(targetSize, targetMinSize)) {
-                nextElementSize = nextElementRect[this.direction.sizeName]
+                nextElementSize = nextElementRect[this.#direction.sizeName]
                 targetSize = 0;
             } else if (this.isOverMove(nextElementSize, nextElementMinSize)) {
-                targetSize = targetRect[this.direction.sizeName];
+                targetSize = targetRect[this.#direction.sizeName];
                 nextElementSize = 0;
             }
 
-            let targetFlexGrow = (targetSize / (this.parentSize - 1)) * this.growLimit;
+            let targetFlexGrow = (targetSize / (this.#parentSize - 1)) * this.#growLimit;
             targetElement.style.flex = `${targetFlexGrow} 1 0%`;
-            let nextElementFlexGrow = (nextElementSize / (this.parentSize - 1)) * this.growLimit;
+            let nextElementFlexGrow = (nextElementSize / (this.#parentSize - 1)) * this.#growLimit;
             nextElement.style.flex = `${nextElementFlexGrow} 1 0%`;
 
             resolve('');
@@ -365,9 +374,9 @@ export class FlexLayout extends HTMLElement {
 
             resizeTarget.dataset.prev_grow = this.getGrow(resizeTarget).toString();
 
-            let notCloseList = this.forResizeList.filter(e => e.style.flex != '0 1 0%' && e != resizeTarget);
+            let notCloseList = this.#forResizeList.filter(e => e.style.flex != '0 1 0%' && e != resizeTarget);
             let notCloseAndOpenTargetList = [...notCloseList, resizeTarget];
-            //let resizeWeight = this.mathWeight(notCloseList, this.forResizeList.length);
+            //let resizeWeight = this.mathWeight(notCloseList, this.#forResizeList.length);
             notCloseAndOpenTargetList.forEach(e => {
                 e.style.transition = 'flex 0.3s';
                 e.ontransitionend = (event) => {
@@ -390,18 +399,18 @@ export class FlexLayout extends HTMLElement {
                     return;
                 }
 
-                let percent = this.getGrow(e) / this.forResizeList.length;
-                //let percentWeight = this.forResizeList.length * percent;
+                let percent = this.getGrow(e) / this.#forResizeList.length;
+                //let percentWeight = this.#forResizeList.length * percent;
                 //let remainWeight = resizeWeight * percent;
                 if (notCloseList.length == 1) {
-                    e.dataset.grow = this.forResizeList.length.toString();
+                    e.dataset.grow = this.#forResizeList.length.toString();
                     return;
                 }
-                e.dataset.grow = (this.forResizeList.length * percent).toString();
+                e.dataset.grow = (this.#forResizeList.length * percent).toString();
             })
 
             if (isResize) {
-                this.resize(notCloseList, this.forResizeList.length);
+                this.resize(notCloseList, this.#forResizeList.length);
             }
 
             resolve(resizeTarget);
@@ -418,9 +427,9 @@ export class FlexLayout extends HTMLElement {
                 resizeTarget.dataset.is_resize = 'true';
             }
 
-            let notCloseList = this.forResizeList.filter(e => e.style.flex != '0 1 0%' && e != resizeTarget);
+            let notCloseList = this.#forResizeList.filter(e => e.style.flex != '0 1 0%' && e != resizeTarget);
             let notCloseAndOpenTargetList = [...notCloseList, resizeTarget];
-            //let resizeWeight = this.mathWeight(notCloseAndOpenTargetList, this.forResizeList.length);
+            //let resizeWeight = this.mathWeight(notCloseAndOpenTargetList, this.#forResizeList.length);
             let openTargetGrow = 1;
             if (isPrevSizeOpen && resizeTarget.hasAttribute('data-prev_grow')) {
                 resizeTarget.dataset.prev_grow;
@@ -450,22 +459,21 @@ export class FlexLayout extends HTMLElement {
                     return;
                 }
 
-                let percent = (this.getGrow(e) / this.forResizeList.length) - (openTargetGrow / this.forResizeList.length)
-                e.dataset.grow = (this.forResizeList.length * percent).toString();
+                let percent = (this.getGrow(e) / this.#forResizeList.length) - (openTargetGrow / this.#forResizeList.length)
+                e.dataset.grow = (this.#forResizeList.length * percent).toString();
             });
 
             if (isResize) {
-                this.resize(notCloseAndOpenTargetList, this.forResizeList.length);
+                this.resize(notCloseAndOpenTargetList, this.#forResizeList.length);
             }
 
             resolve(resizeTarget)
         })
     }
-
     remain() {
         return new Promise(resolve => {
             let notGrowList: Array<HTMLElement> = [];
-            let totalGrow = this.forResizeList.reduce((t, e, i) => {
+            let totalGrow = this.#forResizeList.reduce((t, e, i) => {
                 if (e.hasAttribute('data-grow') == false) {
                     notGrowList.push(e);
                     return t;
@@ -474,13 +482,13 @@ export class FlexLayout extends HTMLElement {
                 e.style.flex = `${grow} 1 0%`;
                 t -= grow;
                 return t;
-            }, this.growLimit);
+            }, this.#growLimit);
 
             if (notGrowList.length != 0) {
                 this.resize(notGrowList, totalGrow);
             }
 
-            resolve(this.forResizeList);
+            resolve(this.#forResizeList);
         });
     }
 
@@ -501,9 +509,9 @@ export class FlexLayout extends HTMLElement {
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (newValue == 'row') {
-            this.direction = row;
+            this.#direction = row;
         } else if (newValue == 'column') {
-            this.direction = column;
+            this.#direction = column;
         } else {
             throw new Error('direction is "row" or "column" required value');
         }
@@ -516,6 +524,24 @@ export class FlexLayout extends HTMLElement {
     getGrow(growTarget: HTMLElement) {
         return (parseFloat(growTarget.style.flex.split(' ')[0]) || parseFloat(growTarget.dataset.grow || ''));
     }
+
+    methGrow(childSize : number){
+        let parentSize;
+
+        if(this.#direction.sizeName == 'width'){
+            parentSize = this.clientWidth;
+        }else if(this.#direction.sizeName == 'height'){
+            parentSize = this.clientHeight;
+        }else{
+            return;
+        }
+        
+        const childContents = [...this.children]
+        .filter(e=>e.classList.contains(flexLayout['flex-layout-content']));
+
+        return childContents.length * (childSize / parentSize);
+    }
+
     isVisible(target: HTMLElement) {
         if (!target.hasAttribute('data-flex_visibility')) {
             throw new Error('is not flex-layout child');

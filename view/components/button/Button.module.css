@@ -37,14 +37,13 @@
 		width:inherit;
 	}
 	&&.long{
-		width: 99.999%;
+		width: 99.52%;
 	}
 	&&.middle{
-		width: 49.999%;
+		width: 49.52%;
 	}
 	&&.short{
-		width: 19.999%;
-    
+		width: 19.52%
 	}
 	&&.spin > * {
 		color: #9f6b6b;
@@ -55,5 +54,4 @@
 		transition: 1s transform;
 		transform: rotate(0deg);
 	}
-
 }

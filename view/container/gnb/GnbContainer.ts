@@ -152,6 +152,7 @@ export const gnbContainer = (() => {
 	)
 	.pipe(
 		map( ([gnbContainer, ...buttons]) => {
+			buttons.forEach(e=>e.classList.add(styles['gnb-button']))
 			gnbContainer.append(...buttons);
 			return {gnbContainer, buttons} 
 		})

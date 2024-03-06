@@ -1,3 +1,5 @@
+import { Subject, from } from "rxjs";
+
 export default new class Common{
 	#keyRegx = /[A-Z]?[a-z]+|[0-9]+|[A-Z]+(?![a-z])/g;
 
@@ -102,5 +104,14 @@ export default new class Common{
 		}, 50)
 
 	}
-
+	renderingAwait(element : HTMLElement, delay = 50){
+		return new Promise<HTMLElement>(res=>{
+			let renderingAwait = setInterval(()=>{
+				if( ! element.isConnected) return;
+				clearInterval(renderingAwait);
+				res(element);
+			}, delay)
+		});
+	} 
+	 
 }
