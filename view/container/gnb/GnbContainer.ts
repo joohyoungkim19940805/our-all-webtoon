@@ -12,7 +12,7 @@ import cartSvg from '@svg/shopping-cart.svg'
 import calendarSvg from '@svg/calendar.svg'
 import { Subject, concat, from, fromEvent, map, merge, mergeMap, zip } from 'rxjs'
 
-//최신 업데이트 버튼
+// 최신 업데이트 버튼
 export const latestUpdateButtonEvent = new Subject<Event>();
 export const latestUpdateButton = button({},{
 	size:'short'
@@ -26,6 +26,7 @@ export const latestUpdateButton = button({},{
 	return latestUpdate
 }));
 
+// 웹툰 목록 버튼
 export const webtoonListButtonEvent = new Subject<Event>();
 export const webtoonListButton = button({},{
 	size:'short'
@@ -39,6 +40,7 @@ export const webtoonListButton = button({},{
 	return webtoonList
 }));
 
+// 웹툰 연재하기 버튼
 export const paintingAddButtonEvent = new Subject<Event>();
 export const paintingAddButton = button({},{
 	size: 'short', animation: 'spin'
@@ -53,6 +55,7 @@ export const paintingAddButton = button({},{
 	return paintingAdd
 }));
 
+// 게시판 버튼
 export const noticeBoardButtonEvent = new Subject<Event>();
 export const noticeBoardButton = button({},{
 	size:'short'
@@ -66,6 +69,7 @@ export const noticeBoardButton = button({},{
 	return noticeBoard
 }));
 
+// 마이페이지 버튼
 export const myHomeButtonEvent = new Subject<Event>();
 export const myHomeButton = button({},{
 	size:'short'
@@ -79,6 +83,7 @@ export const myHomeButton = button({},{
 	return myHome
 }));
 
+// 북마크 목록 버튼
 export const bookMarkButtonEvent = new Subject<Event>();
 export const bookMarkButtonButton = button({},{
 	size:'short'
@@ -92,6 +97,7 @@ export const bookMarkButtonButton = button({},{
 	return bookMark;
 }));
 
+// 생방송 버튼
 export const tvButtonEvent = new Subject<Event>();
 export const tvButton = button({},{
 	size:'short'
@@ -105,6 +111,7 @@ export const tvButton = button({},{
 	return tv;
 }));
 
+//상점 버튼
 export const cartButtonEvent = new Subject<Event>();
 export const cartButton = button({},{
 	size:'short'
@@ -118,19 +125,20 @@ export const cartButton = button({},{
 	return cart;
 }));
 
+//연재 일정 버튼
 export const calendarButtonEvent = new Subject<Event>();
 export const calendarButton = button({},{
 	size:'short'
 }).pipe(map(calendar=>{
 	calendar.innerHTML = calendarSvg;
 	calendar.dataset.variable_name = Object.keys({myHomeButton})[0]
-	calendar.append(document.createTextNode('업로드 일정'));
+	calendar.append(document.createTextNode('연재 일정'));
 	calendar.onclick = (event) => {
 		myHomeButtonEvent.next(event);
 	}
 	return calendar;
 }));
-
+//gnbContainer를 div로 바꿔보기 2024 03 07
 export const gnbContainer = (() => {
 	let promise = new Promise<HTMLDivElement>(res=>{
 		let div = Object.assign(document.createElement('div'), {
