@@ -2,7 +2,14 @@ import { from } from "rxjs";
 import styles from './Input.module.css'
 
 export type InputAttribute = {
-	type? : 'hidden' | 'radio' | 'checbox' | 'text' | 'search' | 'textarea' | 'date' | 'datetime-local',
+	/** @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input */
+	type? : 'hidden' | 'radio' | 'checbox' | 
+		'text' | 'search' | 'textarea' | 
+		'date' | 'datetime-local' | 'button' |
+		'color' | 'email' | 'file' | 'image' | 
+		'month' | 'number' | 'password' | 'range' | 
+		'reset' | 'search' | 'sumbit' | 'tel' |
+		'time' | 'url' | 'week'
 	placeholder? : string,
 	/** @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete */
 	autocomplete? : 'off' | 'on' | 
