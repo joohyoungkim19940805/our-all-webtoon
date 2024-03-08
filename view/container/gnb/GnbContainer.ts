@@ -165,4 +165,4 @@ export const gnbContainer = (() => {
 			return {gnbContainer, buttons} 
 		})
 	);
-})();
+})();    

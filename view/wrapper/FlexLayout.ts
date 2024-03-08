@@ -16,7 +16,7 @@ type Movement = {
     y: number
 }
 
-type SizeStyleName = 'minWidth' | 'minHeight' | 'clientWidth' | 'clientHeight';
+//type SizeStyleName = 'minWidth' | 'minHeight' | 'clientWidth' | 'clientHeight';
 
 export const row: FlexDirectionModelType = {
     xy: 'x',
@@ -145,17 +145,15 @@ export class FlexLayout extends HTMLElement {
         this.addResizePanel(this.children)
         let observer = new MutationObserver((mutationList, observer) => {
             mutationList.forEach((mutation) => this.addResizePanel(mutation.addedNodes))
-        })
-        observer.observe(this, { childList: true });
+        }).observe(this, { childList: true });
     }
     addResizePanel(childElementList: NodeList | HTMLCollection | Array<Element>) {
         if (childElementList instanceof HTMLCollection) {
             childElementList = [...childElementList]
         }
         childElementList.forEach(_childElement => {
-            if (_childElement.nodeType != Node.ELEMENT_NODE || (_childElement as Element).classList.contains(flexLayout['flex-resize-panel'])) {
-                return;
-            }
+            if ( ! (_childElement instanceof FlexContainer)) return
+            
             const childElement = _childElement as HTMLElement;
             // 2024 03 03 수정 is_resize default false로 수정
             let __resizePanel = (childElement as any).__resizePanel as HTMLElement;
@@ -525,7 +523,7 @@ export class FlexLayout extends HTMLElement {
         return (parseFloat(growTarget.style.flex.split(' ')[0]) || parseFloat(growTarget.dataset.grow || ''));
     }
 
-    methGrow(childSize : number){
+    mathGrow(childSize : number){
         let parentSize;
 
         if(this.#direction.sizeName == 'width'){
@@ -549,5 +547,29 @@ export class FlexLayout extends HTMLElement {
         }
 
         return target.dataset.flex_visibility == 'v';
+    }
+}
+
+export class FlexContainer extends HTMLElement {
+    static {
+        window.customElements.define('flex-container', this);
+    }
+    
+    #resizePanel : FlexResizePanel = new FlexResizePanel(); get resizePanel(){ return this.#resizePanel }
+    #isResize : boolean;
+    #panerMode : ResizePanelMode;
+    
+    constructor(attribute = {}){
+        super();
+        Object.assign(this, attribute);
+    }
+}
+
+export class FlexResizePanel  extends HTMLElement {
+
+    #resizeTarget : FlexContainer;
+
+    static {
+        window.customElements.define('flex-resizer', this);
     }
 }

@@ -46,7 +46,8 @@ flex-layout .flex-resize-panel {
     right: 0;
     bottom: 0;
 }
-flex-layout .flex-resize-panel.center-cylinder:hover::after{
+flex-layout .flex-resize-panel.center-cylinder:hover::after,
+flex-layout .flex-resize-panel.center-cylinder:active::after{
     background-color: rgb(0 102 255 / 45%);
     transition: background-color 1s;
 }
@@ -72,13 +73,15 @@ flex-layout[data-direction="column"] .flex-resize-panel {
 }
 
 flex-layout[data-direction="row"] .flex-resize-panel:hover>.hover,
-flex-layout[data-direction="row"] .flex-resize-panel>.hover[data-is_hover] {
+flex-layout[data-direction="row"] .flex-resize-panel>.hover[data-is_hover],
+flex-layout .flex-resize-panel:active>.hover {
     width: 3px;
     height: inherit;
 }
 
 flex-layout[data-direction="column"] .flex-resize-panel:hover>.hover,
-flex-layout[data-direction="column"] .flex-resize-panel>.hover[data-is_hover] {
+flex-layout[data-direction="column"] .flex-resize-panel>.hover[data-is_hover],
+flex-layout .flex-resize-panel:active>.hover {
     height: 3px;
     width: inherit;
 }
@@ -97,7 +100,8 @@ flex-layout .flex-resize-panel>.hover {
     transition: all 1s;
 }
 
-flex-layout .flex-resize-panel:hover {
+flex-layout .flex-resize-panel:hover, 
+flex-layout .flex-resize-panel:active{
     animation-name: drag-panel-hover;
     animation-fill-mode: forwards;
     animation-direction: normal;
@@ -107,7 +111,8 @@ flex-layout .flex-resize-panel:hover {
 }
 
 flex-layout .flex-resize-panel:hover>.hover,
-flex-layout .flex-resize-panel>.hover[data-is_hover] {
+flex-layout .flex-resize-panel>.hover[data-is_hover],
+flex-layout .flex-resize-panel:active>.hover {
     background-color: #0066ffb5;
     z-index: 101;
     position: absolute;
