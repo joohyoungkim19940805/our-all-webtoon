@@ -1,13 +1,11 @@
 import { Observable, concat, delay, from, map, mergeMap, zip } from "rxjs";
-import { FlexLayout } from "@wrapper/FlexLayout";
+import { FlexContainer, FlexLayout } from "@wrapper/FlexLayout";
 import { gnbContainer, latestUpdateButtonEvent } from '@container/gnb/GnbContainer'; 
 import { loadingRotate } from "@components/loading/Loading";
 
-const $bottom : Observable<HTMLDivElement> = from(
-	new Promise<HTMLDivElement>(res => {
-		let bottom = Object.assign(document.createElement('div'), {
-			className:"abcd"
-		});
+const $bottom : Observable<FlexContainer> = from(
+	new Promise<FlexContainer>(res => {
+		let bottom = new FlexContainer({className : 'abcd'});
 		res(bottom);
 	})
 )

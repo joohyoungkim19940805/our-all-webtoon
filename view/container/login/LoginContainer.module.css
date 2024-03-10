@@ -1,0 +1,21 @@
+.login-container{
+	display: flex;
+	flex-direction: column;
+	gap: 4dvh;
+	width: 85dvw;
+	&& input, && button{
+		font-size: 1.3rem;
+	}
+	
+	&& .account-info-wrapper{
+		display: flex;
+		gap: 0.8dvh;
+		flex-direction: column;
+	}
+	
+	&& .account-info-wrapper .id-and-password-wrapper{
+		display: flex;
+		gap: 4dvh;
+		flex-direction: column;
+	}
+}

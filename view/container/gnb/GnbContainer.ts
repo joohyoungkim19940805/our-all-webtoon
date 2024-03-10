@@ -92,7 +92,7 @@ export const bookMarkButtonButton = button({},{
 	bookMark.dataset.variable_name = Object.keys({myHomeButton})[0]
 	bookMark.append(document.createTextNode('북마크'));
 	bookMark.onclick = (event) => {
-		myHomeButtonEvent.next(event);
+		bookMarkButtonEvent.next(event);
 	}
 	return bookMark;
 }));
@@ -106,7 +106,7 @@ export const tvButton = button({},{
 	tv.dataset.variable_name = Object.keys({myHomeButton})[0]
 	tv.append(document.createTextNode('준비 중'));
 	tv.onclick = (event) => {
-		myHomeButtonEvent.next(event);
+		tvButtonEvent.next(event);
 	}
 	return tv;
 }));
@@ -118,9 +118,10 @@ export const cartButton = button({},{
 }).pipe(map(cart=>{
 	cart.innerHTML = cartSvg;
 	cart.dataset.variable_name = Object.keys({myHomeButton})[0]
-	cart.append(document.createTextNode('감자 충전(준비 중)'));
+	//감자 or 당근 화폐
+	cart.append(document.createTextNode('준비 중'));
 	cart.onclick = (event) => {
-		myHomeButtonEvent.next(event);
+		cartButtonEvent.next(event);
 	}
 	return cart;
 }));
@@ -134,7 +135,7 @@ export const calendarButton = button({},{
 	calendar.dataset.variable_name = Object.keys({myHomeButton})[0]
 	calendar.append(document.createTextNode('연재 일정'));
 	calendar.onclick = (event) => {
-		myHomeButtonEvent.next(event);
+		calendarButtonEvent.next(event);
 	}
 	return calendar;
 }));

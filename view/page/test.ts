@@ -1,27 +1,26 @@
-import { FlexLayout } from "@wrapper/FlexLayout";
-import flexLayoutStyle  from "@wrapper/FlexLayout.module.css";
+import { FlexContainer, FlexLayout } from "@wrapper/FlexLayout";
 import styles from './test3.module.css';
 import { bottom } from "@wrapper/layout/bottom";
 import { windowResize } from "@handler/globalEvents";
 import common from "@handler/common";
-styles.div
+import { fullLayer } from "@wrapper/layer/Layer"
+import { loginContainer, usernameInput } from "@container/login/LoginContainer";
+import { zip } from "rxjs";
+styles
 
 let root = new FlexLayout({id: 'root'});
 root.dataset.direction = 'column';
 document.body.append(root);
 
-let contentElement = Object.assign(document.createElement('div'),{
-	textContent : `test content view`
+let contentElement = new FlexContainer({
+	textContent: 'test content view'
 });
+
 contentElement.style.minHeight = '1px'
 contentElement.dataset.is_resize = 'true';
-contentElement.dataset.panel_mode = 'center-cylinder';
-if( (contentElement instanceof FlexLayout)){
-	console.log(root)
-}
+contentElement.panelMode = 'center-cylinder';
+
 root.append(contentElement);
-//console.log('???',flexLayoutStyle["show-helper"], contentElement, (contentElement as any).__resizePanel);
-//(contentElement as any).__resizePanel.classList.add(flexLayoutStyle["show-helper"]);
 bottom.subscribe(bottomObj=>{
 	bottomObj.bottom.dataset.grow = '0.094'
 	bottomObj.bottom.dataset.is_resize = 'false';
@@ -42,9 +41,7 @@ bottom.subscribe(bottomObj=>{
 });
 
 
-
-
-let testLayout = Object.assign(document.createElement('div'), {
-
-});
-document.body.append()
+zip(fullLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
+	layerContainer.append(container);
+	document.body.append(layer);
+})

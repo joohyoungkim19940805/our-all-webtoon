@@ -43,7 +43,8 @@ export const input = ((
 		let input = Object.assign(document.createElement('input'), {
 			className: `${styles.input} ${styles[stylyType]} ${styles[lineColor]}`,
 			type,
-			placeholder
+			placeholder,
+			autocomplete
 		})
 		res(input);
 	});

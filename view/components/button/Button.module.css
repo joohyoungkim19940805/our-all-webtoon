@@ -43,7 +43,8 @@
 		width: 49.52%;
 	}
 	&&.short{
-		width: 19.52%
+		width: 19.52%;
+		height:6dvh;
 	}
 	&&.spin > * {
 		color: #9f6b6b;
