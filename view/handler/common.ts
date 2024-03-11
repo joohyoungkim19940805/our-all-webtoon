@@ -113,5 +113,16 @@ export default new class Common{
 			}, delay)
 		});
 	} 
-	 
+	setUrl(parameter : {}){
+		let urlParam = new URLSearchParams(location.search);
+		Object.entries(parameter).forEach(([k,v])=>{
+			urlParam.set(k, v as any);
+		})
+        let queryString = '?' + [...urlParam.entries()].map( ([key, value]) => key + '=' + value).join('&');
+        
+        history.replaceState(null, '', 
+			`${location.origin}${location.pathname}${queryString}${location.hash}`
+		);
+    
+	}
 }

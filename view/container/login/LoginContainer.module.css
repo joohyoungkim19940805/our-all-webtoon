@@ -9,7 +9,7 @@
 	
 	&& .account-info-wrapper{
 		display: flex;
-		gap: 0.8dvh;
+		gap: 1dvh;
 		flex-direction: column;
 	}
 	

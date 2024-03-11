@@ -1,7 +1,7 @@
 import { FlexContainer, FlexLayout } from "@wrapper/FlexLayout";
 import styles from './test3.module.css';
 import { bottom } from "@wrapper/layout/bottom";
-import { windowResize } from "@handler/globalEvents";
+import { accessNavigation, windowResize } from "@handler/globalEvents";
 import common from "@handler/common";
 import { fullLayer } from "@wrapper/layer/Layer"
 import { loginContainer, usernameInput } from "@container/login/LoginContainer";
@@ -39,9 +39,12 @@ bottom.subscribe(bottomObj=>{
 		root.remain()
 	})
 });
-
-
-zip(fullLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
-	layerContainer.append(container);
-	document.body.append(layer);
-})
+accessNavigation.subscribe(e=>{
+	console.log(e);
+	setTimeout(()=>{
+		zip(fullLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
+			layerContainer.append(container);
+			document.body.append(layer);
+		})
+	},1000)
+});
