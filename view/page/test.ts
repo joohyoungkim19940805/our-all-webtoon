@@ -39,6 +39,7 @@ bottom.subscribe(bottomObj=>{
 		root.remain()
 	})
 });
+/*
 accessNavigation.subscribe(e=>{
 	console.log(e);
 	setTimeout(()=>{
@@ -48,3 +49,4 @@ accessNavigation.subscribe(e=>{
 		})
 	},1000)
 });
+*/

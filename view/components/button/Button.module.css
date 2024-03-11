@@ -7,7 +7,7 @@
 	display: flex;
     flex-direction: column;
     justify-content: space-around;
-	font-size: 1.3rem;
+	font-size: 1.25rem;
 	/*다크모드 // 컬러 모드 개발 전까지 임시*/
 	border-color: #464646;
 	/*다크모드 // 컬러 모드 개발 전까지 임시*/
