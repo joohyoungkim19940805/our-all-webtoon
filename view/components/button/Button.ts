@@ -10,13 +10,13 @@ export type ButtonAttribute = {
 }
 
 export type ButtonStyle = {
-	size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
+	size: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
 	styleType?: 'standard',
 	animation?: 'spin'
 };
 export const button = ( (
 	{type = 'button', event = {}} : ButtonAttribute,
-	{size = 'initial', styleType = 'standard', animation} : ButtonStyle = {}
+	{size, styleType = 'standard', animation} : ButtonStyle = {size : 'inherit'}
 ) => {
 	let promise = new Promise<HTMLButtonElement>(res=>{
 		let button = Object.assign(document.createElement('button'), {
