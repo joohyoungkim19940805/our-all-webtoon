@@ -14,15 +14,19 @@ import { Subject, concat, from, fromEvent, map, merge, mergeMap, zip } from 'rxj
 
 // 최신 업데이트 버튼
 export const latestUpdateButtonEvent = new Subject<Event>();
-export const latestUpdateButton = button({},{
-	size:'short'
-}).pipe(map(latestUpdate=>{
+latestUpdateButtonEvent.subscribe(e=>console.log(e))
+export const latestUpdateButton = button(
+	{ 
+		event: {
+			onclick: (e)=>latestUpdateButtonEvent.next(e)
+		}
+	},
+	{ size:'short' }
+).pipe(map(latestUpdate=>{
 	latestUpdate.innerHTML = boxSvg;
 	latestUpdate.dataset.variable_name = Object.keys({latestUpdateButton})[0]
 	latestUpdate.append(document.createTextNode('최신 업데이트'));
-	latestUpdate.onclick = (event) => {
-		latestUpdateButtonEvent.next(event);
-	}
+
 	return latestUpdate
 }));
 

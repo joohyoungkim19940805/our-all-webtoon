@@ -38,7 +38,6 @@ export const fullLayer = ( () => {
 			className: styles['layer-close-button'],
 			innerHTML: closeSvg,
 			onclick: ()=> layer.isConnected && layer.remove()
-			
 		})
 		layerContainer.append(closeButton);
 		layer.append(layerContainer);

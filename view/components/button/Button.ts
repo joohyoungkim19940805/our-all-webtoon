@@ -5,7 +5,8 @@ import boxSvg from '@svg/box.svg';
 // components -> container -> wrapper
 
 export type ButtonAttribute = {
-	type?: 'button' | 'submit'
+	type?: 'button' | 'submit';
+	event?: Partial<GlobalEventHandlers>
 }
 
 export type ButtonStyle = {
@@ -13,9 +14,8 @@ export type ButtonStyle = {
 	styleType?: 'standard',
 	animation?: 'spin'
 };
-
 export const button = ( (
-	{type = 'button'} : ButtonAttribute,
+	{type = 'button', event = {}} : ButtonAttribute,
 	{size = 'initial', styleType = 'standard', animation} : ButtonStyle = {}
 ) => {
 	let promise = new Promise<HTMLButtonElement>(res=>{
@@ -23,11 +23,17 @@ export const button = ( (
 			className:`${styles.button} ${styles[styleType]} ${styles[size]}`,
 			type
 		});
+		
+		Object.assign(button, event);
+		
 		/*if(animation) {
 			button.classList.add(styles[animation]);
 		}*/
 		res(button);
-		
 	})
 	return from(promise)
 })
+
+export const close = (()=>{
+
+});
