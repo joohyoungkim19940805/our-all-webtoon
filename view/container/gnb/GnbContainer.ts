@@ -1,6 +1,7 @@
 import styles from './GnbContainer.module.css'
 import { button } from '@components/button/Button'
 import buttonStyle from '@components/button/Button.module.css'
+import spinStyle from '@components/spin.module.css'
 import boxSvg from '@svg/box.svg';
 import playListSearchSvg from '@svg/search-loading.svg';
 import addSvg from '@svg/add.svg';
@@ -17,54 +18,63 @@ export const latestUpdateButtonEvent = new Subject<Event>();
 latestUpdateButtonEvent.subscribe(e=>console.log(e))
 export const latestUpdateButton = button(
 	{ 
+		textContent: '최신 업데이트',
 		event: {
 			onclick: (e)=>latestUpdateButtonEvent.next(e)
 		}
 	},
-	{ size:'short' }
+	{ size:'short', svg: boxSvg},
 ).pipe(map(latestUpdate=>{
-	latestUpdate.innerHTML = boxSvg;
 	latestUpdate.dataset.variable_name = Object.keys({latestUpdateButton})[0]
-	latestUpdate.append(document.createTextNode('최신 업데이트'));
-
 	return latestUpdate
 }));
 
 // 웹툰 목록 버튼
 export const webtoonListButtonEvent = new Subject<Event>();
-export const webtoonListButton = button({},{
-	size:'short'
-}).pipe(map(webtoonList=>{
-	webtoonList.innerHTML = playListSearchSvg;
+export const webtoonListButton = button(
+	{ 
+		textContent: '웹툰 목록',
+		event: {
+			onclick: (e)=>webtoonListButtonEvent.next(e)
+		}
+	},
+	{ size:'short', svg: playListSearchSvg }
+).pipe(map(webtoonList=>{
 	webtoonList.dataset.variable_name = Object.keys({webtoonListButton})[0]
-	webtoonList.append(document.createTextNode('웹툰 목록'));
-	webtoonList.onclick = (event) => {
-		webtoonListButtonEvent.next(event);
-	}
+
 	return webtoonList
 }));
 
 // 웹툰 연재하기 버튼
 export const paintingAddButtonEvent = new Subject<Event>();
-export const paintingAddButton = button({},{
-	size: 'short', animation: 'spin'
-}).pipe(map(paintingAdd=>{
-	paintingAdd.innerHTML = addSvg;
-	paintingAdd.onclick = (event) => {
-		paintingAdd.classList.add(buttonStyle.spin);
-		paintingAdd.dataset.variable_name = Object.keys({paintingAddButton})[0]
-		setTimeout(()=>{paintingAdd.classList.remove(buttonStyle.spin)},1500)
-		paintingAddButtonEvent.next(event);
-	}
+export const paintingAddButton = button(
+	{ 
+		event: {
+			onclick: (e) => {
+				paintingAddButtonEvent.next(e)
+			}
+		}
+	},
+	{ size: 'short', animation: 'spin', svg: addSvg }
+).pipe(map(paintingAdd=>{
+	const svg = paintingAdd.querySelector('svg')
+	if( ! svg) return paintingAdd;
+	svg.classList.add(spinStyle.spin_target);
+	paintingAddButtonEvent.subscribe((ev)=>{
+		svg.classList.add(spinStyle.spin);
+		setTimeout(()=>{
+			svg.classList.remove(spinStyle.spin);
+			//svg.ontransitionend = ()=> svg?.classList.remove(spinStyle.spin_target)
+		},1000)
+	})
 	return paintingAdd
 }));
 
 // 게시판 버튼
 export const noticeBoardButtonEvent = new Subject<Event>();
 export const noticeBoardButton = button({},{
-	size:'short'
+	size:'short', svg: boardSvg
 }).pipe(map(noticeBoard=>{
-	noticeBoard.innerHTML = boardSvg;
 	noticeBoard.dataset.variable_name = Object.keys({noticeBoardButton})[0]
 	noticeBoard.append(document.createTextNode('게시판'));
 	noticeBoard.onclick = (event) => {
@@ -76,9 +86,8 @@ export const noticeBoardButton = button({},{
 // 마이페이지 버튼
 export const myHomeButtonEvent = new Subject<Event>();
 export const myHomeButton = button({},{
-	size:'short'
+	size:'short', svg: userlaneSvg
 }).pipe(map(myHome=>{
-	myHome.innerHTML = userlaneSvg;
 	myHome.dataset.variable_name = Object.keys({myHomeButton})[0]
 	myHome.append(document.createTextNode('MY'));
 	myHome.onclick = (event) => {
@@ -90,9 +99,8 @@ export const myHomeButton = button({},{
 // 북마크 목록 버튼
 export const bookMarkButtonEvent = new Subject<Event>();
 export const bookMarkButtonButton = button({},{
-	size:'short'
+	size:'short', svg: bookmarkSvg
 }).pipe(map(bookMark=>{
-	bookMark.innerHTML = bookmarkSvg;
 	bookMark.dataset.variable_name = Object.keys({myHomeButton})[0]
 	bookMark.append(document.createTextNode('북마크'));
 	bookMark.onclick = (event) => {
@@ -104,9 +112,8 @@ export const bookMarkButtonButton = button({},{
 // 생방송 버튼
 export const tvButtonEvent = new Subject<Event>();
 export const tvButton = button({},{
-	size:'short'
+	size:'short', svg: tvSvg
 }).pipe(map(tv=>{
-	tv.innerHTML = tvSvg;
 	tv.dataset.variable_name = Object.keys({myHomeButton})[0]
 	tv.append(document.createTextNode('준비 중'));
 	tv.onclick = (event) => {
@@ -118,9 +125,8 @@ export const tvButton = button({},{
 //상점 버튼
 export const cartButtonEvent = new Subject<Event>();
 export const cartButton = button({},{
-	size:'short'
+	size:'short', svg: cartSvg
 }).pipe(map(cart=>{
-	cart.innerHTML = cartSvg;
 	cart.dataset.variable_name = Object.keys({myHomeButton})[0]
 	//감자 or 당근 화폐
 	cart.append(document.createTextNode('준비 중'));
@@ -133,9 +139,8 @@ export const cartButton = button({},{
 //연재 일정 버튼
 export const calendarButtonEvent = new Subject<Event>();
 export const calendarButton = button({},{
-	size:'short'
+	size:'short', svg: calendarSvg
 }).pipe(map(calendar=>{
-	calendar.innerHTML = calendarSvg;
 	calendar.dataset.variable_name = Object.keys({myHomeButton})[0]
 	calendar.append(document.createTextNode('연재 일정'));
 	calendar.onclick = (event) => {

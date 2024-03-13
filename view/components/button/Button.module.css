@@ -5,16 +5,30 @@
 	/*max-width: fit-content;*/
 	min-width: fit-content;
 	display: flex;
-    flex-direction: column;
     justify-content: space-around;
-	font-size: 1.25rem;
 	/*다크모드 // 컬러 모드 개발 전까지 임시*/
 	border-color: #464646;
 	/*다크모드 // 컬러 모드 개발 전까지 임시*/
 	color: #b9b9b9;
+	font-size: 1.8rem;
 	&& > svg{
 		/*다크모드 // 컬러 모드 개발 전까지 임시*/
 		color:#cbc3e3;
+	}
+	&&.svg_top{
+		flex-direction: column;
+	}
+	&&.svg_bottom{
+		flex-direction: column-reverse;
+	}
+	&&.svg_left{
+		flex-direction: row;
+	}
+	&&.svg_right{
+		flex-direction: row-reverse;
+	}
+	&&.svg{
+		font-size: 1.25rem;
 	}
 	&&[color-mode="black"]{
 		background-color: #343434;
@@ -27,7 +41,6 @@
 	&&.standard{
 		border: revert;
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 	}
 	&&.initial{
@@ -45,14 +58,5 @@
 	&&.short{
 		width: 19.52%;
 		height:4rem;
-	}
-	&&.spin > * {
-		color: #9f6b6b;
-		transition: 1s transform;
-		transform: rotate(270deg);
-	}
-	&&:not(.spin) > *{
-		transition: 1s transform;
-		transform: rotate(0deg);
 	}
 }

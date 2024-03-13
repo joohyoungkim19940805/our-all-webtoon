@@ -1,0 +1,11 @@
+.spin_target{
+    &&.spin{
+        color: #9f6b6b;
+        transition: 1s transform;
+        transform: rotate(270deg);
+    }
+    &&:not(.spin){
+        transition: 1s transform;
+        transform: rotate(0deg);
+    }
+}
