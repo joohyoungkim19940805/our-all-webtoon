@@ -1,6 +1,6 @@
 import { Observable, concat, delay, from, map, mergeMap, zip } from "rxjs";
 import { FlexContainer, FlexLayout } from "@wrapper/FlexLayout";
-import { gnbContainer, latestUpdateButtonEvent } from '@container/gnb/GnbContainer'; 
+import { gnbContainer } from '@container/gnb/GnbContainer'; 
 import { loadingRotate } from "@components/loading/Loading";
 
 export interface BottomPageLayout {
@@ -11,6 +11,8 @@ export interface BottomPageLayout {
 const $bottom : Observable<FlexContainer> = from(
 	new Promise<FlexContainer>(res => {
 		let bottom = new FlexContainer({className : 'abcd'});
+		bottom.dataset.grow = '0.094'
+		bottom.dataset.is_resize = 'false';
 		res(bottom);
 	})
 )

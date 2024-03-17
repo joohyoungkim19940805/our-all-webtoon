@@ -7,17 +7,14 @@ import { fullLayer } from "@wrapper/layer/Layer"
 import { loginContainer, usernameInput } from "@container/login/LoginContainer";
 import { map, zip } from "rxjs";
 import { top } from "@wrapper/layout/top";
-import {center} from "@wrapper/layout/center";
 styles
 
 let root = new FlexLayout({id: 'root'});
 root.dataset.direction = 'column';
 document.body.append(root);
-zip(top, center, bottom)
-.subscribe( ([
-	{top}, {center}, {bottom, gnbContainer}
-]) => {
-	root.replaceChildren(top, center, bottom)
+bottom
+.subscribe( ({bottom, gnbContainer}) => {
+	root.replaceChildren(bottom)
 	bottom.style.minHeight = gnbContainer.children[0].clientHeight + 'px';
 	bottom.style.maxHeight = gnbContainer.clientHeight + 'px';
 	common.renderingAwait(bottom).then(ele=>{

@@ -1,7 +1,8 @@
 import { FlexLayout } from "@wrapper/FlexLayout";
 import styles from './test3.module.css';
 
-import { gnbContainer, latestUpdateButtonEvent } from '@container/gnb/GnbContainer'; 
+import { gnbContainer } from '@container/gnb/GnbContainer'; 
+import { latestUpdateButtonEvent } from "@components/button/fragments/LatestUpdateButton";
 styles.div
 
 let root = new FlexLayout({id: 'root'});

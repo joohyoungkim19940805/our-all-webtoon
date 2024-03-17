@@ -252,7 +252,7 @@ export class FlexLayout extends HTMLElement {
     moveMouseFlex(resizePanel: FlexResizePanel, moveEvent: Movement) {
         return new Promise(resolve => {
             let movement = moveEvent[this.#direction.xy];
-            movement = movement / 2;
+            movement = movement;
             this.#totalMovement += moveEvent[this.#direction.xy];
             const resizeTarget = resizePanel.resizeTarget;
             let minSizeName = 'min' + this.#direction.sizeName.charAt(0).toUpperCase() + this.#direction.sizeName.substring(1);

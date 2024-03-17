@@ -1,4 +1,4 @@
-import { search } from "@container/gnb/TopContainer";
+import { headContainer } from "@container/gnb/HeadContainer";
 import { FlexContainer } from "@wrapper/FlexLayout";
 import { Observable, from, map, zip } from "rxjs";
 //탑이 광고역할 및 검색 역할 드가야함
@@ -26,16 +26,15 @@ export type TopPageLayout = {
 
 const $top : Observable<FlexContainer> = from(
 	new Promise<FlexContainer>(res => {
-		let top = new FlexContainer({textContent:'???'})
-		top.style.minHeight = '1px'
-		top.dataset.is_resize = 'true';
-		top.panelMode = 'center-cylinder';
+		let top = new FlexContainer();
+		top.dataset.grow = '0.094'
+		top.dataset.is_resize = 'false';
 		res(top);
 	})
 )
 
-export const top = zip($top, search).pipe(map( ([ top, search ]) => {
+export const top = zip($top, headContainer).pipe(map( ([ top, {headContainer} ]) => {
 	//bottom.append(gnbContainer)
-	top.replaceChildren(search);
-	return {top, search} as TopPageLayout
+	top.replaceChildren(headContainer);
+	return {top, headContainer};
 }))
