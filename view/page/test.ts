@@ -3,7 +3,7 @@ import styles from './test3.module.css';
 import { bottom } from "@wrapper/layout/bottom";
 import { accessNavigation, windowResize } from "@handler/globalEvents";
 import common from "@handler/common";
-import { fullLayer } from "@wrapper/layer/Layer"
+import { dimLayer } from "@wrapper/layer/Layer"
 import { loginContainer, usernameInput } from "@container/login/LoginContainer";
 import { map, zip } from "rxjs";
 import { top } from "@wrapper/layout/top";
@@ -34,14 +34,14 @@ zip(top, center, bottom)
 	})
 });
 
-/*
+
 accessNavigation.subscribe(e=>{
 	console.log(e);
 	setTimeout(()=>{
-		zip(fullLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
+		zip(dimLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
 			layerContainer.append(container);
 			document.body.append(layer);
 		})
 	},1000)
 });
-*/
+

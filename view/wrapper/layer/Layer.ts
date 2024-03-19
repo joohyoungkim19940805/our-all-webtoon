@@ -1,8 +1,9 @@
 import styles from './layer.module.css'
 import { loginContainer } from "@container/login/LoginContainer";
 import { loadingRotate } from "@components/loading/Loading";
-import { Observable, from } from "rxjs";
+import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from "rxjs";
 import closeSvg from '@svg/close.svg';
+import { closeButton } from '@components/button/fragments/CloseButton';
 /*
 export class LayerHandler extends HTMLElement{
 	static{
@@ -24,7 +25,7 @@ export class LayerHandler extends HTMLElement{
 }
 */
 
-export const fullLayer = ( () => {
+export const dimLayer = ( () => {
 	const promise = new Promise<{layer:HTMLDivElement, layerContainer:HTMLDivElement}>(res => {
 		let layer = Object.assign(document.createElement('div'), {
 			className: styles.layer,
@@ -33,15 +34,16 @@ export const fullLayer = ( () => {
 		let layerContainer = Object.assign(document.createElement('div'), {
 			className: styles['layer-container']
 		})
-		let closeButton = Object.assign(document.createElement('button'), {
-			type: 'button',
-			className: styles['layer-close-button'],
-			innerHTML: closeSvg,
-			onclick: ()=> layer.isConnected && layer.remove()
-		})
-		layerContainer.append(closeButton);
 		layer.append(layerContainer);
+
+		closeButton(layer).pipe(map(button=>{
+			layerContainer.append(button)
+			button.classList.add(styles['layer-close-button'])
+			return {layer, layerContainer}
+		})).subscribe();
+		
 		res({layer, layerContainer});
 	});
-	return from(promise);
+	return from(promise)
+	
 } )();

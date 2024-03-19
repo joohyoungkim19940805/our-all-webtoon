@@ -6,7 +6,6 @@
 	display: flex;
     justify-content: space-around;
 	font-size: 1.8rem;
-	display: flex;
 	align-items: center;
 	body[data-mode="black"] &&{
 		background-color: #343434;
