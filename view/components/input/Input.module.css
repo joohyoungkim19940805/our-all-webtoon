@@ -1,10 +1,10 @@
 .input{
-	&&.standard{		
-		border: none;
-		background: none;
-		border-bottom: solid 1px; 
-		border-left: solid 1px;		
-	}
+	border: none;
+	background: none;
+	border-bottom: solid 1px; 
+	border-left: solid 1px;
+	font-size: 1.2rem;
+	height: fit-content;
 	&&.pale-red{
 		border-bottom-color: #ffe7e7;
 		border-left-color: #ffe7e7;
@@ -20,5 +20,21 @@
 	&&.translucent-grey{
 		border-bottom-color: #cbcbcbbd;
 		border-left-color: #cbcbcbbd;
+	}
+	&&.initial{
+		width:initial
+	}
+	&&.inherit{
+		width:inherit;
+	}
+	&&.long{
+		width: 99.52%;
+	}
+	&&.middle{
+		width: 49.52%;
+	}
+	&&.short{
+		width: 19.52%;
+		height:4rem;
 	}
 }

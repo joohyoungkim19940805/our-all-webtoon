@@ -1,20 +1,25 @@
 
 .button{
 	cursor: pointer;
-	background-color: #343434;
 	/*max-width: fit-content;*/
 	min-width: fit-content;
 	display: flex;
     justify-content: space-around;
-	/*다크모드 // 컬러 모드 개발 전까지 임시*/
-	border-color: #464646;
-	/*다크모드 // 컬러 모드 개발 전까지 임시*/
-	color: #b9b9b9;
 	font-size: 1.8rem;
-	&& > svg{
-		/*다크모드 // 컬러 모드 개발 전까지 임시*/
-		color:#cbc3e3;
+	display: flex;
+	align-items: center;
+	body[data-mode="black"] &&{
+		background-color: #343434;
+		/*border-color: #464646;*/
+		color: #b9b9b9;
+		&& > svg{
+			color:#cbc3e3;
+		}
 	}
+	body:not([data-mode]) && > svg{
+		color:#6f6f6f;
+	}
+
 	&&.svg_top{
 		flex-direction: column;
 	}
@@ -28,21 +33,9 @@
 		flex-direction: row-reverse;
 	}
 	&&.svg{
-		font-size: 1.25rem;
+		font-size: 1.05rem;
 	}
-	&&[color-mode="black"]{
-		background-color: #343434;
-		border-color: #464646;
-		color: #b9b9b9;
-		&& > svg{
-			color: #af91b3;
-		}
-	}
-	&&.standard{
-		border: revert;
-		display: flex;
-		align-items: center;
-	}
+
 	&&.initial{
 		width:initial
 	}

@@ -10,6 +10,8 @@ import { top } from "@wrapper/layout/top";
 import {center} from "@wrapper/layout/center";
 styles
 
+document.body.dataset.mode = 'black';
+
 let root = new FlexLayout({id: 'root'});
 root.dataset.direction = 'column';
 document.body.append(root);
@@ -31,3 +33,15 @@ zip(top, center, bottom)
 		root.remain()
 	})
 });
+
+/*
+accessNavigation.subscribe(e=>{
+	console.log(e);
+	setTimeout(()=>{
+		zip(fullLayer, loginContainer).subscribe( ( [{layer, layerContainer}, {container, components}] ) => {
+			layerContainer.append(container);
+			document.body.append(layer);
+		})
+	},1000)
+});
+*/

@@ -34,14 +34,15 @@ export type InputAttribute = {
 export type InputStyle = {
 	lineColor: 'pale-red' | 'bright-purple' | 'bright-grey' | 'translucent-grey'
 	stylyType?: 'standard'
+	size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
 }
 export const input = ((
 	{type = 'text', autocomplete = 'on', placeholder = ''} : InputAttribute,
-	{stylyType = 'standard', lineColor} : InputStyle
+	{lineColor, size = 'inherit'} : InputStyle
 ) => {
 	let promise = new Promise<HTMLInputElement>(res =>{
 		let input = Object.assign(document.createElement('input'), {
-			className: `${styles.input} ${styles[stylyType]} ${styles[lineColor]}`,
+			className: `${styles.input} ${styles[lineColor]} ${styles[size]}`,
 			type,
 			placeholder,
 			autocomplete

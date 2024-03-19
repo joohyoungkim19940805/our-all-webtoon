@@ -9,7 +9,7 @@ export type FlexDirectionModelType = {
     resizeCursor: 'ew-resize' | 'ns-resize'
 }
 
-export type ResizePanelMode = 'default' | 'center-cylinder' ;
+export type ResizePanelMode = 'default' | 'center-cylinder' | 'center-cylinder-reverse';
 
 type Movement = {
     x: number,
@@ -145,7 +145,7 @@ export class FlexLayout extends HTMLElement {
                 
                 return;
             }
-
+            childElement.root = this;
             let resizePanel = childElement.resizePanel;
 
             this.#addResizePanelEvent(resizePanel);
@@ -538,6 +538,8 @@ export class FlexContainer extends HTMLElement {
         }
         this.#resizePanel.classList.add(flexLayout[panelMode || '']);
     };
+    #root : FlexLayout | undefined; 
+    set root(root:FlexLayout){this.#root = root}; get getRoot(){return this.#root};
     attributeChangedCallback(name: string, oldValue: string, newValue: string){
         if(oldValue == newValue) return;
         if(name === 'is_resize'){

@@ -1,4 +1,6 @@
-import { headContainer } from "@container/gnb/HeadContainer";
+import { headContainer } from "@container/head/HeadContainer";
+import common from "@handler/common";
+import { windowResize } from "@handler/globalEvents";
 import { FlexContainer } from "@wrapper/FlexLayout";
 import { Observable, from, map, zip } from "rxjs";
 //탑이 광고역할 및 검색 역할 드가야함
@@ -29,12 +31,29 @@ const $top : Observable<FlexContainer> = from(
 		let top = new FlexContainer();
 		top.dataset.grow = '0.094'
 		top.dataset.is_resize = 'false';
+		top.panelMode = 'center-cylinder-reverse';
 		res(top);
 	})
 )
 
-export const top = zip($top, headContainer).pipe(map( ([ top, {headContainer} ]) => {
+export const top = zip($top, headContainer).pipe(map( ([ top, {headContainer, rankContainer, searchAndMenuContainer} ]) => {
 	//bottom.append(gnbContainer)
 	top.replaceChildren(headContainer);
+	top.style.minHeight = searchAndMenuContainer.clientHeight + 'px';
+	common.renderingAwait(searchAndMenuContainer).then(() => {
+		const root = top.getRoot;
+		if(! root) return;
+		top.dataset.grow = root.mathGrow(searchAndMenuContainer.clientHeight)?.toString();
+		top.style.minHeight = '';
+		top.style.maxHeight = searchAndMenuContainer.clientHeight + rankContainer.clientHeight + 'px';
+		root.remain()
+	})
+	windowResize.subscribe(ev=>{
+		const root = top.getRoot;
+		if(! root) return;
+		top.style.maxHeight = searchAndMenuContainer.clientHeight + 'px';
+		top.dataset.grow = root.mathGrow(searchAndMenuContainer.clientHeight)?.toString();
+		root.remain()
+	})
 	return {top, headContainer};
 }))

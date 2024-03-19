@@ -11,7 +11,6 @@ export type ButtonAttribute = {
 }
 export type ButtonStyle = {
 	size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
-	styleType?: 'standard'
 	animation?: 'spin'
 	svg?:string,
 	svgPosition?: 'top' | 'bottom' | 'left' | 'right'
@@ -19,11 +18,11 @@ export type ButtonStyle = {
 type SvgPosition = 'svg_top' | 'svg_bottom' | 'svg_left' | 'svg_right'
 export const button = ( (
 	{type = 'button', textContent, event = {}} : ButtonAttribute,
-	{size = 'inherit', styleType = 'standard', animation, svg, svgPosition = 'top'} : ButtonStyle = {},
+	{size = 'inherit', animation, svg, svgPosition = 'top'} : ButtonStyle = {},
 ) => {
 	let promise = new Promise<HTMLButtonElement>(res=>{
 		let button = Object.assign(document.createElement('button'), {
-			className:`${styles.button} ${styles[styleType]} ${styles[size]} ${svg && styles.svg}`,
+			className:`${styles.button} ${styles[size]} ${svg && styles.svg}`,
 			type,
 			innerHTML: svg || '',
 		});
