@@ -2,8 +2,8 @@ import { from, of, Observable } from 'rxjs';
 import styles from './Link.module.css'
 
 export type LinkAttribute = {
-	hrefType?: 'mailto:' | 'tel:+' | 'http' | 'https' | 'blob' | 'data' | '#' | '/',
-	href?: 'javascript:void(0);' | string
+	hrefType?: 'mailto:' | 'tel:+' | 'http' | 'https' | 'blob' | 'data' | '#' | '/' | ''
+	href?: string
 	download?: string,
 	ping?: string,
 	referrerpolicy?: string,
@@ -13,23 +13,28 @@ export type LinkAttribute = {
 	 * rel="noreferrer"를 추가해 
 	 * window.opener API의 악의적인 사용을 방지하는걸 고려하세요
 	 */
-	target?: '_self' | '_top' | '_blank' | '_parent'
+	target?: '_self' | '_top' | '_blank' | '_parent',
+	event?: Partial<GlobalEventHandlers>
 } 
 
 // components -> container -> wrapper
 export type LinkStyle = {
 	size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
-	type?: 'standard'
+	type?: 'standard',
+	svg?: string
 };
 
 export const link = ( (
-	{} : LinkAttribute = {},
-	{} : LinkStyle = {}
+	{hrefType, href, download, ping, referrerpolicy, rel, target, event} : LinkAttribute = {},
+	{size, type} : LinkStyle = {}
 ) => {
 	let promise = new Promise<HTMLAnchorElement>(res=>{
 		let link = Object.assign(document.createElement('a'), {
-			className : `${styles.link}`
+			className : `${styles.link}`,
+			hrefType, href, download, ping, referrerpolicy, rel, target
 		});
+		Object.assign(link, event);
+		
 		res(link);
 	})
 	return from(promise)

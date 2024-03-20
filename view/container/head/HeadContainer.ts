@@ -5,7 +5,7 @@ import { searchAndMenuContainer } from "@container/search/SearchAndMenuContainer
 export const recommendContainer = (() => {
 	let promise = new Promise<HTMLDivElement>(res => {
 		let div = Object.assign(document.createElement('div'), {
-			textContent: 'rank!'
+			textContent: 'recommend!'
 		})
 		res(div);
 	})

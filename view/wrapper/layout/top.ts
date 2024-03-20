@@ -52,7 +52,7 @@ export const top = zip($top, headContainer).pipe(map( ([ top, {headContainer, re
 	windowResize.subscribe(ev=>{
 		const root = top.getRoot;
 		if(! root) return;
-		top.style.maxHeight = searchAndMenuContainer.clientHeight + 'px';
+		top.style.maxHeight = searchAndMenuContainer.clientHeight + recommendContainer.clientHeight + 'px';
 		top.dataset.grow = root.mathGrow(searchAndMenuContainer.clientHeight)?.toString();
 		root.remain()
 	})
