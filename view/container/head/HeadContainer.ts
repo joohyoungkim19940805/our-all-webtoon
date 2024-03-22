@@ -1,15 +1,19 @@
 import { from, map, zip } from "rxjs";
 import styles from './HeadContainer.module.css'
 import { searchAndMenuContainer } from "@container/search/SearchAndMenuContainer";
+import { select } from "@components/select/Select";
+import { option } from "@components/option/Option";
 
 export const recommendContainer = (() => {
 	let promise = new Promise<HTMLDivElement>(res => {
-		let div = Object.assign(document.createElement('div'), {
-			textContent: 'recommend!'
+		let container = Object.assign(document.createElement('div'), {
+
 		})
-		res(div);
+		res(container);
 	})
-	return from(promise);
+	return from(promise) //zip(
+		
+	//);
 })();
 
 
