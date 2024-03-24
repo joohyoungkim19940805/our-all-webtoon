@@ -29,7 +29,7 @@ export type TopPageLayout = {
 const $top : Observable<FlexContainer> = from(
 	new Promise<FlexContainer>(res => {
 		let top = new FlexContainer();
-		top.dataset.grow = '0.08'
+		top.dataset.grow = '0.09'
 		top.dataset.is_resize = 'false';
 		top.panelMode = 'center-cylinder-reverse';
 		res(top);

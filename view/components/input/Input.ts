@@ -28,25 +28,34 @@ export type InputAttribute = {
 		'language' | 'bday' | 'bday-day' | 'bday-month' | 'bday-year' | 'sex' | 
 		/** 국가 코드 && 전화 관련 */
 		'tel' | 'tel-country-code' | 'tel-national' | 'tel-area-code' | 'tel-local' | 'tel-extension' | 
-		'impp' | 'url' | 'photo' | 'webauthn' | ''
+		'impp' | 'url' | 'photo' | 'webauthn' | '',
+	id?: string
+	name?: string
+	data?:{ [key:string]: string }
+	event?: Partial<GlobalEventHandlers>
+	hidden?: boolean
 }
 
 export type InputStyle = {
-	lineColor: 'pale-red' | 'bright-purple' | 'bright-grey' | 'translucent-grey'
+	lineColor?: 'pale-red' | 'bright-purple' | 'bright-grey' | 'translucent-grey'
 	stylyType?: 'standard'
 	size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle'
 }
 export const input = ((
-	{type = 'text', autocomplete = 'on', placeholder = ''} : InputAttribute,
+	{type = 'text', autocomplete = 'on', placeholder = '', id, name, data = {}, hidden = false} : InputAttribute,
 	{lineColor, size = 'inherit'} : InputStyle
 ) => {
 	let promise = new Promise<HTMLInputElement>(res =>{
 		let input = Object.assign(document.createElement('input'), {
-			className: `${styles.input} ${styles[lineColor]} ${styles[size]}`,
+			className: `${styles.input} ${lineColor && styles[lineColor] || styles['color-none']} ${styles[size]}`,
 			type,
 			placeholder,
-			autocomplete
+			autocomplete,
+			id: id || '',
+			name: name || '',
+			hidden
 		})
+		Object.assign(input.dataset, data);
 		res(input);
 	});
 	return from(promise)

@@ -8,7 +8,7 @@
 	font-size: 1.8rem;
 	align-items: center;
 	body[data-mode="black"] &&{
-		background-color: #343434;
+		/*background-color: #343434;*/
 		/*border-color: #464646;*/
 		color: #b9b9b9;
 		&& > svg{

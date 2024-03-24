@@ -1,0 +1,17 @@
+.genre-list-container{
+
+	& .genre-list-item{
+		
+		& .genre-list-item-input{
+			color: blue;
+			&:checked + label.genre-list-item-label{
+				color: red;
+			}
+		}
+
+		& .genre-list-item-label{
+			color: green;
+		}
+		
+	}
+}

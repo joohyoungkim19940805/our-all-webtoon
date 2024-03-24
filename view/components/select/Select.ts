@@ -42,6 +42,7 @@ let t = zip(option({},{}), option({},{})).pipe(
 	toArray(),
 	map(e=>{
 		console.log(e);
+		return e;
 	})
 )
 console.log(t);

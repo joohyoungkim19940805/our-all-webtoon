@@ -1,0 +1,10 @@
+.search-and-menu-container{
+    display: flex;
+    align-items: flex-end;
+	min-height: max-content;
+	body[data-mode="black"] &&{
+		border-color: #464646;
+		background-color: #343434;
+		color: white;
+	}
+}
