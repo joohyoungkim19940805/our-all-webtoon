@@ -1,14 +1,15 @@
 .list_scroll{
-	&-y{
+	flex-wrap: nowrap;
+	text-wrap: nowrap;
+	&&.y{
 		position: relative;
 		overflow-y: auto;
 		overflow-x: clip;
 	}
-	&-x{
+	&&.x{
 		position: relative;
 		overflow-y: clip;
 		overflow-x: auto;
-
 	}
 	&::-webkit-scrollbar{
 		display: none;

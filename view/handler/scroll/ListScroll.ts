@@ -1,3 +1,13 @@
+import styles from './ListScroll.module.css'
+
+export type ScrollType = {
+	direction: 'y' | 'x'
+}
+
+export const addScroll = (scrollTarget : HTMLElement) => {
+	scrollTarget.classList.add()
+	return scrollTarget
+}
 
 /*
 document.addEventListener('keydown',(event)=>{
