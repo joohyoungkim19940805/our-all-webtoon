@@ -52,9 +52,13 @@ module.exports = {
 				exclude: /node_modules/,
 			},
 			{
-				test: /\.{png|jpg}$/,
-				use: ['file-loader'],
-				exclude: path.resolve(__dirname, 'view/image/')
+				test: /\.(png|jpe?g|gif|webp)$/i,
+				use:{
+					loader: 'file-loader',
+					options: {
+						name: '[name].[contenthash].[ext]'
+					}
+				}
 			},
 			{ 
 				test: /\.svg$/, 
@@ -75,6 +79,8 @@ module.exports = {
 			'@container' : path.resolve(__dirname, './view/container'),
 			'@wrapper' : path.resolve(__dirname, './view/wrapper'),
 			'@handler' : path.resolve(__dirname, './view/handler'),
+			"@image/*": path.resolve(__dirname, './view/image'),
+			"@type/*": path.resolve(__dirname, './view/type'),
 			'@root' : path.resolve(__dirname, './view')
 		},
 		plugins: [

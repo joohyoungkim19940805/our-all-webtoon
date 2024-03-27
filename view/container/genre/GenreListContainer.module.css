@@ -1,0 +1,20 @@
+.genre-list-container{
+	flex-wrap: nowrap;
+	text-wrap: nowrap;
+	gap: 2vw;
+	& .genre-list-item{
+		
+		& .genre-list-item-input{
+			color: blue;
+			&:checked + label.genre-list-item-label{
+				color: red;
+				text-decoration: underline;
+			}
+		}
+
+		& .genre-list-item-label{
+			color: green;
+		}
+		
+	}
+}

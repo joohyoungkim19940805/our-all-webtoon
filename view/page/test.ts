@@ -34,7 +34,7 @@ zip(top, center, bottom)
 	})
 });
 
-
+/*
 accessNavigation.subscribe(e=>{
 	console.log(e);
 	setTimeout(()=>{
@@ -44,4 +44,4 @@ accessNavigation.subscribe(e=>{
 		})
 	},1000)
 });
-
+*/

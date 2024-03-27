@@ -1,19 +1,42 @@
-import { from, map, zip } from "rxjs";
+import { from, map, mergeMap, of, toArray, zip } from "rxjs";
 import styles from './HeadContainer.module.css'
 import { searchAndMenuContainer } from "@container/search/SearchAndMenuContainer";
 import { select } from "@components/select/Select";
 import { option } from "@components/option/Option";
+import { input } from "@components/input/Input";
+import { genreListContainer } from "@container/genre/GenreListContainer";
+import { Genre } from "@type/GenreType";
+
+/*장르 목록 - 
+로맨스, 판타지, 이세계, 전생, 드라마
+액션, 학원, 추리, 시대/전기, 
+사극, 중세, 무협, 스릴러, 스포츠, 먹방, 
+러브코미디, 개그, 일상, 음악,
+SF, BL, 백합, 호러, 공포, 19
+*/
+const testData : Genre[] = [
+	'로맨스', '판타지', '이세계', '전생', '드라마',
+	'액션', '학원', '추리', '시대/전기', '다큐멘터리',
+	'사극', '중세', '무협', '스릴러', '스포츠', '먹방', 
+	'러브코미디', '개그', '일상', '음악',
+	'SF', 'BL', '백합', '호러', '공포', '19'
+].map(e=>{
+	return{name: e} as Genre
+});
 
 export const recommendContainer = (() => {
 	let promise = new Promise<HTMLDivElement>(res => {
 		let container = Object.assign(document.createElement('div'), {
-
-		})
+		});
 		res(container);
 	})
-	return from(promise) //zip(
-		
-	//);
+	return zip(
+		from(promise), 
+		genreListContainer(testData, {type:'radio'})
+	).pipe(map( ([recommendContainer, {genreListContainer, components}]) =>{
+		recommendContainer.replaceChildren(genreListContainer);
+		return {recommendContainer, genreListContainer} 
+	}))
 })();
 
 
@@ -30,7 +53,7 @@ export const headContainer = (()=>{
 		recommendContainer,
 		searchAndMenuContainer,
 	).pipe(
-		map(([headContainer, recommendContainer, {searchAndMenuContainer, components: searchAndMenuComponents}]) => {
+		map(([headContainer, {recommendContainer}, {searchAndMenuContainer, components: searchAndMenuComponents}]) => {
 			headContainer.replaceChildren(recommendContainer, searchAndMenuContainer);
 			return {headContainer, recommendContainer, searchAndMenuContainer};
 		})

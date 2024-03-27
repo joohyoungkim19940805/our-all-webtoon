@@ -45,6 +45,12 @@
 			"@handler/*": [
 				"./view/handler/*"
 			],
+			"@image/*": [
+				"./view/image/*"
+			],
+			"@type/*": [
+				"./view/type/*"
+			],
 			"@root/*": [
 				"./view/*"
 			]

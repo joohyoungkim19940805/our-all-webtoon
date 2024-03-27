@@ -24,20 +24,3 @@ export const select = ({ event = {} }: SelectAttribute, { size = 'inherit', anim
         /*if(animation) {
 			button.classList.add(styles[animation]);
 		}*/
-
-        options.subscribe((options) => {
-            select.replaceChildren(...options);
-        });
-        res(select);
-    });
-    return from(promise);
-};
-let t = zip(option({}, {}), option({}, {})).pipe(
-    mergeMap((e) => e),
-    toArray(),
-    map((e) => {
-        console.log(e);
-    }),
-);
-console.log(t);
-select({}, {}, zip(option({}, {})));

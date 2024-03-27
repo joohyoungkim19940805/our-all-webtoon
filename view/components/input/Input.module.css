@@ -1,10 +1,18 @@
 .input{
-	border: none;
 	background: none;
-	border-bottom: solid 1px; 
-	border-left: solid 1px;
 	font-size: 1.2rem;
 	height: fit-content;
+	body[data-mode="black"] &&{
+		color: #b9b9b9
+	}
+	&&:not(.color-none){
+		border: none;
+		border-bottom: solid 1px; 
+		border-left: solid 1px;
+	}
+	&&.color-none{
+		border: none;
+	}
 	&&.pale-red{
 		border-bottom-color: #ffe7e7;
 		border-left-color: #ffe7e7;
