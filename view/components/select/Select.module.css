@@ -1,54 +1,64 @@
-
-.button{
+.button {
 	cursor: pointer;
 	/*max-width: fit-content;*/
 	min-width: fit-content;
 	display: flex;
-    justify-content: space-around;
+	justify-content: space-around;
 	font-size: 1.8rem;
 	align-items: center;
-	body[data-mode="black"] &&{
+
+	body[data-mode="black"] && {
 		background-color: #343434;
 		/*border-color: #464646;*/
 		color: #b9b9b9;
-		&& > svg{
-			color:#cbc3e3;
+
+		&&>svg {
+			color: #cbc3e3;
 		}
 	}
-	body:not([data-mode]) && > svg{
-		color:#6f6f6f;
+
+	body:not([data-mode]) &&>svg {
+		color: #6f6f6f;
 	}
 
-	&&.svg_top{
+	&&.svg_top {
 		flex-direction: column;
 	}
-	&&.svg_bottom{
+
+	&&.svg_bottom {
 		flex-direction: column-reverse;
 	}
-	&&.svg_left{
+
+	&&.svg_left {
 		flex-direction: row;
 	}
-	&&.svg_right{
+
+	&&.svg_right {
 		flex-direction: row-reverse;
 	}
-	&&.svg{
+
+	&&.svg {
 		font-size: 1.05rem;
 	}
 
-	&&.initial{
-		width:initial
+	&&.initial {
+		width: initial
 	}
-	&&.inherit{
-		width:inherit;
+
+	&&.inherit {
+		width: inherit;
 	}
-	&&.long{
+
+	&&.long {
 		width: 99.52%;
 	}
-	&&.middle{
+
+	&&.middle {
 		width: 49.52%;
 	}
-	&&.short{
+
+	&&.short {
 		width: 19.52%;
-		height:4rem;
+		height: 4rem;
 	}
 }
