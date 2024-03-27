@@ -12,7 +12,10 @@ export type OptionStyle = {
     animation?: 'spin';
 };
 
-export const option = ({ textContent, value, event = {} }: OptionAttribute, { size = 'inherit' }: OptionStyle = {}) => {
+export const option = (
+    { textContent, value, event = {} }: OptionAttribute,
+    { size = 'inherit' }: OptionStyle = {},
+) => {
     let promise = new Promise<HTMLOptionElement>((res) => {
         let option = Object.assign(document.createElement('option'), {
             className: `${styles.button} ${styles[size]}`,
