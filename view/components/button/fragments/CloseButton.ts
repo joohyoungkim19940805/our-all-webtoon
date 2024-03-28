@@ -13,8 +13,4 @@ export const closeButton = (layer: HTMLDivElement) =>
         {
             svg: closeSvg,
         },
-    ).pipe(
-        map((close) => {
-            return close;
-        }),
     );

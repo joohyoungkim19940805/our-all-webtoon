@@ -1,75 +1,50 @@
 {
-	"compilerOptions": {
-		"moduleResolution": "NodeNext",
-		"noImplicitAny": true,
-		"sourceMap": true,
-		"esModuleInterop": true,
-		"allowJs": true,
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"removeComments": true,
-		"skipLibCheck": true,
-		"resolveJsonModule": true,
-		"module": "NodeNext",
-		"isolatedModules": true,
-		"target": "ES6",
-		"lib": [
-			"dom",
-			"dom.Iterable",
-			"ES2015",
-			"ES2016",
-			"ES2017",
-			"ES2018",
-			"ES2019",
-			"ES2020",
-			"esnext"
-		],
-		"outDir": "./src/main/resources/static/ts/dist",
-		"baseUrl": ".",
-		"paths": {
-			"*": [
-				"./view/node_modules/*"
-			],
-			"@svg/*":[
-				"./view/svg/*"
-			],
-			"@container/*":[
-				"./view/container/*"
-			],
-			"@components/*": [
-				"./view/components/*"
-			],
-			"@wrapper/*":[
-				"./view/wrapper/*"
-			],
-			"@handler/*": [
-				"./view/handler/*"
-			],
-			"@image/*": [
-				"./view/image/*"
-			],
-			"@type/*": [
-				"./view/type/*"
-			],
-			"@root/*": [
-				"./view/*"
-			]
-		},
-		"typeRoots": [
-			"./node_modules/@types",
-			"./types"
-		],
-		"plugins": [
-			{
-				"name": "typescript-plugin-css-modules"
-			}
-		],
-	},
-	"include": [
-		"./**/*.ts",
-		"./**/*.tsx"
-	],
-	"exclude": [
-		"node_modues"
-	]
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "allowJs": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "removeComments": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "target": "ES6",
+        "jsx": "preserve",
+        "lib": [
+            "dom",
+            "dom.Iterable",
+            "ES2015",
+            "ES2016",
+            "ES2017",
+            "ES2018",
+            "ES2019",
+            "ES2020",
+            "esnext"
+        ],
+        "outDir": "./src/main/resources/static/ts/dist",
+        "baseUrl": ".",
+        "paths": {
+            "*": ["./view/node_modules/*"],
+            "@svg/*": ["./view/svg/*"],
+            "@container/*": ["./view/container/*"],
+            "@components/*": ["./view/components/*"],
+            "@wrapper/*": ["./view/wrapper/*"],
+            "@handler/*": ["./view/handler/*"],
+            "@image/*": ["./view/image/*"],
+            "@type/*": ["./view/type/*"],
+            "@root/*": ["./view/*"]
+        },
+        "typeRoots": ["./node_modules/@types", "./types"],
+        "plugins": [
+            {
+                "name": "typescript-plugin-css-modules"
+            }
+        ]
+    },
+    "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx"],
+    "exclude": ["node_modues"]
 }

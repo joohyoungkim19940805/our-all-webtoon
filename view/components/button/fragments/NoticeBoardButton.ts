@@ -5,11 +5,9 @@ import { Subject, map } from 'rxjs';
 // 게시판 버튼
 export const noticeBoardButtonEvent = new Subject<Event>();
 export const noticeBoardButton = button(
-	{textContent: '게시판'},
-	{size:'short', svg: boardSvg}
-).pipe(map(noticeBoard=>{
-	noticeBoard.onclick = (event) => {
-		noticeBoardButtonEvent.next(event);
-	}
-	return noticeBoard
-}));
+    {
+        textContent: '게시판',
+        event: { onclick: (event) => noticeBoardButtonEvent.next(event) },
+    },
+    { size: 'short', svg: boardSvg },
+);

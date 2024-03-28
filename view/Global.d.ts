@@ -3,7 +3,7 @@ declare module '*.module.css' {
     export default classes;
 }
 declare module '*.svg' {
-    const content: string
+    const content: ReactNode | ReactElement;
     export default content;
 }
 declare module '*.png';
