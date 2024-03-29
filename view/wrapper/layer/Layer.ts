@@ -1,9 +1,9 @@
-import styles from './layer.module.css'
-import { loginContainer } from "@container/login/LoginContainer";
-import { loadingRotate } from "@components/loading/Loading";
-import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from "rxjs";
+import styles from './layer.module.css';
+import { loginContainer } from '@container/login/LoginContainer';
+import { loadingRotate } from '@components/loading/Loading';
+import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from 'rxjs';
 import closeSvg from '@svg/close.svg';
-import { closeButton } from '@components/button/fragments/CloseButton';
+import { CloseButton } from '@components/button/fragments/CloseButton';
 /*
 export class LayerHandler extends HTMLElement{
 	static{
@@ -24,7 +24,7 @@ export class LayerHandler extends HTMLElement{
 	}
 }
 */
-
+/*
 export const dimLayer = ( () => {
 	const promise = new Promise<{layer:HTMLDivElement, layerContainer:HTMLDivElement}>(res => {
 		let layer = Object.assign(document.createElement('div'), {
@@ -47,3 +47,4 @@ export const dimLayer = ( () => {
 	return from(promise)
 	
 } )();
+*/
