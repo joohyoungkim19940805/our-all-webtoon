@@ -26,17 +26,6 @@ export const Bottom = () => {
         bottomRef.current.getRoot.remain();
     }, [bottomRef]);
 
-    windowResize.subscribe((ev) => {
-        if (!bottomRef.current || !heights || !bottomRef.current.getRoot)
-            return;
-        const [gnbHeight, gnbFirstChildHeight] = heights;
-        bottomRef.current.style.maxHeight = gnbHeight + 'px';
-        bottomRef.current.dataset.grow = bottomRef.current.getRoot
-            .mathGrow(gnbFirstChildHeight)
-            .toString();
-        bottomRef.current.getRoot.remain();
-    });
-
     return (
         <flex-container
             ref={bottomRef}

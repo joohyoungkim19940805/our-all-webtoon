@@ -34,24 +34,39 @@ import { CalendarButton } from '@components/button/fragments/CalendarButton';
 import { CartButton } from '@components/button/fragments/CartButton';
 import { TvButton } from '@components/button/fragments/TvButton';
 import { useEffect, useRef, useState } from 'react';
+import { windowResize } from '@handler/globalEvents';
 
 const gnbRef = useRef<HTMLDivElement>(null);
 
 export const useHeightState = () => {
     const [heights, setHeights] = useState<Array<number>>();
+
     useEffect(() => {
         if (!gnbRef.current) return;
-
         setHeights([
-            gnbRef.current.clientHeight,
-            gnbRef.current.children[0].clientHeight,
+            gnbRef.current.getBoundingClientRect().height,
+            gnbRef.current.children[0].getBoundingClientRect().height,
         ]);
     }, [gnbRef]);
+
+    useEffect(() => {
+        const subscribe = windowResize.subscribe((ev) => {
+            if (!gnbRef.current) return;
+            setHeights([
+                gnbRef.current.getBoundingClientRect().height,
+                gnbRef.current.children[0].getBoundingClientRect().height,
+            ]);
+        });
+
+        return () => {
+            subscribe.unsubscribe();
+        };
+    });
 
     return { heights };
 };
 
-//gnbContainer를 div로 바꿔보기 2024 03 07
+//ul로 바꿔보기 2024 03 29
 export const GnbContainer = () => {
     return (
         <div ref={gnbRef} className={styles['gnb-container']}>
