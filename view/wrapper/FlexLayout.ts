@@ -2,16 +2,16 @@ declare global {
     namespace JSX {
         interface IntrinsicElements {
             'flex-layout': React.DetailedHTMLProps<
-                React.HTMLAttributes<HTMLElement>,
-                HTMLElement
+                React.HTMLAttributes<FlexLayout>,
+                FlexLayout
             >;
             'flex-container': React.DetailedHTMLProps<
-                React.HTMLAttributes<HTMLElement>,
-                HTMLElement
+                React.HTMLAttributes<FlexContainer>,
+                FlexContainer
             >;
             'flex-resizer': React.DetailedHTMLProps<
-                React.HTMLAttributes<HTMLElement>,
-                HTMLElement
+                React.HTMLAttributes<FlexResizePanel>,
+                FlexResizePanel
             >;
         }
     }
@@ -637,7 +637,7 @@ export class FlexContainer extends HTMLElement {
         window.customElements.define('flex-container', this);
     }
     static get observedAttributes() {
-        return ['data-is_resize'];
+        return ['data-is_resize', 'data-panel_mode'];
     }
 
     #resizePanel: FlexResizePanel = new FlexResizePanel({}, this);
@@ -671,7 +671,7 @@ export class FlexContainer extends HTMLElement {
     }
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue == newValue) return;
-        if (name === 'is_resize') {
+        if (name === 'data-is_resize') {
             this.isResize = JSON.parse(newValue);
         } else if (name === 'data-panel_mode') {
             this.panelMode = newValue as ResizePanelMode;

@@ -1,12 +1,12 @@
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import styles from './test3.module.css';
-import { bottom } from '@wrapper/layout/bottom';
+import { bottom } from '@wrapper/layout/Bottom';
 import { accessNavigation, windowResize } from '@handler/globalEvents';
 import common from '@handler/common';
 import { dimLayer } from '@wrapper/layer/Layer';
 import { loginContainer, usernameInput } from '@container/login/LoginContainer';
 import { map, zip } from 'rxjs';
-import { top } from '@wrapper/layout/top';
+import { top } from '@wrapper/layout/Top';
 import { center } from '@wrapper/layout/center';
 styles;
 

@@ -1,7 +1,7 @@
 import { from, of, Observable } from 'rxjs';
 import styles from './Button.module.css';
 import boxSvg from '@svg/box.svg';
-import { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, EventHandler } from 'react';
 
 // components -> container -> wrapper
 

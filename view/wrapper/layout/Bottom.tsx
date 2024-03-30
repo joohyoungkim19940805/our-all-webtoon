@@ -1,14 +1,9 @@
 import { Observable, concat, delay, from, map, mergeMap, zip } from 'rxjs';
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import { GnbContainer, useHeightState } from '@container/gnb/GnbContainer';
-import { loadingRotate } from '@components/loading/Loading';
+import { LoadingRotate } from '@components/loading/Loading';
 import { useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
-
-export interface BottomPageLayout {
-    bottom: FlexContainer;
-    gnbContainer: HTMLDivElement;
-}
 
 export const Bottom = () => {
     const bottomRef = useRef<FlexContainer>(null);

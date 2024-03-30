@@ -11,7 +11,10 @@ export type OptionStyle = {
     size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle';
     animation?: 'spin';
 };
-
+export const Option = () => {
+    return <option></option>;
+};
+/*
 export const option = (
     { textContent, value, event = {} }: OptionAttribute,
     { size = 'inherit' }: OptionStyle = {},
@@ -23,10 +26,9 @@ export const option = (
             value,
         });
         Object.assign(option, event);
-        /*if(animation) {
-			button.classList.add(styles[animation]);
-		}*/
+
         res(option);
     });
     return from(promise);
 };
+*/

@@ -1,5 +1,5 @@
 import { FlexLayout } from '@wrapper/FlexLayout';
-import { Bottom } from '@wrapper/layout/bottom';
+import { Bottom } from '@wrapper/layout/Bottom';
 import { createRoot } from 'react-dom/client';
 
 const rootElement = new FlexLayout({ id: 'root' });

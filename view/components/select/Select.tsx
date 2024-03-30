@@ -1,19 +1,21 @@
 import { from, of, Observable, mergeMap, map, zip, toArray } from 'rxjs';
 import styles from './Button.module.css';
-import { option } from '@components/option/Option';
+import { Option } from '@components/option/Option';
 
 // components -> container -> wrapper
 
-export type SelectAttribute = {
+export type SelectAttributeProps = {
     event?: Partial<GlobalEventHandlers>;
-};
-export type SelectStyle = {
     size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle';
     animation?: 'spin';
     svg?: string;
     svgPosition?: 'top' | 'bottom' | 'left' | 'right';
 };
-
+export type SelectStyle = {};
+export const Select = () => {
+    return <select></select>;
+};
+/*
 export const select = (
     { event = {} }: SelectAttribute,
     { size = 'inherit', animation, svg }: SelectStyle = {},
@@ -24,10 +26,6 @@ export const select = (
             className: `${styles.button} ${styles[size]} ${svg && styles.svg}`,
         });
         Object.assign(select, event);
-
-        /*if(animation) {
-			button.classList.add(styles[animation]);
-		}*/
 
         options.subscribe((options) => {
             select.replaceChildren(...options);
@@ -46,3 +44,4 @@ let t = zip(option({}, {}), option({}, {})).pipe(
 );
 console.log(t);
 select({}, {}, zip(option({}, {})));
+*/
