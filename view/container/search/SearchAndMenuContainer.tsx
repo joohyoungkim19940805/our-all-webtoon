@@ -3,12 +3,11 @@ import { from, map, zip } from 'rxjs';
 import logo from '@root/image/test.png';
 import style from './SearchAndMenuContainer.module.css';
 import { SearchButton } from '@components/button/fragments/SearchButton';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
 
-const searchAndMenuRef = useRef<HTMLDivElement>(null);
-
-export const useHeightState = () => {
+export const useSearchHeight = () => {
+    const searchAndMenuRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number>();
 
     useEffect(() => {
@@ -26,20 +25,17 @@ export const useHeightState = () => {
         };
     });
 
-    return { height };
+    return { searchAndMenuRef, height };
 };
 
-export const SearchAndMenuContainer = () => {
+export const SearchAndMenuContainer = forwardRef<HTMLDivElement>((_, ref) => {
     return (
-        <div
-            ref={searchAndMenuRef}
-            className={style['search-and-menu-container']}
-        >
+        <div ref={ref} className={style['search-and-menu-container']}>
             <WebtoonSearchInput></WebtoonSearchInput>
             <SearchButton></SearchButton>
         </div>
     );
-};
+});
 
 /*
 export const searchAndMenuContainer = (() => {

@@ -33,12 +33,17 @@ import { BookMarkButtonButton } from '@components/button/fragments/BookMarkButto
 import { CalendarButton } from '@components/button/fragments/CalendarButton';
 import { CartButton } from '@components/button/fragments/CartButton';
 import { TvButton } from '@components/button/fragments/TvButton';
-import { useEffect, useRef, useState } from 'react';
+import React, {
+    LegacyRef,
+    forwardRef,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { windowResize } from '@handler/globalEvents';
 
-const gnbRef = useRef<HTMLDivElement>(null);
-
-export const useHeightState = () => {
+export const useGnbHeights = () => {
+    const gnbRef = useRef<HTMLDivElement>(null);
     const [heights, setHeights] = useState<Array<number>>();
 
     useEffect(() => {
@@ -47,9 +52,6 @@ export const useHeightState = () => {
             gnbRef.current.getBoundingClientRect().height,
             gnbRef.current.children[0].getBoundingClientRect().height,
         ]);
-    }, [gnbRef]);
-
-    useEffect(() => {
         const subscribe = windowResize.subscribe((ev) => {
             if (!gnbRef.current) return;
             setHeights([
@@ -57,19 +59,19 @@ export const useHeightState = () => {
                 gnbRef.current.children[0].getBoundingClientRect().height,
             ]);
         });
-
         return () => {
             subscribe.unsubscribe();
         };
-    });
-
-    return { heights };
+    }, [gnbRef]);
+    return { gnbRef, heights };
 };
-
+/*type GnbContainerProps = {
+    ref: LegacyRef<HTMLDivElement>; // Add the ref prop
+};*/
 //ul로 바꿔보기 2024 03 29
-export const GnbContainer = () => {
+export const GnbContainer = forwardRef<HTMLDivElement>((_, ref) => {
     return (
-        <div ref={gnbRef} className={styles['gnb-container']}>
+        <div ref={ref} className={styles['gnb-container']}>
             <LatestUpdateButton></LatestUpdateButton>
             <WebtoonListButton></WebtoonListButton>
             <PaintingAddButton></PaintingAddButton>
@@ -81,4 +83,4 @@ export const GnbContainer = () => {
             <TvButton></TvButton>
         </div>
     );
-};
+});

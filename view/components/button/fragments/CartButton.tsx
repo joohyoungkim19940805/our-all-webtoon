@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import CartSvg from '@svg/shopping-cart.svg';
+import { ShoppingCart } from '@svg/ShoppingCart';
 import { Subject, map } from 'rxjs';
 
 //상점 버튼
@@ -8,10 +8,9 @@ export const CartButton = () => {
     return (
         <Button
             textContent="준비 중"
-            event={{ onclick: (event) => cartButtonEvent.next(event) }}
             size="short"
             type="button"
-            svg={CartSvg}
+            svg={<ShoppingCart />}
         ></Button>
     );
 };

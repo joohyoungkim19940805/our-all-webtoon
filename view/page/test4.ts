@@ -1,3 +1,4 @@
+/*
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import styles from './test3.module.css';
 import { bottom } from '@wrapper/layout/Bottom';
@@ -7,7 +8,7 @@ import { dimLayer } from '@wrapper/layer/Layer';
 import { loginContainer, usernameInput } from '@container/login/LoginContainer';
 import { map, zip } from 'rxjs';
 import { top } from '@wrapper/layout/Top';
-import { center } from '@wrapper/layout/center';
+import { center } from '@wrapper/layout/Center';
 styles;
 
 document.body.dataset.mode = 'black';
@@ -36,7 +37,7 @@ zip(top, center, bottom).subscribe(
         });
     },
 );
-
+*/
 /*
 accessNavigation.subscribe(e=>{
 	console.log(e);

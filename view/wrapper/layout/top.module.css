@@ -1,0 +1,13 @@
+.head-container {
+    display: flex;
+    word-wrap: anywhere;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    body[data-mode='black'] && {
+        border-color: #464646;
+        background-color: #343434;
+        color: white;
+    }
+}

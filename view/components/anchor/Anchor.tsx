@@ -1,8 +1,8 @@
 import { from, of, Observable } from 'rxjs';
-import styles from '../link/Link.module.css';
+import styles from './Link.module.css';
 import { HTMLAttributeAnchorTarget, HTMLAttributeReferrerPolicy } from 'react';
 
-export type LinkAttribute = {
+export type AnchorAttribute = {
     hrefType?:
         | 'mailto:'
         | 'tel:+'
@@ -28,6 +28,7 @@ export type LinkAttribute = {
     size?: 'initial' | 'inherit' | 'long' | 'short' | 'middle';
     type?: 'standard';
     svg?: string;
+    textContent?: string;
 };
 export const Anchor = ({
     hrefType,
@@ -40,7 +41,8 @@ export const Anchor = ({
     event,
     size,
     type,
-}: LinkAttribute = {}) => {
+    textContent,
+}: AnchorAttribute = {}) => {
     return (
         <a
             className={styles.link}
@@ -51,6 +53,8 @@ export const Anchor = ({
             referrerPolicy={referrerpolicy}
             rel={rel}
             target={target}
-        ></a>
+        >
+            {textContent}
+        </a>
     );
 };

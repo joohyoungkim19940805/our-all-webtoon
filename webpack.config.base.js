@@ -23,7 +23,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.(ts|tsx)$/,
                 use: ['ts-loader'],
                 exclude: /node_modules/,
             },
@@ -71,7 +71,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', '.css'],
+        extensions: ['.ts', '.tsx', '.js', 'jsx', '.css'],
         alias: {
             '@svg': path.resolve(__dirname, './view/svg'),
             '@components': path.resolve(__dirname, './view/components'),

@@ -43,6 +43,7 @@ export const GenreListContainer = ({
         <ul className={styles['genre-list-container']}>
             {genreList.map((genre, i) => (
                 <GenreItem
+                    key={i}
                     type={genreItemType}
                     index={i}
                     genre={genre}

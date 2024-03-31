@@ -1,8 +1,9 @@
 import { Button } from '@components/button/Button';
 
-import AddSvg from '@svg/add.svg';
+import { AddSvg } from '@svg/AddSvg';
 import { Subject, map } from 'rxjs';
 import spinStyle from '@components/spin.module.css';
+import { useEffect, useRef, useState } from 'react';
 
 // 웹툰 연재하기 버튼
 export const paintingAddButtonEvent = new Subject<Event>();
@@ -16,11 +17,20 @@ paintingAddButtonEvent.subscribe((ev) => {
     */
 });
 export const PaintingAddButton = () => {
+    const svgRef = useRef<SVGSVGElement>(null);
+    const [isSpinning, setIsSpinning] = useState(false);
+    useEffect(() => {
+        if (!svgRef.current) return;
+
+        if (isSpinning) svgRef.current.classList.add(spinStyle.on);
+        else svgRef.current.classList.remove(spinStyle.on);
+    }, [isSpinning, svgRef]);
+    console.log(spinStyle.spin);
     return (
         <Button
-            event={{ onclick: (event) => paintingAddButtonEvent.next(event) }}
-            svg={AddSvg}
+            svg={<AddSvg ref={svgRef} className={spinStyle.spin} />}
             size="short"
+            onClick={() => setIsSpinning(!isSpinning)}
         ></Button>
     );
 };

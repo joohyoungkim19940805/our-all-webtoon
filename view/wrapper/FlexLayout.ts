@@ -155,7 +155,7 @@ export class FlexLayout extends HTMLElement {
             this.classList.add(attribute.className);
             delete attribute.className;
         }
-        Object.assign(this, attribute);
+        //Object.assign(this, attribute);
         this.addResizePanel(this.children);
         let observer = new MutationObserver((mutationList, observer) => {
             mutationList.forEach((mutation) =>
@@ -679,14 +679,16 @@ export class FlexContainer extends HTMLElement {
     }
     constructor(attribute: any = {}) {
         super();
-        this.isResize = this.#isResize;
-        this.className = flexLayout['flex-layout-content'];
-        if (attribute.hasOwnProperty('className')) {
+        /*if (attribute.hasOwnProperty('className')) {
             this.classList.add(attribute.className);
             delete attribute.className;
-        }
-        Object.assign(this, attribute);
+        }*/
+        //Object.assign(this, attribute);
         //if(.attribute)
+    }
+    connectedCallback() {
+        this.className = flexLayout['flex-layout-content'];
+        this.isResize = this.#isResize;
     }
 }
 
@@ -710,11 +712,11 @@ export class FlexResizePanel extends HTMLElement {
         super();
         this.className = flexLayout['flex-resize-panel'];
         this.#resizeTarget = resizeTarget;
-        if (attribute.hasOwnProperty('className')) {
+        /*if (attribute.hasOwnProperty('className')) {
             this.classList.add(attribute.className);
             delete attribute.className;
-        }
-        Object.assign(this, attribute);
+        }*/
+        //Object.assign(this, attribute);
     }
     connectedCallback() {
         this.replaceChildren(...this.#html);

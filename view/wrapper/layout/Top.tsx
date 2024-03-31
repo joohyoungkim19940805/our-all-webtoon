@@ -1,9 +1,12 @@
 import {
-    HeadContainer,
-    useHeightState as useRecommendHeightState,
-} from '@container/head/HeadContainer';
-import { useHeightState as useSearchAndMenuHeightState } from '@container/search/SearchAndMenuContainer';
-
+    RecommendContainer,
+    useRecommendHeight,
+} from '@container/head/RecommendContainer';
+import {
+    SearchAndMenuContainer,
+    useSearchHeight,
+} from '@container/search/SearchAndMenuContainer';
+import styles from './top.module.css';
 import common from '@handler/common';
 import { windowResize } from '@handler/globalEvents';
 import { FlexContainer } from '@wrapper/FlexLayout';
@@ -13,8 +16,8 @@ import { Observable, from, map, zip } from 'rxjs';
 
 export const Top = () => {
     const topRef = useRef<FlexContainer>(null);
-    const { height: searchAndMenuHeight } = useSearchAndMenuHeightState();
-    const { height: recommendHeight } = useRecommendHeightState();
+    const { searchAndMenuRef, height: searchAndMenuHeight } = useSearchHeight();
+    const { recommendRef, height: recommendHeight } = useRecommendHeight();
     useEffect(() => {
         if (
             !topRef.current ||
@@ -29,7 +32,7 @@ export const Top = () => {
         topRef.current.dataset.grow = topRef.current.getRoot
             .mathGrow(searchAndMenuHeight)
             .toString();
-    }, [topRef]);
+    }, [topRef, searchAndMenuHeight, recommendHeight]);
     return (
         <flex-container
             ref={topRef}
@@ -37,11 +40,16 @@ export const Top = () => {
             data-is_resize="false"
             data-panel_mode="center-cylinder-reverse"
         >
-            <HeadContainer></HeadContainer>
+            <div className={styles['head-container']}>
+                <RecommendContainer ref={recommendRef}></RecommendContainer>
+                <SearchAndMenuContainer
+                    ref={searchAndMenuRef}
+                ></SearchAndMenuContainer>
+            </div>
         </flex-container>
     );
 };
-
+/*
 const $top: Observable<FlexContainer> = from(
     new Promise<FlexContainer>((res) => {
         let top = new FlexContainer();
@@ -51,6 +59,7 @@ const $top: Observable<FlexContainer> = from(
         res(top);
     }),
 );
+*/
 /*
 export const top = zip($top, headContainer).pipe(
     map(

@@ -1,3 +1,4 @@
+/*
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import styles from './test3.module.css';
 import { bottom } from '@wrapper/layout/Bottom';
@@ -27,3 +28,4 @@ bottom.subscribe(({ bottom, gnbContainer }) => {
         root.remain();
     });
 });
+*/

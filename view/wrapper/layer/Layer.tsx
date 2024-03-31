@@ -1,29 +1,11 @@
 import styles from './layer.module.css';
-import { loginContainer } from '@container/login/LoginContainer';
-import { loadingRotate } from '@components/loading/Loading';
+import { LoginContainer } from '@container/login/LoginContainer';
+import { LoadingRotate } from '@components/loading/Loading';
 import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from 'rxjs';
 import closeSvg from '@svg/close.svg';
 import { CloseButton } from '@components/button/fragments/CloseButton';
-/*
-export class LayerHandler extends HTMLElement{
-	static{
-		window.customElements.define('layer-handler', this);
-	}
 
-    constructor(attribute : any = {}) {
-		super();
-		if(attribute.hasOwnProperty('className')){
-            this.classList.add(attribute.className);
-            delete attribute.className;
-        }
-        Object.assign(this, attribute)
-	}
-
-	connectedCallback(){
-		
-	}
-}
-*/
+export type DimLayerProps = {};
 /*
 export const dimLayer = ( () => {
 	const promise = new Promise<{layer:HTMLDivElement, layerContainer:HTMLDivElement}>(res => {
