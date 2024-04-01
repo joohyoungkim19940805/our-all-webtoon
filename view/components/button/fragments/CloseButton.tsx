@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import { CloseSvg } from '@svg/CloseSvg';
+import { CloseSvg } from '@components/svg/CloseSvg';
 import { Subject, map } from 'rxjs';
 
 // 닫기 버튼

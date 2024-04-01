@@ -1,13 +1,6 @@
-.head-container{
+.recommend-container {
     display: flex;
-    word-wrap: anywhere;
-    height: 100%;
-    width: 100%;
-    flex-direction: column;
-    justify-content: flex-end;
-    body[data-mode="black"] &&{
-		border-color: #464646;
-		background-color: #343434;
-		color: white;
-	}
+    justify-content: center;
+    padding-top: 0.25dvh;
+    padding-bottom: 0.7dvh;
 }

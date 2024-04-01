@@ -1,7 +1,7 @@
 import { Button } from '@components/button/Button';
 import { Subject, map } from 'rxjs';
 
-import { CalendarSvg } from '@svg/CalendarSvg';
+import { CalendarSvg } from '@components/svg/CalendarSvg';
 
 //연재 일정 버튼
 export const calendarButtonEvent = new Subject<Event>();

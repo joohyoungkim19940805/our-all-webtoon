@@ -1,8 +1,8 @@
 import { Button } from '@components/button/Button';
 
-import { AddSvg } from '@svg/AddSvg';
+import { AddSvg } from '@components/svg/AddSvg';
 import { Subject, map } from 'rxjs';
-import spinStyle from '@components/spin.module.css';
+import spinStyle from '@root/spin.module.css';
 import { useEffect, useRef, useState } from 'react';
 
 // 웹툰 연재하기 버튼

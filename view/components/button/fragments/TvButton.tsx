@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import { TvSvg } from '@svg/TvSvg';
+import { TvSvg } from '@components/svg/TvSvg';
 import { Subject, map } from 'rxjs';
 
 // 생방송 버튼

@@ -1,6 +1,6 @@
 import { Button } from '@components/button/Button';
 import { Subject, map } from 'rxjs';
-import { BoxSvg } from '@svg/BoxSvg';
+import { BoxSvg } from '@components/svg/BoxSvg';
 
 // 최신 업데이트 버튼
 export const latestUpdateButtonEvent = new Subject<Event>();

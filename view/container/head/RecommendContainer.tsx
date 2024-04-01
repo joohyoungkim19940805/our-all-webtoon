@@ -1,5 +1,5 @@
 import { from, map, mergeMap, of, toArray, zip } from 'rxjs';
-import styles from './HeadContainer.module.css';
+import styles from './RecommendContainer.module.css';
 import { SearchAndMenuContainer } from '@container/search/SearchAndMenuContainer';
 import { GenreListContainer } from '@container/genre/GenreListContainer';
 import { Genre } from '@type/GenreType';
@@ -67,7 +67,7 @@ export const useRecommendHeight = () => {
 };
 export const RecommendContainer = forwardRef<HTMLDivElement>((_, ref) => {
     return (
-        <div ref={ref}>
+        <div className={`${styles['recommend-container']}`} ref={ref}>
             <GenreListContainer
                 genreList={testData}
                 genreItemType="radio"

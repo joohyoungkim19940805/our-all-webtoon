@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import { BoardSvg } from '@svg/BoardSvg';
+import { BoardSvg } from '@components/svg/BoardSvg';
 import { Subject, map } from 'rxjs';
 
 // 게시판 버튼

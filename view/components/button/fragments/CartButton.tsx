@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import { ShoppingCart } from '@svg/ShoppingCart';
+import { ShoppingCart } from '@components/svg/ShoppingCart';
 import { Subject, map } from 'rxjs';
 
 //상점 버튼

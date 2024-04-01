@@ -1,5 +1,5 @@
 import { Button } from '@components/button/Button';
-import { BookmarkSvg } from '@svg/BookmarkSvg';
+import { BookmarkSvg } from '@components/svg/BookmarkSvg';
 import { Subject, map } from 'rxjs';
 // 북마크 목록 버튼
 export const bookMarkButtonEvent = new Subject<any>();

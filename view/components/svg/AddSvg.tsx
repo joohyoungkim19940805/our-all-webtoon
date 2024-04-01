@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import spinStyle from '@components/spin.module.css';
+import spinStyle from '@root/spin.module.css';
 type AddSvgProps = {
     className?: string;
 };

@@ -124,7 +124,6 @@ export const Input = ({
 }: InputAttributeProps) => {
     return (
         <>
-            {id && <label htmlFor={id}>{textContent}</label>}
             <input
                 className={`${styles.input} ${(lineColor && styles[lineColor]) || styles['color-none']} ${styles[size]}`}
                 type={type}
@@ -137,6 +136,7 @@ export const Input = ({
                     [`data-${k}`]: v,
                 }))}
             ></input>
+            {id && <label htmlFor={id}>{textContent}</label>}
         </>
     );
 };

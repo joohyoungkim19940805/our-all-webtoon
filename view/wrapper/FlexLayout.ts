@@ -68,7 +68,7 @@ export class FlexLayout extends HTMLElement {
 
     #forResizeList: Array<HTMLElement> = [];
 
-    #totalMovement = 0;
+    //#totalMovement = 0;
 
     #parentSize = 0;
 
@@ -226,7 +226,7 @@ export class FlexLayout extends HTMLElement {
      * @param {FlexResizePanel} resizePanel
      */
     #addResizePanelEvent(resizePanel: FlexResizePanel) {
-        this.#totalMovement = 0;
+        //this.#totalMovement = 0;
         this.#parentSize = 0;
         let prevTouchEvent: TouchEvent | undefined;
 
@@ -234,7 +234,7 @@ export class FlexLayout extends HTMLElement {
             resizePanel.addEventListener(
                 eventName,
                 (event) => {
-                    this.#totalMovement = 0;
+                    //this.#totalMovement = 0;
                     prevTouchEvent = undefined;
                     this.#parentSize = this.getBoundingClientRect()[
                         this.#direction.sizeName as keyof DOMRect
@@ -250,7 +250,7 @@ export class FlexLayout extends HTMLElement {
         });
         new Array('mouseup', 'touchend').forEach((eventName) => {
             window.addEventListener(eventName, (event) => {
-                this.#totalMovement = 0;
+                //this.#totalMovement = 0;
                 this.#parentSize = 0;
                 prevTouchEvent = undefined;
                 resizePanel.removeAttribute('data-is_mouse_down');
@@ -267,7 +267,7 @@ export class FlexLayout extends HTMLElement {
             });
             resizePanel.addEventListener(eventName, () => {
                 resizePanel.removeAttribute('data-is_mouse_down');
-                this.#totalMovement = 0;
+                //his.#totalMovement = 0;
                 this.#parentSize = 0;
                 prevTouchEvent = undefined;
             });
@@ -306,7 +306,7 @@ export class FlexLayout extends HTMLElement {
         return new Promise((resolve) => {
             let movement = moveEvent[this.#direction.xy];
             movement = movement;
-            this.#totalMovement += moveEvent[this.#direction.xy];
+            //this.#totalMovement += moveEvent[this.#direction.xy];
             const resizeTarget = resizePanel.resizeTarget;
             let minSizeName =
                 'min' +
@@ -376,8 +376,7 @@ export class FlexLayout extends HTMLElement {
             targetElement.style.flex = `${targetFlexGrow} 1 0%`;
             let nextElementFlexGrow =
                 (nextElementSize / (this.#parentSize - 1)) * this.#growLimit;
-            (nextElement as HTMLElement).style.flex =
-                `${nextElementFlexGrow} 1 0%`;
+            nextElement.style.flex = `${nextElementFlexGrow} 1 0%`;
 
             resolve('');
         });

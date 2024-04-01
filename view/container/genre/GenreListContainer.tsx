@@ -2,6 +2,7 @@ import { Input } from '@components/input/Input';
 import { Observable, from, map, mergeMap, toArray, zip } from 'rxjs';
 import { Genre } from '@type/GenreType';
 import styles from './GenreListContainer.module.css';
+import scrollStyles from '@root/listScroll.module.css';
 
 const testData = [
     '로맨스',
@@ -40,7 +41,9 @@ export const GenreListContainer = ({
     genreItemType,
 }: GenreListContainerProps) => {
     return (
-        <ul className={styles['genre-list-container']}>
+        <ul
+            className={`${styles['genre-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
+        >
             {genreList.map((genre, i) => (
                 <GenreItem
                     key={i}
