@@ -1,7 +1,7 @@
 import {
     RecommendContainer,
     useRecommendHeight,
-} from '@container/head/RecommendContainer';
+} from '@container/recommend/RecommendContainer';
 import {
     SearchAndMenuContainer,
     useSearchHeight,

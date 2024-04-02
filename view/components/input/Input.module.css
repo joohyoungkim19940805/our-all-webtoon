@@ -1,6 +1,6 @@
 .input {
     background: none;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     height: fit-content;
     body[data-mode='black'] && {
         color: #b9b9b9;

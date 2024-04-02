@@ -1,0 +1,15 @@
+.genre-rank-list-container {
+    width: 80dvw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    position: relative;
+    & > .genre-rank-list-item {
+        flex: 1 0 33%;
+        & > img {
+            width: 100%;
+            height: 10dvh;
+        }
+    }
+}

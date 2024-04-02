@@ -1,6 +1,8 @@
 .recommend-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    padding-top: 0.25dvh;
     padding-bottom: 0.7dvh;
+    padding-top: 0.25dvh;
+    align-items: center;
 }
