@@ -13,9 +13,6 @@ export const useSearchHeight = () => {
     useEffect(() => {
         if (!searchAndMenuRef.current) return;
         setHeight(searchAndMenuRef.current.getBoundingClientRect().height);
-    }, [searchAndMenuRef]);
-
-    useEffect(() => {
         const subscribe = windowResize.subscribe((ev) => {
             if (!searchAndMenuRef.current) return;
             setHeight(searchAndMenuRef.current.getBoundingClientRect().height);
@@ -23,7 +20,7 @@ export const useSearchHeight = () => {
         return () => {
             subscribe.unsubscribe();
         };
-    });
+    }, [searchAndMenuRef]);
 
     return { searchAndMenuRef, height };
 };

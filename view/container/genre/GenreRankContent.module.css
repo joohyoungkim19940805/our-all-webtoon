@@ -2,14 +2,15 @@
     width: 80dvw;
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    position: relative;
     & > .genre-rank-list-item {
-        flex: 1 0 33%;
+        flex: 1 0 35%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         & > img {
+            height: 11dvh;
+            max-width: 6rem;
             width: 100%;
-            height: 10dvh;
         }
     }
 }

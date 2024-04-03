@@ -5,7 +5,7 @@ import { GenreListContainer } from '@container/genre/GenreListContainer';
 import { Genre } from '@type/GenreType';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
-import { GenreRankContent } from '@container/genre/GenreRankContent';
+import { GenreRankContainer } from '@container/genre/GenreRankContent';
 
 /*장르 목록 - 
 로맨스, 판타지, 이세계, 전생, 드라마
@@ -52,17 +52,15 @@ export const useRecommendHeight = () => {
     useEffect(() => {
         if (!recommendRef.current) return;
         setHeight(recommendRef.current.getBoundingClientRect().height);
-    }, [recommendRef]);
-
-    useEffect(() => {
         const subscribe = windowResize.subscribe((ev) => {
+            console.log(ev);
             if (!recommendRef.current) return;
             setHeight(recommendRef.current.getBoundingClientRect().height);
         });
         return () => {
             subscribe.unsubscribe();
         };
-    });
+    }, [recommendRef]);
 
     return { recommendRef, height };
 };
@@ -73,7 +71,7 @@ export const RecommendContainer = forwardRef<HTMLDivElement>((_, ref) => {
                 genreList={testData}
                 genreItemType="radio"
             ></GenreListContainer>
-            <GenreRankContent></GenreRankContent>
+            <GenreRankContainer></GenreRankContainer>
         </div>
     );
 });

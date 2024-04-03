@@ -65,7 +65,6 @@ export class FlexLayout extends HTMLElement {
     #isLoaded = false;
     #growLimit = 0;
     #direction: FlexDirectionModelType = column;
-
     #forResizeList: Array<HTMLElement> = [];
 
     //#totalMovement = 0;
@@ -308,11 +307,8 @@ export class FlexLayout extends HTMLElement {
             movement = movement;
             //this.#totalMovement += moveEvent[this.#direction.xy];
             const resizeTarget = resizePanel.resizeTarget;
-            let minSizeName =
-                'min' +
-                this.#direction.sizeName.charAt(0).toUpperCase() +
-                this.#direction.sizeName.substring(1);
-
+            const minSizeName = 'min-' + this.#direction.sizeName;
+            const maxSizeName = 'max-' + this.#direction.sizeName;
             let targetElement = this.findNotCloseFlexContent(
                 resizeTarget,
                 'previousElementSibling',
@@ -324,42 +320,52 @@ export class FlexLayout extends HTMLElement {
             ) {
                 targetElement = resizeTarget;
             }
+
             if (!targetElement) return;
-            let targetMinSize =
-                parseFloat(
-                    window
-                        .getComputedStyle(targetElement)
-                        .getPropertyValue(minSizeName),
-                ) || 0;
-            let targetRect = targetElement.getBoundingClientRect();
+            const targetRect = targetElement.getBoundingClientRect();
+            const targetStyle = window.getComputedStyle(targetElement);
+            const targetMinSize =
+                parseFloat(targetStyle.getPropertyValue(minSizeName)) || 0;
+            const targetMaxSize =
+                parseFloat(targetStyle.getPropertyValue(maxSizeName)) || 0;
             let targetSize =
                 (targetRect[this.#direction.sizeName] as number) + movement;
+            if (targetMaxSize != 0 && targetSize >= targetMaxSize) {
+                return;
+                //targetSize = targetMaxSize;
+            }
 
             let nextElement = this.findNotCloseFlexContent(
-                resizePanel.nextElementSibling as HTMLElement,
+                resizePanel.nextElementSibling as FlexContainer,
                 'nextElementSibling',
             );
-
             if (
                 !nextElement ||
                 !targetElement.isResize ||
                 ((resizePanel.nextElementSibling as FlexContainer)?.isResize &&
                     30 < movement * -1)
             ) {
-                nextElement = resizePanel.nextElementSibling as HTMLElement;
+                nextElement = resizePanel.nextElementSibling as FlexContainer;
             }
+
             if (!nextElement) return;
 
-            let nextElementMinSize =
-                parseFloat(
-                    window
-                        .getComputedStyle(nextElement)
-                        .getPropertyValue(minSizeName),
-                ) || 0;
-            let nextElementRect = nextElement.getBoundingClientRect();
+            const nextElementRect = nextElement.getBoundingClientRect();
+            const nextElementStyle = window.getComputedStyle(nextElement);
+            const nextElementMinSize =
+                parseFloat(nextElementStyle.getPropertyValue(minSizeName)) || 0;
+            const nextElementMaxSize =
+                parseFloat(nextElementStyle.getPropertyValue(maxSizeName)) || 0;
             let nextElementSize =
                 (nextElementRect[this.#direction.sizeName] as number) +
                 movement * -1;
+            if (
+                nextElementMaxSize != 0 &&
+                nextElementSize >= nextElementMaxSize
+            ) {
+                //nextElementSize = nextElementMaxSize;
+                return;
+            }
 
             if (this.isOverMove(targetSize, targetMinSize)) {
                 nextElementSize = nextElementRect[
@@ -390,7 +396,7 @@ export class FlexLayout extends HTMLElement {
         );
     }
 
-    findNotCloseFlexContent(target: HTMLElement, direction: string) {
+    findNotCloseFlexContent(target: FlexContainer, direction: string) {
         const isCloseCheck = () => {
             if (!target) return false;
             if (target.dataset.is_resize == 'false') {
@@ -408,6 +414,9 @@ export class FlexLayout extends HTMLElement {
         };
         while (isCloseCheck()) {
             let nextTarget = (target as any)[direction]?.[direction];
+            if (!(nextTarget instanceof FlexContainer)) {
+                break;
+            }
             if (!nextTarget) {
                 break;
             }
