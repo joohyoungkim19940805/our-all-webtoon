@@ -83,7 +83,7 @@ export const GenreRankContainer = () => {
                             className={styles['genre-rank-list-item']}
                             key={i}
                             ref={
-                                i == 0 //|| (i + 1) % 4 === 0
+                                i == 0 || (i + 1) % 4 === 0
                                     ? (node) => {
                                           if (!node || !observer) return;
                                           observer.observe(node);
