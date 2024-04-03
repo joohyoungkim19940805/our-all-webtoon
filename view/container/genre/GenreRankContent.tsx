@@ -12,6 +12,8 @@ const testData = [
     '/image/test.png',
     '/image/test.png',
     '/image/test.png',
+    '/image/test.png',
+    '/image/test.png',
 ];
 // top, bottom에 사이즈 조절 하는 부분 자식요소 추가 삭제시에도 동작하게끔 만들어야 함(MutationObserver)
 export const GenreRankContainer = () => {
@@ -43,10 +45,11 @@ export const GenreRankContainer = () => {
             (entries) =>
                 entries.forEach((entry) => {
                     console.log(entry);
+                    entry.target.scrollIntoView({ block: 'start' });
                 }),
             {
                 root: ref.current,
-                threshold: 0.1,
+                threshold: 0.3,
             },
         );
         setObserver(observer);
@@ -83,7 +86,7 @@ export const GenreRankContainer = () => {
                             className={styles['genre-rank-list-item']}
                             key={i}
                             ref={
-                                i == 0 || (i + 1) % 4 === 0
+                                /*i == 0 ||*/ i % 3 === 0 && i != 0
                                     ? (node) => {
                                           if (!node || !observer) return;
                                           observer.observe(node);
