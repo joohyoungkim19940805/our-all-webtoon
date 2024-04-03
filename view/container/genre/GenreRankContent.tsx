@@ -45,7 +45,12 @@ export const GenreRankContainer = () => {
             (entries) =>
                 entries.forEach((entry) => {
                     console.log(entry);
-                    entry.target.scrollIntoView({ block: 'start' });
+                    if (entry.isIntersecting) {
+                        entry.target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'end',
+                        });
+                    }
                 }),
             {
                 root: ref.current,
