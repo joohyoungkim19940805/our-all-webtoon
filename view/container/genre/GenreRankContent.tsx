@@ -32,6 +32,7 @@ export const GenreRankContainer = () => {
         useShiftDownScrollWheelXState();
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [visibleTarget, setVisibleTarget] = useState<Element>();
+    const [isScrolling, setIsScrolling] = useState<boolean>(false);
     useEffect(() => {
         if (!ref.current) return;
         let visibleTargetElement: Element | undefined = undefined;
@@ -87,7 +88,9 @@ export const GenreRankContainer = () => {
     return (
         <div>
             <ul
+                //onTouchStart={event =>}
                 onTouchEnd={(event) => {
+                    console.log(visibleTarget, new Date().toLocaleTimeString());
                     if (
                         !visibleTarget ||
                         !(visibleTarget instanceof HTMLElement) ||
@@ -100,7 +103,7 @@ export const GenreRankContainer = () => {
                             inline: visibleTarget.dataset
                                 .inline as ScrollLogicalPosition,
                         });
-                    }, 10);
+                    }, 100);
                 }}
                 onMouseUp={(event) => {
                     setIsMouseDown(false);
@@ -123,7 +126,7 @@ export const GenreRankContainer = () => {
                 }
                 onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
                 ref={ref}
-                className={`${styles['genre-rank-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x}`}
+                className={`${styles['genre-rank-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
             >
                 {testData.map((e, i) => {
                     return (
