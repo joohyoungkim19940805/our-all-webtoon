@@ -28,8 +28,6 @@ export const GenreRankContainer = () => {
         useShiftDownScrollWheelXState();
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [visibleTarget, setVisibleTarget] = useState<Element>();
-    const [prevTouchEvent, setPrevTouchEvent] =
-        useState<React.TouchEvent<HTMLUListElement>>();
 
     useEffect(() => {
         if (!ref.current) return;
