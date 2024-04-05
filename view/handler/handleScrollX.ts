@@ -13,7 +13,7 @@ export const handleScrollWheelX = (
 };
 
 export const handleMouseMoveScrollWheelX = (
-    event: React.MouseEvent,
+    event: React.MouseEvent | MouseEvent,
     ref: React.RefObject<HTMLUListElement>,
     isMouseDown: boolean,
 ) => {

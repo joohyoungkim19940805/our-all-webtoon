@@ -13,6 +13,8 @@ export const documentKeyUp = fromEvent<KeyboardEvent>(document, 'keyup');
 
 export const windowMouseUp = fromEvent<MouseEvent>(window, 'mouseup');
 
+export const windowMouseMove = fromEvent<MouseEvent>(window, 'mousemove');
+
 export const accessNavigation = new ReplaySubject<PerformanceEntry>(3);
 performance.getEntriesByType('navigation').forEach((entry) => {
     accessNavigation.next(entry);

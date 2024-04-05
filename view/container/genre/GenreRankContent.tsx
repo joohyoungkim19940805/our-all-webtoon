@@ -6,11 +6,7 @@ import {
 import styles from './GenreRankContent.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-    documentKeyDown,
-    documentKeyUp,
-    windowMouseUp,
-} from '@handler/globalEvents';
+import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
 
 const testData = [
     '/image/test.png',
@@ -32,30 +28,17 @@ export const GenreRankContainer = () => {
         useShiftDownScrollWheelXState();
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [visibleTarget, setVisibleTarget] = useState<Element>();
+    const [prevTouchEvent, setPrevTouchEvent] =
+        useState<React.TouchEvent<HTMLUListElement>>();
+
     useEffect(() => {
         if (!ref.current) return;
-        let visibleTargetElement: Element | undefined = undefined;
-        const windowMouseSubscribe = windowMouseUp.subscribe((event) => {
-            setIsMouseDown(false);
-            if (
-                !visibleTargetElement ||
-                !(visibleTargetElement instanceof HTMLElement) ||
-                !visibleTargetElement.dataset.inline
-            )
-                return;
-            visibleTargetElement.scrollIntoView({
-                behavior: 'smooth',
-                inline: visibleTargetElement.dataset
-                    .inline as ScrollLogicalPosition,
-            });
-        });
 
         const observer = new IntersectionObserver(
             (entries) =>
                 entries.forEach((entry) => {
                     if (!entry.isIntersecting) return;
                     setVisibleTarget(entry.target);
-                    visibleTargetElement = entry.target;
                 }),
             {
                 root: ref.current,
@@ -80,15 +63,70 @@ export const GenreRankContainer = () => {
             mutationObserver.disconnect();
             keyUpSubscribe.unsubscribe();
             keyDownSubscribe.unsubscribe();
-            windowMouseSubscribe.unsubscribe();
         };
     }, [ref]);
+    useEffect(() => {
+        if (!ref.current) return;
+        ref.current.onscrollend = (e) => {
+            if (
+                isMouseDown ||
+                !visibleTarget ||
+                !(visibleTarget instanceof HTMLElement) ||
+                !visibleTarget.dataset.inline
+            )
+                return;
+            visibleTarget.scrollIntoView({
+                behavior: 'smooth',
+                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
+            });
+        };
+        const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
+            console.log(isMouseDown);
+            if (isMouseDown == false) return;
+            setIsMouseDown(false);
+            if (
+                !visibleTarget ||
+                //!visibleTargetElement.matches(':hover') ||
+                !(visibleTarget instanceof HTMLElement) ||
+                !visibleTarget.dataset.inline
+            )
+                return;
+
+            visibleTarget.scrollIntoView({
+                behavior: 'smooth',
+                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
+            });
+        });
+        const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
+            if (
+                !isMouseDown ||
+                !visibleTarget ||
+                ref?.current?.matches(':hover')
+            ) {
+                return;
+            }
+            handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+            //console.log(event);
+        });
+        return () => {
+            windowMouseMoveSubscribe.unsubscribe();
+            windowMouseUpSubscribe.unsubscribe();
+        };
+    }, [ref, visibleTarget, isMouseDown]);
     // ${scrollStyles.none}
     return (
         <div>
             <ul
+                /* 추후 모바일에서 오작동 발생시 이 부분 주석 해제해보기
+                onTouchStart={(event) => {
+                    setIsMouseDown(true);
+                }}
                 onTouchEnd={(event) => {
-                    if (
+                    setIsMouseDown(false);
+                }}
+                */
+                /*onTouchEnd={(event) => {
+                    /*if (
                         !visibleTarget ||
                         !(visibleTarget instanceof HTMLElement) ||
                         !visibleTarget.dataset.inline
@@ -101,7 +139,8 @@ export const GenreRankContainer = () => {
                                 .inline as ScrollLogicalPosition,
                         });
                     }, 10);
-                }}
+                    
+                }}*/
                 onMouseUp={(event) => {
                     setIsMouseDown(false);
                     if (
@@ -118,12 +157,12 @@ export const GenreRankContainer = () => {
                     });
                 }}
                 onMouseDown={(event) => setIsMouseDown(true)}
-                onMouseMove={(event) =>
-                    handleMouseMoveScrollWheelX(event, ref, isMouseDown)
-                }
+                onMouseMove={(event) => {
+                    handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+                }}
                 onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
                 ref={ref}
-                className={`${styles['genre-rank-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x}`}
+                className={`${styles['genre-rank-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
             >
                 {testData.map((e, i) => {
                     return (
