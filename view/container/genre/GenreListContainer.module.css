@@ -1,21 +1,26 @@
 .genre-list-container {
-    flex-wrap: nowrap;
-    text-wrap: nowrap;
-    gap: 2vw;
+    gap: 3.9vw;
     display: flex;
+    flex-direction: row;
     width: 90%;
-    padding-top: 1.5dvh;
-    padding-bottom: 2dvh;
+    /*padding-top: 1dvh;
+    padding-bottom: 2dvh;*/
+    padding-bottom: 1dvh;
+    padding-top: 0.8dvh;
+    user-select: none;
     && .genre-list-item {
         & input {
             &:checked + label {
-                color: red;
+                color: #c3c9d9;
+                font-weight: 700;
+                -webkit-text-decoration: underline;
                 text-decoration: underline;
+                text-underline-offset: 0.4rem;
             }
         }
 
         & label {
-            color: green;
+            color: #b9b9b9;
             font-size: 1.2rem;
         }
     }

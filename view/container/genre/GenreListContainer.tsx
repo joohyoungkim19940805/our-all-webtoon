@@ -3,6 +3,13 @@ import { Observable, from, map, mergeMap, toArray, zip } from 'rxjs';
 import { Genre } from '@type/GenreType';
 import styles from './GenreListContainer.module.css';
 import scrollStyles from '@root/listScroll.module.css';
+import { useEffect, useRef, useState } from 'react';
+import {
+    handleMouseMoveScrollWheelX,
+    handleScrollWheelX,
+    useShiftDownScrollWheelXState,
+} from '@handler/handleScrollX';
+import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
 
 const testData = [
     '로맨스',
@@ -40,8 +47,52 @@ export const GenreListContainer = ({
     genreList,
     genreItemType,
 }: GenreListContainerProps) => {
+    const ref = useRef<HTMLUListElement>(null);
+    const { isShft, keyDownSubscribe, keyUpSubscribe } =
+        useShiftDownScrollWheelXState();
+    const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+    useEffect(() => {
+        if (!ref.current) return;
+        /*ref.current.onscrollend = (e) => {
+            if (
+                isMouseDown ||
+                !visibleTarget ||
+                !(visibleTarget instanceof HTMLElement) ||
+                !visibleTarget.dataset.inline
+            )
+                return;
+            visibleTarget.scrollIntoView({
+                behavior: 'smooth',
+                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
+            });
+        };*/
+        const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
+            if (!isMouseDown == false) return;
+            setIsMouseDown(false);
+        });
+        const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
+            if (!isMouseDown || ref?.current?.matches(':hover')) {
+                return;
+            }
+            handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+            //console.log(event);
+        });
+        return () => {
+            windowMouseMoveSubscribe.unsubscribe();
+            windowMouseUpSubscribe.unsubscribe();
+        };
+    }, [ref, isMouseDown]);
     return (
         <ul
+            ref={ref}
+            onMouseDown={(event) => setIsMouseDown(true)}
+            onMouseMove={(event) => {
+                handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+            }}
+            onMouseUp={(event) => {
+                setIsMouseDown(false);
+            }}
+            onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
             className={`${styles['genre-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
         >
             {genreList.map((genre, i) => (

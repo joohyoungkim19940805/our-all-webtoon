@@ -278,7 +278,7 @@ export class FlexLayout extends HTMLElement {
                     return;
                 }
                 let move: Movement = { x: 0, y: 0 };
-                if (event instanceof TouchEvent) {
+                if (window.TouchEvent && event instanceof TouchEvent) {
                     if (!prevTouchEvent) {
                         prevTouchEvent = event as TouchEvent;
                         return;

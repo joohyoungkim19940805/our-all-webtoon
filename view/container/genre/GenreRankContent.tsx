@@ -18,7 +18,12 @@ const testData = [
     '/image/test.png',
     '/image/test.png',
     '/image/test.png',
+    '/image/test.png',
+    '/image/test.png',
+    '/image/test.png',
+    '/image/test.png',
 ];
+
 // top, bottom에 사이즈 조절 하는 부분 자식요소 추가 삭제시에도 동작하게끔 만들어야 함(MutationObserver)
 export const GenreRankContainer = () => {
     const [observer, setObserver] = useState<IntersectionObserver>();
@@ -28,7 +33,21 @@ export const GenreRankContainer = () => {
         useShiftDownScrollWheelXState();
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [visibleTarget, setVisibleTarget] = useState<Element>();
-
+    const [page, setPage] = useState<number>();
+    const hanldeScrollIntoView = (visibleTarget: Element | undefined) => {
+        if (
+            !visibleTarget ||
+            !(visibleTarget instanceof HTMLElement) ||
+            !visibleTarget.dataset.inline
+        )
+            return;
+        visibleTarget.scrollIntoView({
+            behavior: 'smooth',
+            inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
+        });
+        if (!visibleTarget.dataset.page) return;
+        setPage(parseInt(visibleTarget.dataset.page));
+    };
     useEffect(() => {
         if (!ref.current) return;
 
@@ -40,7 +59,7 @@ export const GenreRankContainer = () => {
                 }),
             {
                 root: ref.current,
-                threshold: 0.3,
+                threshold: 0.9,
             },
         );
         setObserver(observer);
@@ -66,34 +85,13 @@ export const GenreRankContainer = () => {
     useEffect(() => {
         if (!ref.current) return;
         ref.current.onscrollend = (e) => {
-            if (
-                isMouseDown ||
-                !visibleTarget ||
-                !(visibleTarget instanceof HTMLElement) ||
-                !visibleTarget.dataset.inline
-            )
-                return;
-            visibleTarget.scrollIntoView({
-                behavior: 'smooth',
-                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
-            });
+            if (isMouseDown) return;
+            hanldeScrollIntoView(visibleTarget);
         };
         const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
-            console.log(isMouseDown);
-            if (isMouseDown == false) return;
+            if (!isMouseDown == false) return;
             setIsMouseDown(false);
-            if (
-                !visibleTarget ||
-                //!visibleTargetElement.matches(':hover') ||
-                !(visibleTarget instanceof HTMLElement) ||
-                !visibleTarget.dataset.inline
-            )
-                return;
-
-            visibleTarget.scrollIntoView({
-                behavior: 'smooth',
-                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
-            });
+            hanldeScrollIntoView(visibleTarget);
         });
         const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
             if (
@@ -113,46 +111,14 @@ export const GenreRankContainer = () => {
     }, [ref, visibleTarget, isMouseDown]);
     // ${scrollStyles.none}
     return (
-        <div>
+        <div className={`${styles['genre-rank-list-container']}`}>
             <ul
-                /* 추후 모바일에서 오작동 발생시 이 부분 주석 해제해보기
-                onTouchStart={(event) => {
-                    setIsMouseDown(true);
-                }}
                 onTouchEnd={(event) => {
-                    setIsMouseDown(false);
+                    hanldeScrollIntoView(visibleTarget);
                 }}
-                */
-                /*onTouchEnd={(event) => {
-                    /*if (
-                        !visibleTarget ||
-                        !(visibleTarget instanceof HTMLElement) ||
-                        !visibleTarget.dataset.inline
-                    )
-                        return;
-                    setTimeout(() => {
-                        visibleTarget.scrollIntoView({
-                            behavior: 'smooth',
-                            inline: visibleTarget.dataset
-                                .inline as ScrollLogicalPosition,
-                        });
-                    }, 10);
-                    
-                }}*/
                 onMouseUp={(event) => {
                     setIsMouseDown(false);
-                    if (
-                        !visibleTarget ||
-                        !(visibleTarget instanceof HTMLElement) ||
-                        !visibleTarget.dataset.inline
-                    )
-                        return;
-
-                    visibleTarget.scrollIntoView({
-                        behavior: 'smooth',
-                        inline: visibleTarget.dataset
-                            .inline as ScrollLogicalPosition,
-                    });
+                    hanldeScrollIntoView(visibleTarget);
                 }}
                 onMouseDown={(event) => setIsMouseDown(true)}
                 onMouseMove={(event) => {
@@ -160,11 +126,18 @@ export const GenreRankContainer = () => {
                 }}
                 onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
                 ref={ref}
-                className={`${styles['genre-rank-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
+                className={`${styles['genre-rank-list']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
             >
                 {testData.map((e, i) => {
                     return (
                         <li
+                            data-page={
+                                i % 3 == 0
+                                    ? i / 3
+                                    : (i + 1) % 3 == 0
+                                      ? (i + 1) / 3 - 1
+                                      : ''
+                            }
                             className={styles['genre-rank-list-item']}
                             key={i}
                             ref={
@@ -181,8 +154,23 @@ export const GenreRankContainer = () => {
                                   ? { ['data-inline']: 'start' }
                                   : {})}
                         >
-                            <img src={e}></img>
+                            <img src={e} draggable={false}></img>
                         </li>
+                    );
+                })}
+            </ul>
+            <ul className={`${styles['genre-rank-list-page']}`}>
+                {[...new Array(Math.ceil(testData.length / 3))].map((_, i) => {
+                    return (
+                        <li
+                            key={i}
+                            className={
+                                (i == 0 && page == undefined) ||
+                                (page != undefined && i === page)
+                                    ? styles['target-page']
+                                    : ''
+                            }
+                        ></li>
                     );
                 })}
             </ul>

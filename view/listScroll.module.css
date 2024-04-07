@@ -1,6 +1,8 @@
 .list-scroll {
     flex-wrap: nowrap;
     text-wrap: nowrap;
+    white-space: nowrap;
+    scrollbar-width: none;
     &.y {
         position: relative;
         overflow-y: auto;
@@ -10,6 +12,9 @@
         position: relative;
         overflow-y: clip;
         overflow-x: auto;
+    }
+    .none {
+        scrollbar-width: none;
     }
     &.none:hover::-webkit-scrollbar {
         display: none;

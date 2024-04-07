@@ -1,16 +1,37 @@
 .genre-rank-list-container {
-    width: 80dvw;
-    display: flex;
-    flex-direction: row;
-    & > .genre-rank-list-item {
-        flex: 1 0 35%;
+    .genre-rank-list {
+        width: 80dvw;
         display: flex;
+        flex-direction: row;
+        user-select: none;
+        & > .genre-rank-list-item {
+            flex: 1 0 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            & > img {
+                height: 11dvh;
+                max-width: 6rem;
+                width: 100%;
+                user-select: none;
+            }
+        }
+    }
+    & .genre-rank-list-page {
         align-items: center;
-        justify-content: center;
-        & > img {
-            height: 11dvh;
-            max-width: 6rem;
-            width: 100%;
+        display: flex;
+        justify-content: space-around;
+        width: inherit;
+        padding-top: 0.6vh;
+        & li {
+            height: 0.4rem;
+            width: 0.4rem;
+            border-radius: 100%;
+            border: 3px solid #abababbf;
+            &.target-page {
+                background-color: rgb(176 161 255 / 74%);
+                border-color: hsl(80.83deg 100% 53.7% / 23%);
+            }
         }
     }
 }
