@@ -1,0 +1,16 @@
+.center-container {
+    display: flex;
+    word-wrap: anywhere;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    body[data-mode='black'] && {
+        border-color: #464646;
+        background-color: #343434;
+        color: white;
+    }
+    & .genre-container {
+        display: flex;
+        justify-content: center;
+    }
+}

@@ -7,7 +7,7 @@ export type InputAttributeProps = {
     type?:
         | 'hidden'
         | 'radio'
-        | 'checbox'
+        | 'checkbox'
         | 'text'
         | 'search'
         | 'textarea'

@@ -41,11 +41,13 @@ const testData = [
 ];
 type GenreListContainerProps = {
     genreList: Genre[];
-    genreItemType: 'radio' | 'checbox';
+    genreItemType: 'radio' | 'checkbox';
+    id: string;
 };
 export const GenreListContainer = ({
     genreList,
     genreItemType,
+    id,
 }: GenreListContainerProps) => {
     const ref = useRef<HTMLUListElement>(null);
     const { isShft, keyDownSubscribe, keyUpSubscribe } =
@@ -53,21 +55,8 @@ export const GenreListContainer = ({
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     useEffect(() => {
         if (!ref.current) return;
-        /*ref.current.onscrollend = (e) => {
-            if (
-                isMouseDown ||
-                !visibleTarget ||
-                !(visibleTarget instanceof HTMLElement) ||
-                !visibleTarget.dataset.inline
-            )
-                return;
-            visibleTarget.scrollIntoView({
-                behavior: 'smooth',
-                inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
-            });
-        };*/
         const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
-            if (!isMouseDown == false) return;
+            if (!isMouseDown) return;
             setIsMouseDown(false);
         });
         const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
@@ -82,8 +71,13 @@ export const GenreListContainer = ({
             windowMouseUpSubscribe.unsubscribe();
         };
     }, [ref, isMouseDown]);
+    /*document.querySelector('#recommend-genre-list > li:nth-child(7)').scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+    });*/
     return (
         <ul
+            id={id}
             ref={ref}
             onMouseDown={(event) => setIsMouseDown(true)}
             onMouseMove={(event) => {
@@ -101,6 +95,7 @@ export const GenreListContainer = ({
                     type={genreItemType}
                     index={i}
                     genre={genre}
+                    id={id}
                 ></GenreItem>
             ))}
         </ul>
@@ -108,16 +103,18 @@ export const GenreListContainer = ({
 };
 
 type GenreItemProps = {
-    type: 'radio' | 'checbox';
+    type: 'radio' | 'checkbox';
     index: number;
     genre: Genre;
+    id: string;
 };
-export const GenreItem = ({ type, index, genre }: GenreItemProps) => {
+export const GenreItem = ({ type, index, genre, id }: GenreItemProps) => {
     return (
         <li className={styles['genre-list-item']}>
             <Input
                 type={type}
-                id={`genre-list-item_${index}`}
+                id={`${id}_${index}`}
+                //id={`genre-list-item_${index}`}
                 name="genre-list"
                 hidden={true}
                 textContent={genre.name}

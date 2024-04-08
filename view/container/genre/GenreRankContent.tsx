@@ -23,7 +23,6 @@ const testData = [
     '/image/test.png',
     '/image/test.png',
 ];
-
 // top, bottom에 사이즈 조절 하는 부분 자식요소 추가 삭제시에도 동작하게끔 만들어야 함(MutationObserver)
 export const GenreRankContainer = () => {
     const [observer, setObserver] = useState<IntersectionObserver>();
@@ -59,7 +58,7 @@ export const GenreRankContainer = () => {
                 }),
             {
                 root: ref.current,
-                threshold: 0.9,
+                threshold: 0.6,
             },
         );
         setObserver(observer);
@@ -85,11 +84,11 @@ export const GenreRankContainer = () => {
     useEffect(() => {
         if (!ref.current) return;
         ref.current.onscrollend = (e) => {
-            if (isMouseDown) return;
+            if (!isMouseDown) return;
             hanldeScrollIntoView(visibleTarget);
         };
         const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
-            if (!isMouseDown == false) return;
+            if (!isMouseDown) return;
             setIsMouseDown(false);
             hanldeScrollIntoView(visibleTarget);
         });
@@ -114,6 +113,7 @@ export const GenreRankContainer = () => {
         <div className={`${styles['genre-rank-list-container']}`}>
             <ul
                 onTouchEnd={(event) => {
+                    setIsMouseDown(true);
                     hanldeScrollIntoView(visibleTarget);
                 }}
                 onMouseUp={(event) => {

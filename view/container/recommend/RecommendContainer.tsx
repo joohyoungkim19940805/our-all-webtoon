@@ -70,6 +70,7 @@ export const RecommendContainer = forwardRef<HTMLDivElement>((_, ref) => {
             <GenreListContainer
                 genreList={testData}
                 genreItemType="radio"
+                id="recommend-genre-list"
             ></GenreListContainer>
             <GenreRankContainer></GenreRankContainer>
         </div>
