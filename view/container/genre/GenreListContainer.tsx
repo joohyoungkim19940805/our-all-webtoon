@@ -53,6 +53,7 @@ export const GenreListContainer = ({
     const { isShft, keyDownSubscribe, keyUpSubscribe } =
         useShiftDownScrollWheelXState();
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+
     useEffect(() => {
         if (!ref.current) return;
         const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
@@ -71,112 +72,41 @@ export const GenreListContainer = ({
             windowMouseUpSubscribe.unsubscribe();
         };
     }, [ref, isMouseDown]);
-    /*document.querySelector('#recommend-genre-list > li:nth-child(7)').scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-    });*/
-    return (
-        <ul
-            id={id}
-            ref={ref}
-            onMouseDown={(event) => setIsMouseDown(true)}
-            onMouseMove={(event) => {
-                handleMouseMoveScrollWheelX(event, ref, isMouseDown);
-            }}
-            onMouseUp={(event) => {
-                setIsMouseDown(false);
-            }}
-            onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
-            className={`${styles['genre-list-container']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
-        >
-            {genreList.map((genre, i) => (
-                <GenreItem
-                    key={i}
-                    type={genreItemType}
-                    index={i}
-                    genre={genre}
-                    id={id}
-                ></GenreItem>
-            ))}
-        </ul>
-    );
-};
 
-type GenreItemProps = {
-    type: 'radio' | 'checkbox';
-    index: number;
-    genre: Genre;
-    id: string;
-};
-export const GenreItem = ({ type, index, genre, id }: GenreItemProps) => {
     return (
-        <li className={styles['genre-list-item']}>
-            <Input
-                type={type}
-                id={`${id}_${index}`}
-                //id={`genre-list-item_${index}`}
-                name="genre-list"
-                hidden={true}
-                textContent={genre.name}
-            ></Input>
-        </li>
+        <div className={`${styles['genre-list-container']}`}>
+            <ul
+                id={id}
+                ref={ref}
+                onMouseDown={(event) => setIsMouseDown(true)}
+                onMouseMove={(event) => {
+                    handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+                }}
+                onMouseUp={(event) => {
+                    setIsMouseDown(false);
+                }}
+                onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
+                className={`${styles['genre-list']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
+            >
+                {genreList.map((genre, i) => (
+                    <li className={styles['genre-list-item']} key={i}>
+                        <input
+                            type={genreItemType}
+                            id={`${id}_${i}`}
+                            name="genre-list"
+                            hidden={true}
+                            onChange={(event) => {
+                                if (!event.target.checked) return;
+                                event.target.closest('li')?.scrollIntoView({
+                                    behavior: 'smooth',
+                                    inline: 'center',
+                                });
+                            }}
+                        />
+                        <label htmlFor={`${id}_${i}`}>{genre.name}</label>
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };
-
-/*
-export const genreListContainer = (
-    genreList: Genre[],
-    genreItemType: GenreItemType,
-) => {
-    const ul = Object.assign(document.createElement('ul'), {
-        className: styles['genre-list-container'],
-    });
-    return zip(
-        genreList.map((e, i) => {
-            return genreItem(genreItemType, i, e);
-        }),
-    ).pipe(
-        mergeMap((e) => e),
-        toArray(),
-        map((liList) => {
-            ul.replaceChildren(...liList);
-            return { genreListContainer: ul, components: liList };
-        }),
-    );
-};
-*/
-/*
-export const genreItem = (
-    { type }: GenreItemType,
-    index: number,
-    genre: Genre,
-) => {
-    return input(
-        {
-            type,
-            data: {
-                genre_name: genre.name,
-            },
-            id: `genre-list-item_${index}`,
-            name: 'genre-list',
-            hidden: true,
-        },
-        {},
-    ).pipe(
-        map((input) => {
-            input.classList.add(styles['genre-list-item-input']);
-            let li = Object.assign(document.createElement('li'), {
-                className: styles['genre-list-item'],
-            });
-            let label = Object.assign(document.createElement('label'), {
-                textContent: input.dataset.genre_name,
-                className: styles['genre-list-item-label'],
-            });
-            label.setAttribute('for', input.id);
-            //label.prepend(e);
-            li.append(input, label);
-            return li;
-        }),
-    );
-};
-*/

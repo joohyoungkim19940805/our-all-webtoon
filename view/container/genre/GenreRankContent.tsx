@@ -177,16 +177,3 @@ export const GenreRankContainer = () => {
         </div>
     );
 };
-
-export type GenreRankItemProps = {
-    src: string;
-    index: number;
-};
-
-export const GenreRankItem = ({ src, index }: GenreRankItemProps) => {
-    return (
-        <li className={styles['genre-rank-list-item']} key={index}>
-            <img src={src}></img>
-        </li>
-    );
-};

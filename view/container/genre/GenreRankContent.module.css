@@ -24,8 +24,8 @@
         width: inherit;
         padding-top: 0.6vh;
         & li {
-            height: 0.4rem;
-            width: 0.4rem;
+            height: 0.3rem;
+            width: 0.3rem;
             border-radius: 100%;
             border: 3px solid #abababbf;
             &.target-page {
