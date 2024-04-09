@@ -1,12 +1,9 @@
-import {
-    handleMouseMoveScrollWheelX,
-    handleScrollWheelX,
-    useShiftDownScrollWheelXState,
-} from '@handler/handleScrollX';
+import { useShiftDownScrollWheelXState } from '@handler/hooks/ScrollHooks';
 import styles from './GenreRankContent.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
+import { useVisibleSliderPaging } from '@handler/hooks/SliderHooks';
 
 const testData = [
     '/image/test.png',
@@ -25,89 +22,23 @@ const testData = [
 ];
 // top, bottom에 사이즈 조절 하는 부분 자식요소 추가 삭제시에도 동작하게끔 만들어야 함(MutationObserver)
 export const GenreRankContainer = () => {
-    const [observer, setObserver] = useState<IntersectionObserver>();
-
-    const ref = useRef<HTMLUListElement>(null);
+    const {
+        isMouseDown,
+        setIsMouseDown,
+        hanldeScrollIntoView,
+        visibleObserver,
+        visibleTarget,
+        page,
+        listRef,
+    } = useVisibleSliderPaging();
     const { isShft, keyDownSubscribe, keyUpSubscribe } =
         useShiftDownScrollWheelXState();
-    const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-    const [visibleTarget, setVisibleTarget] = useState<Element>();
-    const [page, setPage] = useState<number>();
-    const hanldeScrollIntoView = (visibleTarget: Element | undefined) => {
-        if (
-            !visibleTarget ||
-            !(visibleTarget instanceof HTMLElement) ||
-            !visibleTarget.dataset.inline
-        )
-            return;
-        visibleTarget.scrollIntoView({
-            behavior: 'smooth',
-            inline: visibleTarget.dataset.inline as ScrollLogicalPosition,
-        });
-        if (!visibleTarget.dataset.page) return;
-        setPage(parseInt(visibleTarget.dataset.page));
-    };
     useEffect(() => {
-        if (!ref.current) return;
-
-        const observer = new IntersectionObserver(
-            (entries) =>
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) return;
-                    setVisibleTarget(entry.target);
-                }),
-            {
-                root: ref.current,
-                threshold: 0.6,
-            },
-        );
-        setObserver(observer);
-        const mutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'childList') {
-                    mutation.removedNodes.forEach((removedNode) => {
-                        console.log(removedNode);
-                        observer.unobserve(removedNode as Element);
-                    });
-                }
-            });
-        });
-        mutationObserver.observe(ref.current, { childList: true });
-
         return () => {
-            observer.disconnect();
-            mutationObserver.disconnect();
             keyUpSubscribe.unsubscribe();
             keyDownSubscribe.unsubscribe();
         };
-    }, [ref]);
-    useEffect(() => {
-        if (!ref.current) return;
-        ref.current.onscrollend = (e) => {
-            if (!isMouseDown) return;
-            hanldeScrollIntoView(visibleTarget);
-        };
-        const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
-            if (!isMouseDown) return;
-            setIsMouseDown(false);
-            hanldeScrollIntoView(visibleTarget);
-        });
-        const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
-            if (
-                !isMouseDown ||
-                !visibleTarget ||
-                ref?.current?.matches(':hover')
-            ) {
-                return;
-            }
-            handleMouseMoveScrollWheelX(event, ref, isMouseDown);
-            //console.log(event);
-        });
-        return () => {
-            windowMouseMoveSubscribe.unsubscribe();
-            windowMouseUpSubscribe.unsubscribe();
-        };
-    }, [ref, visibleTarget, isMouseDown]);
+    }, [listRef]);
     // ${scrollStyles.none}
     return (
         <div className={`${styles['genre-rank-list-container']}`}>
@@ -122,10 +53,18 @@ export const GenreRankContainer = () => {
                 }}
                 onMouseDown={(event) => setIsMouseDown(true)}
                 onMouseMove={(event) => {
-                    handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+                    if (!listRef.current || !isMouseDown) return;
+                    listRef.current.scrollLeft += event.movementX * -1;
                 }}
-                onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
-                ref={ref}
+                onWheel={(event) => {
+                    if (!listRef.current || isShft) return;
+                    const { deltaY } = event;
+                    listRef.current.scrollTo(
+                        listRef.current.scrollLeft + deltaY,
+                        0,
+                    );
+                }}
+                ref={listRef}
                 className={`${styles['genre-rank-list']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
             >
                 {testData.map((e, i) => {
@@ -143,8 +82,8 @@ export const GenreRankContainer = () => {
                             ref={
                                 (i + 1) % 3 === 0 || i % 3 === 0
                                     ? (node) => {
-                                          if (!node || !observer) return;
-                                          observer.observe(node);
+                                          if (!node || !visibleObserver) return;
+                                          visibleObserver.observe(node);
                                       }
                                     : null
                             }

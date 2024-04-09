@@ -4,12 +4,9 @@ import { Genre } from '@type/GenreType';
 import styles from './GenreListContainer.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import { useEffect, useRef, useState } from 'react';
-import {
-    handleMouseMoveScrollWheelX,
-    handleScrollWheelX,
-    useShiftDownScrollWheelXState,
-} from '@handler/handleScrollX';
+import { useShiftDownScrollWheelXState } from '@handler/hooks/ScrollHooks';
 import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
+import { useMouseSlider } from '@handler/hooks/SliderHooks';
 
 const testData = [
     '로맨스',
@@ -39,6 +36,29 @@ const testData = [
     '공포',
     '19',
 ];
+
+//hooks로 분리, subject로 selectedMap(또는 배열?) 값 연결
+export const useGenreChange = () => {
+    const [selectedMap, setSelectedMap] = useState<Map<string, string>>(
+        new Map(),
+    );
+    const addGenre = (genre: Genre) => {
+        setSelectedMap((prevMap) => {
+            const newMap = new Map(prevMap);
+            newMap.set(genre.name, genre.name);
+            return newMap;
+        });
+    };
+    const removeGenre = (genre: Genre) => {
+        setSelectedMap((prevMap) => {
+            const newMap = new Map(prevMap);
+            newMap.delete(genre.name);
+            return newMap;
+        });
+    };
+    return { selectedMap, addGenre, removeGenre };
+};
+
 type GenreListContainerProps = {
     genreList: Genre[];
     genreItemType: 'radio' | 'checkbox';
@@ -49,43 +69,38 @@ export const GenreListContainer = ({
     genreItemType,
     id,
 }: GenreListContainerProps) => {
-    const ref = useRef<HTMLUListElement>(null);
+    const { isMouseDown, setIsMouseDown, listRef } = useMouseSlider();
     const { isShft, keyDownSubscribe, keyUpSubscribe } =
         useShiftDownScrollWheelXState();
-    const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-
+    const { addGenre, removeGenre } = useGenreChange();
     useEffect(() => {
-        if (!ref.current) return;
-        const windowMouseUpSubscribe = windowMouseUp.subscribe((event) => {
-            if (!isMouseDown) return;
-            setIsMouseDown(false);
-        });
-        const windowMouseMoveSubscribe = windowMouseMove.subscribe((event) => {
-            if (!isMouseDown || ref?.current?.matches(':hover')) {
-                return;
-            }
-            handleMouseMoveScrollWheelX(event, ref, isMouseDown);
-            //console.log(event);
-        });
         return () => {
-            windowMouseMoveSubscribe.unsubscribe();
-            windowMouseUpSubscribe.unsubscribe();
+            keyUpSubscribe.unsubscribe();
+            keyDownSubscribe.unsubscribe();
         };
-    }, [ref, isMouseDown]);
+    }, [listRef]);
 
     return (
         <div className={`${styles['genre-list-container']}`}>
             <ul
                 id={id}
-                ref={ref}
+                ref={listRef}
                 onMouseDown={(event) => setIsMouseDown(true)}
                 onMouseMove={(event) => {
-                    handleMouseMoveScrollWheelX(event, ref, isMouseDown);
+                    if (!listRef.current || !isMouseDown) return;
+                    listRef.current.scrollLeft += event.movementX * -1;
                 }}
                 onMouseUp={(event) => {
                     setIsMouseDown(false);
                 }}
-                onWheel={(event) => handleScrollWheelX(event, ref, isShft)}
+                onWheel={(event) => {
+                    if (!listRef.current || isShft) return;
+                    const { deltaY } = event;
+                    listRef.current.scrollTo(
+                        listRef.current.scrollLeft + deltaY,
+                        0,
+                    );
+                }}
                 className={`${styles['genre-list']} ${scrollStyles['list-scroll']} ${scrollStyles.x} ${scrollStyles.none}`}
             >
                 {genreList.map((genre, i) => (
@@ -96,11 +111,18 @@ export const GenreListContainer = ({
                             name="genre-list"
                             hidden={true}
                             onChange={(event) => {
-                                if (!event.target.checked) return;
-                                event.target.closest('li')?.scrollIntoView({
-                                    behavior: 'smooth',
-                                    inline: 'center',
+                                if (!event.target.checked) {
+                                    removeGenre(genre);
+                                    return;
+                                }
+                                new Promise<void>((res) => {
+                                    event.target.closest('li')?.scrollIntoView({
+                                        behavior: 'smooth',
+                                        inline: 'center',
+                                    });
+                                    res();
                                 });
+                                addGenre(genre);
                             }}
                         />
                         <label htmlFor={`${id}_${i}`}>{genre.name}</label>

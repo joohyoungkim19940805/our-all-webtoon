@@ -1,14 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>hello word</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            th:href="@{/dist/testPageRenderer.css}"
+        />
+    </head>
 
-<head>
-	<meta charset="UTF-8">
-	<title>hello word</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/dist/testPageRenderer.css}">
-</head>
-
-<body>
-	<script type="text/javascript" th:src="@{/dist/testPageRenderer.js}"></script>
-</body>
-
+    <body>
+        <script
+            type="text/javascript"
+            th:src="@{/dist/testPageRenderer.js}"
+        ></script>
+    </body>
 </html>

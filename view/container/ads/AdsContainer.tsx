@@ -10,7 +10,7 @@ export const AdsContainer = () => {
             }}
         >
             <img
-                style={{ width: '99%', height: '9dvh' }}
+                style={{ width: '96dvw', height: '9dvh' }}
                 src="/image/test.png"
             ></img>
         </div>
