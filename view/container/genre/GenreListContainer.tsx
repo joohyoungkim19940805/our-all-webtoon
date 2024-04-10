@@ -70,15 +70,8 @@ export const GenreListContainer = ({
     id,
 }: GenreListContainerProps) => {
     const { isMouseDown, setIsMouseDown, listRef } = useMouseSlider();
-    const { isShft, keyDownSubscribe, keyUpSubscribe } =
-        useShiftDownScrollWheelXState();
+    const { isShft } = useShiftDownScrollWheelXState(listRef);
     const { addGenre, removeGenre } = useGenreChange();
-    useEffect(() => {
-        return () => {
-            keyUpSubscribe.unsubscribe();
-            keyDownSubscribe.unsubscribe();
-        };
-    }, [listRef]);
 
     return (
         <div className={`${styles['genre-list-container']}`}>

@@ -1,16 +1,18 @@
-import { Button } from '@components/button/Button';
 import { BookmarkSvg } from '@components/svg/BookmarkSvg';
 import { Subject, map } from 'rxjs';
+import styles from './Button.module.css';
+
 // 북마크 목록 버튼
 export const bookMarkButtonEvent = new Subject<any>();
 export const BookMarkButtonButton = () => {
     return (
-        <Button
-            textContent="북마크"
+        <button
             type="button"
-            size="short"
-            svg={<BookmarkSvg />}
-        ></Button>
+            className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]}`}
+        >
+            북마크
+            <BookmarkSvg></BookmarkSvg>
+        </button>
     );
 };
 

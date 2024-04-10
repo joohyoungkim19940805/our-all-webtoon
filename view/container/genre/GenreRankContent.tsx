@@ -31,14 +31,8 @@ export const GenreRankContainer = () => {
         page,
         listRef,
     } = useVisibleSliderPaging();
-    const { isShft, keyDownSubscribe, keyUpSubscribe } =
-        useShiftDownScrollWheelXState();
-    useEffect(() => {
-        return () => {
-            keyUpSubscribe.unsubscribe();
-            keyDownSubscribe.unsubscribe();
-        };
-    }, [listRef]);
+    const { isShft } = useShiftDownScrollWheelXState(listRef);
+
     // ${scrollStyles.none}
     return (
         <div className={`${styles['genre-rank-list-container']}`}>

@@ -1,12 +1,22 @@
+interface FlexLayoutHTMLAttributes<FlexLayout>
+    extends React.HTMLAttributes<FlexLayout> {
+    ['data-direction']: 'row' | 'column';
+}
+interface FlexContainerHTMLAttributes<FlexContainer>
+    extends React.HTMLAttributes<FlexContainer> {
+    ['data-is_resize']: boolean;
+    ['data-panel_mode']?: ResizePanelMode;
+    ['data-grow']?: number;
+}
 declare global {
     namespace JSX {
         interface IntrinsicElements {
             'flex-layout': React.DetailedHTMLProps<
-                React.HTMLAttributes<FlexLayout>,
+                FlexLayoutHTMLAttributes<FlexLayout>,
                 FlexLayout
             >;
             'flex-container': React.DetailedHTMLProps<
-                React.HTMLAttributes<FlexContainer>,
+                FlexContainerHTMLAttributes<FlexContainer>,
                 FlexContainer
             >;
             'flex-resizer': React.DetailedHTMLProps<
@@ -66,7 +76,6 @@ export class FlexLayout extends HTMLElement {
     #growLimit = 0;
     #direction: FlexDirectionModelType = column;
     #forResizeList: Array<HTMLElement> = [];
-
     //#totalMovement = 0;
 
     #parentSize = 0;
@@ -148,12 +157,8 @@ export class FlexLayout extends HTMLElement {
         });
     });
 
-    constructor(attribute: any = {}) {
+    constructor(test: any = undefined) {
         super();
-        if (attribute.hasOwnProperty('className')) {
-            this.classList.add(attribute.className);
-            delete attribute.className;
-        }
         //Object.assign(this, attribute);
         this.addResizePanel(this.children);
         let observer = new MutationObserver((mutationList, observer) => {
@@ -204,6 +209,7 @@ export class FlexLayout extends HTMLElement {
         this.remain();
     }
     connectedCallback() {
+        console.log([this]);
         /*
         if (!this.#isLoaded) {
             this.#isLoaded = true;
@@ -654,14 +660,14 @@ export class FlexContainer extends HTMLElement {
     }
     #isResize: boolean = false;
     set isResize(isResize: boolean) {
-        if (this.#isResize == isResize) return;
+        if (this.#isResize === isResize) return;
         this.#isResize = isResize;
         this.dataset.is_resize = String(isResize);
         this.#resizePanel.style.display = isResize ? '' : 'none';
     }
-    #panelMode: ResizePanelMode | undefined;
+    #panelMode?: ResizePanelMode;
     set panelMode(panelMode: ResizePanelMode) {
-        if (this.#panelMode == panelMode) return;
+        if (this.#panelMode === panelMode) return;
         this.#panelMode = panelMode;
         this.dataset.panel_mode = panelMode;
         if (panelMode === 'default') {
@@ -687,6 +693,7 @@ export class FlexContainer extends HTMLElement {
     }
     constructor(attribute: any = {}) {
         super();
+
         /*if (attribute.hasOwnProperty('className')) {
             this.classList.add(attribute.className);
             delete attribute.className;
@@ -697,6 +704,10 @@ export class FlexContainer extends HTMLElement {
     connectedCallback() {
         this.className = flexLayout['flex-layout-content'];
         this.isResize = this.#isResize;
+        if (!this.dataset.panel_mode) {
+            this.#panelMode = 'default';
+        }
+        this.#resizePanel.style.display = this.#isResize ? '' : 'none';
     }
 }
 

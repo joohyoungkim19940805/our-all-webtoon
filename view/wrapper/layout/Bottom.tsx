@@ -1,13 +1,14 @@
 import { Observable, concat, delay, from, map, mergeMap, zip } from 'rxjs';
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
-import { GnbContainer, useGnbHeights } from '@container/gnb/GnbContainer';
+import { GnbContainer } from '@container/gnb/GnbContainer';
 import { LoadingRotate } from '@components/loading/Loading';
 import { useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
+import { useFirstChildHeight } from '@handler/hooks/SizeChangeHooks';
 
 export const Bottom = () => {
     const bottomRef = useRef<FlexContainer>(null);
-    const { gnbRef, heights } = useGnbHeights();
+    const { ref: gnbRef, heights } = useFirstChildHeight();
 
     useEffect(() => {
         if (!bottomRef.current || !heights || !bottomRef.current.getRoot)
@@ -24,8 +25,8 @@ export const Bottom = () => {
     return (
         <flex-container
             ref={bottomRef}
-            data-grow="0.094"
-            data-is_resize="false"
+            data-grow={0.094}
+            data-is_resize={false}
         >
             <GnbContainer ref={gnbRef}></GnbContainer>
         </flex-container>

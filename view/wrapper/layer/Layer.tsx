@@ -3,7 +3,7 @@ import { LoginContainer } from '@container/login/LoginContainer';
 import { LoadingRotate } from '@components/loading/Loading';
 import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from 'rxjs';
 import closeSvg from '@svg/close.svg';
-import { CloseButton } from '@components/button/fragments/CloseButton';
+import { CloseButton } from '@components/button/CloseButton';
 
 export type DimLayerProps = {};
 /*

@@ -1,0 +1,43 @@
+.webtoon-filter-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5vh 3vw 0;
+    & > * {
+        width: 33%;
+    }
+    & .sort {
+        display: flex;
+        justify-content: flex-start;
+        & option {
+            text-align: start;
+        }
+    }
+    & .sex-age {
+        display: flex;
+        justify-content: center;
+        gap: 3vw;
+        & > :first-child::after {
+            content: '|';
+        }
+        & option {
+            text-align: center;
+        }
+        & .sex {
+            /*& option {
+                text-align: start;
+            }*/
+        }
+        & .age {
+            /*& option {
+                text-align: end;
+            }*/
+        }
+    }
+    & .list-column {
+        display: flex;
+        justify-content: flex-end;
+        & option {
+            text-align: end;
+        }
+    }
+}

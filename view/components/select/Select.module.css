@@ -1,17 +1,13 @@
 .select {
-    cursor: pointer;
-    /*max-width: fit-content;*/
-    min-width: fit-content;
-    display: flex;
-    justify-content: space-around;
-    font-size: 1.8rem;
-    align-items: center;
-
+    border: none;
+    color: #159f33;
+    padding-bottom: 0.4vh;
+    text-decoration: underline;
+    text-underline-offset: 0.2vh;
+    text-decoration-color: #159f3324;
     body[data-mode='black'] && {
         background-color: #343434;
         /*border-color: #464646;*/
-        color: #b9b9b9;
-
         && > svg {
             color: #cbc3e3;
         }

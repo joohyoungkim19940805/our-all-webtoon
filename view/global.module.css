@@ -1,13 +1,14 @@
 /* stylelint-disable */
-:root{
+:root {
     --bg-mode: initial;
     /*#343434;*/
 }
-html{
+html {
     font-size: 1.4vmax;
     font-family: serif;
 }
-body, html{
+body,
+html {
     width: 100dvw;
     height: 100dvh;
     margin: 0;
@@ -18,10 +19,10 @@ body, html{
     overflow: hidden;
 }
 /* summary 마크 화살표 제거 */
-summary{
-    list-style: none ;
+summary {
+    list-style: none;
 
-    &&::marker{
+    &&::marker {
         display: none;
     }
 }
@@ -37,22 +38,48 @@ ul {
     padding-inline-start: 0px;
 }
 
-label{
+button {
+    cursor: pointer;
+    min-width: fit-content;
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.8rem;
+    align-items: center;
+}
+
+label {
     font-size: 1.2rem;
 }
 
-input, button{
+input,
+button {
     outline: none;
     background: none;
     border: none;
 }
 
-input{
+input {
     border-bottom: solid 1px #ffe7e7;
     border-left: solid 1px #ffe7e7;
 }
 
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    & option {
+        font-size: 1.2vw;
+        text-align: center;
+    }
+}

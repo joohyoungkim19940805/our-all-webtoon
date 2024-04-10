@@ -1,23 +1,17 @@
-import {
-    RecommendContainer,
-    useRecommendHeight,
-} from '@container/recommend/RecommendContainer';
-import {
-    SearchAndMenuContainer,
-    useSearchHeight,
-} from '@container/search/SearchAndMenuContainer';
+import { RecommendContainer } from '@container/recommend/RecommendContainer';
+import { SearchAndMenuContainer } from '@container/search/SearchAndMenuContainer';
 import styles from './top.module.css';
 import common from '@handler/common';
 import { windowResize } from '@handler/globalEvents';
 import { FlexContainer } from '@wrapper/FlexLayout';
 import { useEffect, useRef } from 'react';
 import { Observable, from, map, zip } from 'rxjs';
-//탑이 광고역할 및 검색 역할 드가야함
+import { useHeight } from '@handler/hooks/SizeChangeHooks';
 
 export const Top = () => {
     const topRef = useRef<FlexContainer>(null);
-    const { searchAndMenuRef, height: searchAndMenuHeight } = useSearchHeight();
-    const { recommendRef, height: recommendHeight } = useRecommendHeight();
+    const { ref: searchAndMenuRef, height: searchAndMenuHeight } = useHeight();
+    const { ref: recommendRef, height: recommendHeight } = useHeight();
     useEffect(() => {
         if (
             !topRef.current ||
@@ -36,8 +30,8 @@ export const Top = () => {
     return (
         <flex-container
             ref={topRef}
-            data-grow="0.09"
-            data-is_resize="false"
+            data-grow={0.09}
+            data-is_resize={true}
             data-panel_mode="center-cylinder-reverse"
         >
             <div className={styles['head-container']}>

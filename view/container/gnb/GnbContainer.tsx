@@ -1,5 +1,4 @@
 import styles from './GnbContainer.module.css';
-import { Button } from '@components/button/Button';
 
 import {
     Subject,
@@ -12,27 +11,27 @@ import {
     zip,
 } from 'rxjs';
 
-import { MyHomeButton } from '@components/button/fragments/MyHomeButton';
+import { MyHomeButton } from '@components/button/MyHomeButton';
 import {
     LatestUpdateButton,
     latestUpdateButtonEvent,
-} from '@components/button/fragments/LatestUpdateButton';
+} from '@components/button/LatestUpdateButton';
 import {
     WebtoonListButton,
     webtoonListButtonEvent,
-} from '@components/button/fragments/WebtoonListButton';
+} from '@components/button/WebtoonListButton';
 import {
     PaintingAddButton,
     paintingAddButtonEvent,
-} from '@components/button/fragments/PaintingAddButton';
+} from '@components/button/PaintingAddButton';
 import {
     NoticeBoardButton,
     noticeBoardButtonEvent,
-} from '@components/button/fragments/NoticeBoardButton';
-import { BookMarkButtonButton } from '@components/button/fragments/BookMarkButton';
-import { CalendarButton } from '@components/button/fragments/CalendarButton';
-import { CartButton } from '@components/button/fragments/CartButton';
-import { TvButton } from '@components/button/fragments/TvButton';
+} from '@components/button/NoticeBoardButton';
+import { BookMarkButtonButton } from '@components/button/BookMarkButton';
+import { CalendarButton } from '@components/button/CalendarButton';
+import { CartButton } from '@components/button/CartButton';
+import { TvButton } from '@components/button/TvButton';
 import React, {
     LegacyRef,
     forwardRef,
@@ -41,30 +40,8 @@ import React, {
     useState,
 } from 'react';
 import { windowResize } from '@handler/globalEvents';
+import buttonStyle from '@components/button/Button.module.css';
 
-export const useGnbHeights = () => {
-    const gnbRef = useRef<HTMLDivElement>(null);
-    const [heights, setHeights] = useState<Array<number>>();
-
-    useEffect(() => {
-        if (!gnbRef.current) return;
-        setHeights([
-            gnbRef.current.getBoundingClientRect().height,
-            gnbRef.current.children[0].getBoundingClientRect().height,
-        ]);
-        const subscribe = windowResize.subscribe((ev) => {
-            if (!gnbRef.current) return;
-            setHeights([
-                gnbRef.current.getBoundingClientRect().height,
-                gnbRef.current.children[0].getBoundingClientRect().height,
-            ]);
-        });
-        return () => {
-            subscribe.unsubscribe();
-        };
-    }, [gnbRef]);
-    return { gnbRef, heights };
-};
 /*type GnbContainerProps = {
     ref: LegacyRef<HTMLDivElement>; // Add the ref prop
 };*/

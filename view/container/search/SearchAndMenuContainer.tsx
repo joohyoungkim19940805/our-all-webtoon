@@ -2,28 +2,9 @@ import { WebtoonSearchInput } from '@components/input/fragments/WebtoonSearchInp
 import { from, map, zip } from 'rxjs';
 import logo from '@root/image/test.png';
 import style from './SearchAndMenuContainer.module.css';
-import { SearchButton } from '@components/button/fragments/SearchButton';
+import { SearchButton } from '@components/button/SearchButton';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
-
-export const useSearchHeight = () => {
-    const searchAndMenuRef = useRef<HTMLDivElement>(null);
-    const [height, setHeight] = useState<number>();
-
-    useEffect(() => {
-        if (!searchAndMenuRef.current) return;
-        setHeight(searchAndMenuRef.current.getBoundingClientRect().height);
-        const subscribe = windowResize.subscribe((ev) => {
-            if (!searchAndMenuRef.current) return;
-            setHeight(searchAndMenuRef.current.getBoundingClientRect().height);
-        });
-        return () => {
-            subscribe.unsubscribe();
-        };
-    }, [searchAndMenuRef]);
-
-    return { searchAndMenuRef, height };
-};
 
 export const SearchAndMenuContainer = forwardRef<HTMLDivElement>((_, ref) => {
     return (

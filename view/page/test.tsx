@@ -6,7 +6,8 @@ import { createRoot } from 'react-dom/client';
 import styles from './test3.module.css';
 styles;
 document.body.dataset.mode = 'black';
-const rootElement = new FlexLayout({ id: 'root' });
+const rootElement = new FlexLayout();
+rootElement.id = 'root';
 rootElement.dataset.direction = 'column';
 document.body.append(rootElement);
 
