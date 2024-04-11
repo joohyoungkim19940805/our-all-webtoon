@@ -1,4 +1,3 @@
-import { Button } from '@components/button/Button';
 import { TvSvg } from '@components/svg/TvSvg';
 import { Subject, map } from 'rxjs';
 import styles from './Button.module.css';

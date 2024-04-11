@@ -1,7 +1,6 @@
 import { from, of, Observable, map, zip } from 'rxjs';
 import styles from './LoginContainer.module.css';
 import { Input } from '@components/input/Input';
-import { Button } from '@components/button/Button';
 import { FindAccountInfo } from '@container/login/FindAccountInfoContainer';
 
 export const UsernameInput = () => {
@@ -26,7 +25,14 @@ export const PasswordInput = () => {
 };
 
 export const LoginSubmitButton = () => {
-    return <Button type="submit" size="inherit" textContent="로그인"></Button>;
+    return (
+        <button
+            type="submit"
+            className={`${styles.button} ${styles['inherit']}`}
+        >
+            로그인
+        </button>
+    );
 };
 
 export const LoginContainer = () => {

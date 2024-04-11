@@ -1,4 +1,3 @@
-import { Button } from '@components/button/Button';
 import { Subject, map } from 'rxjs';
 import { SearchLoadingSvg } from '@components/svg/SearchLoadingSvg';
 import styles from './Button.module.css';
