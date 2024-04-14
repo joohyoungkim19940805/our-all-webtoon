@@ -1,8 +1,8 @@
-export type WebtoonEpisodeType = {
+export interface WebtoonEpisodeType {
     title: string;
     id: number;
     episode: Episode;
-};
+}
 
 export interface Episode {
     chapter: number | string;

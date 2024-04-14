@@ -1,5 +1,13 @@
 import { WebtoonEpisodeType } from '@type/WebtoonEpisodeType';
 import styles from './WebtoonEpisodeList.module.css';
+import scrollStyles from '@root/listScroll.module.css';
+import { EyeSvg } from '@svg/EyeSvg';
+import { useEffect, useRef, useState } from 'react';
+import {
+    $filterBarChange,
+    Way,
+    wayValues,
+} from '@handler/Subject/FilterBarEvent';
 const testWebtoonList = [
     [...new Array(20)],
     [...new Array(20)],
@@ -27,13 +35,29 @@ const testWebtoonList = [
 );
 
 export const WebtoonEpisodeList = () => {
+    const [way, setWay] = useState<Way | undefined>();
+    const listRef = useRef<HTMLUListElement>(null);
+    useEffect(() => {
+        const subscribe = $filterBarChange.subscribe(({ value }) => {
+            if (!value || !wayValues.some((e) => e[0] === value[0])) return;
+
+            console.log(value);
+            setWay(value as Way);
+        });
+        return () => {
+            subscribe.unsubscribe();
+        };
+    }, []);
     return (
-        <div>
-            <ul>
-                {testWebtoonList[0].map((item) => {
+        <div className={`${scrollStyles['list-scroll']} ${scrollStyles['y']}`}>
+            <ul className={`${styles['webtoon-episode-list']}`} ref={listRef}>
+                {testWebtoonList[0].map((item, i) => {
+                    const { title, id, episode } = item;
                     return (
                         <li
-                            className={`${styles['webtoon-episode-container']}`}
+                            key={i}
+                            className={`${styles['webtoon-episode-item']} ${styles[way ? way[0] : 'one_way']}`}
+                            data-test={way ? way[0] : 'aaa'}
                         >
                             <div className={`${styles['episode-thumbnail']}`}>
                                 <img src="https://manatoki333.net/data/file/comic/526342/19200461/thumb-mlZHrEwjMXS0_240x320.jpg"></img>
@@ -41,14 +65,14 @@ export const WebtoonEpisodeList = () => {
                             <div className={`${styles['episode-title']}`}>
                                 <div className={`${styles['title-wrapper']}`}>
                                     <div className={`${styles['title']}`}>
-                                        {item.title}
+                                        {title}
                                     </div>
                                     <div className={`${styles['chapter']}`}>
-                                        {`${item.episode.chapter} 화`}
+                                        {`${episode.chapter} 화`}
                                         <span
                                             className={`${styles['sub-title']}`}
                                         >
-                                            {item.episode.subTitle}
+                                            {episode.subTitle}
                                         </span>
                                     </div>
                                 </div>
@@ -59,12 +83,21 @@ export const WebtoonEpisodeList = () => {
                             </div>
                             <div className={`${styles['episode-at']}`}>
                                 <div className={`${styles['at']}`}>
-                                    {new Date(
-                                        item.episode.createAt,
-                                    ).toLocaleString()}
+                                    {new Date(episode.createAt).toLocaleString(
+                                        'ko-KR',
+                                        {
+                                            formatMatcher: 'basic',
+                                            hourCycle: 'h24',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                        },
+                                    )}
                                 </div>
                                 <div className={`${styles['views']}`}>
-                                    {item.episode.views || 0}
+                                    {episode.views || 0}
+                                    <EyeSvg></EyeSvg>
                                 </div>
                             </div>
                         </li>

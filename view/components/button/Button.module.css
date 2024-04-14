@@ -4,7 +4,7 @@
     min-width: fit-content;
     display: flex;
     justify-content: space-around;
-    font-size: 1.8rem;
+    font-size: 1.8vmax;
     align-items: center;
     body[data-mode='black'] && {
         /*background-color: #343434;*/
@@ -31,7 +31,7 @@
         flex-direction: row-reverse;
     }
     &&.svg {
-        font-size: 1.05rem;
+        font-size: 1.25vmax;
     }
 
     &&.initial {

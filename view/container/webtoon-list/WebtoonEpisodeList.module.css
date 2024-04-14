@@ -1,85 +1,100 @@
-.webtoon-episode-container {
+.webtoon-episode-list {
     display: flex;
-    gap: 3vw;
-    text-wrap: pretty;
-    box-sizing: border-box;
-    height: 100%;
-    width: 100%;
-    word-wrap: revert;
-    border-bottom: 1px solid #a3a3a3;
-    padding-top: 0.7vh;
-    padding-bottom: 0.7vh;
-    & .episode-thumbnail {
-        flex: 1 0 18%;
-        img {
-            max-width: 100%;
-            height: auto;
-            aspect-ratio: attr(width) / attr(height);
-            image-rendering: auto;
+    flex-wrap: wrap;
+    .webtoon-episode-item {
+        display: flex;
+        gap: 2vw;
+        text-wrap: pretty;
+        box-sizing: border-box;
+        height: 100%;
+        word-wrap: revert;
+        border-bottom: 1px solid #a3a3a3;
+        padding-bottom: 0.7vh;
+        padding-top: 0.7vh;
+        text-wrap: pretty;
+        &.one_way {
+            width: 100%;
+            font-size: 1.132rem;
         }
-    }
-    & .episode-title {
-        align-items: center;
-        display: inline-flex;
-        flex: 1 0 58%;
-        flex-direction: column;
-        gap: 0.5dvh;
-        justify-content: space-between;
-        & .title-wrapper {
-            display: flex;
+        &.two_way {
+            width: 50%;
+            font-size: 0.95rem;
+        }
+        & .episode-thumbnail {
+            flex: 1 0 18%;
+            img {
+                max-width: 100%;
+                height: auto;
+                aspect-ratio: attr(width) / attr(height);
+                image-rendering: auto;
+            }
+        }
+        & .episode-title {
+            align-items: center;
+            display: inline-flex;
+            flex: 1 0 58%;
             flex-direction: column;
             gap: 0.5dvh;
-            flex: 1 0 0%;
-            align-items: center;
-            justify-content: center;
-            & .title {
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                font-size: 1.132rem;
-                line-height: 120%;
-            }
+            justify-content: space-between;
+            & .title-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5dvh;
+                flex: 1 0 0%;
+                align-items: center;
+                justify-content: center;
+                & .title {
+                    display: -webkit-box;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+                    font-size: 1em;
+                    line-height: 120%;
+                }
 
-            & .chapter {
-                width: 100%;
-                font-weight: 700;
-                font-size: 1.132rem;
-                & .sub-title {
-                    color: hsl(0deg 0% 86.76% / 81.2%);
-                    font-size: 1.07rem;
-                    &::before {
-                        content: ' - ';
+                & .chapter {
+                    width: 100%;
+                    font-weight: 700;
+                    font-size: 1em;
+                    & .sub-title {
+                        color: hsl(0deg 0% 86.76% / 81.2%);
+                        font-size: 0.97em;
+                        &::before {
+                            content: ' - ';
+                        }
                     }
                 }
             }
+            & .episode-info {
+                align-items: flex-end;
+                color: hsl(0deg 0% 100% / 42%);
+                display: flex;
+                font-size: 0.88em;
+                justify-content: space-between;
+                width: 100%;
+            }
         }
-        & .episode-info {
-            align-items: flex-end;
-            color: hsl(0deg 0% 100% / 42%);
+        & .episode-at {
             display: flex;
-            font-size: 0.9rem;
-            justify-content: space-between;
-            width: 100%;
-        }
-    }
-    & .episode-at {
-        flex: 1 0 18%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        & .at {
-            flex: 1;
-            display: flex;
+            flex-direction: column;
             align-items: center;
-        }
-        & .views {
-            display: flex;
-            font-size: 0.9rem;
-            width: 100%;
-            justify-content: center;
+            justify-content: space-between;
+            & .at {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                text-align: center;
+                font-size: 0.88em;
+            }
+            & .views {
+                display: flex;
+                font-size: 0.88em;
+                width: 100%;
+                justify-content: center;
+                color: hsla(0, 0%, 100%, 0.42);
+                gap: 0.4vw;
+            }
         }
     }
 }

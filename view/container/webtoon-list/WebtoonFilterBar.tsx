@@ -1,37 +1,131 @@
+import {
+    Age,
+    Sex,
+    Sort,
+    Way,
+    ageValues,
+    $filterBarChange,
+    sexValues,
+    sortValues,
+    wayValues,
+} from '@handler/Subject/FilterBarEvent';
 import styles from './WebtoonFilterBar.module.css';
 import selectStyles from '@components/select/Select.module.css';
+import { useEffect, useRef } from 'react';
 
 export const WebtoonFilterBar = () => {
+    const wayRef = useRef<HTMLSelectElement>(null);
+    useEffect(() => {
+        if (!wayRef.current) return;
+        $filterBarChange.next({
+            event: undefined,
+            value: [
+                wayRef.current.selectedOptions[0].value,
+                wayRef.current.selectedOptions[0].textContent || '',
+            ] as Way,
+        });
+    }, [wayRef]);
     return (
         <div className={styles['webtoon-filter-box']}>
             <div className={styles['sort']}>
-                <select className={selectStyles.select}>
-                    <option>업데이트순</option>
-                    <option>조회수순</option>
-                    <option>별점순</option>
+                <select
+                    className={selectStyles.select}
+                    onChange={(e) =>
+                        $filterBarChange.next({
+                            event: e,
+                            value:
+                                e.target.selectedIndex == 0
+                                    ? undefined
+                                    : ([
+                                          e.target.selectedOptions[0].value,
+                                          e.target.selectedOptions[0]
+                                              .textContent || '',
+                                      ] as Sort),
+                        })
+                    }
+                >
+                    {sortValues.map(([value, text], i) => {
+                        return (
+                            <option key={i} value={value}>
+                                {text}
+                            </option>
+                        );
+                    })}
                 </select>
             </div>
             <div className={styles['sex-age']}>
-                <select className={`${selectStyles.select} ${styles.sex}`}>
-                    <option>성별 전체</option>
-                    <option>남자</option>
-                    <option>여자</option>
+                <select
+                    className={`${selectStyles.select} ${styles.sex}`}
+                    onChange={(e) =>
+                        $filterBarChange.next({
+                            event: e,
+                            value:
+                                e.target.selectedIndex == 0
+                                    ? undefined
+                                    : ([
+                                          e.target.selectedOptions[0].value,
+                                          e.target.selectedOptions[0]
+                                              .textContent || '',
+                                      ] as Sex),
+                        })
+                    }
+                >
+                    <option value="">성별 전체</option>
+                    {sexValues.map(([value, text], i) => {
+                        return (
+                            <option key={i} value={value}>
+                                {text}
+                            </option>
+                        );
+                    })}
                 </select>
-                <select className={`${selectStyles.select} ${styles.age}`}>
-                    <option>연령 전체</option>
-                    <option>10대</option>
-                    <option>20대</option>
-                    <option>30대</option>
-                    <option>40대</option>
-                    <option>50대</option>
-                    <option>60대</option>
-                    <option>70대 이상</option>
+                <select
+                    className={`${selectStyles.select} ${styles.age}`}
+                    onChange={(e) =>
+                        $filterBarChange.next({
+                            event: e,
+                            value:
+                                e.target.selectedIndex == 0
+                                    ? undefined
+                                    : ([
+                                          e.target.selectedOptions[0].value,
+                                          e.target.selectedOptions[0]
+                                              .textContent || '',
+                                      ] as Age),
+                        })
+                    }
+                >
+                    <option value="">연령 전체</option>
+                    {ageValues.map(([value, text], i) => {
+                        return (
+                            <option key={i} value={value}>
+                                {text}
+                            </option>
+                        );
+                    })}
                 </select>
             </div>
             <div className={styles['list-column']}>
-                <select className={selectStyles.select}>
-                    <option>한줄</option>
-                    <option>두줄</option>
+                <select
+                    ref={wayRef}
+                    className={selectStyles.select}
+                    onChange={(e) =>
+                        $filterBarChange.next({
+                            event: e,
+                            value: [
+                                e.target.selectedOptions[0].value,
+                                e.target.selectedOptions[0].textContent || '',
+                            ] as Way,
+                        })
+                    }
+                >
+                    {wayValues.map(([value, text], i) => {
+                        return (
+                            <option key={i} value={value}>
+                                {text}
+                            </option>
+                        );
+                    })}
                 </select>
             </div>
         </div>
