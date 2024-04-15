@@ -1,9 +1,22 @@
 @import './../global.module.css';
 
+#root {
+    display: inline-flex;
+    flex-direction: column;
+    height: 100dvh;
+    margin: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    user-select: auto;
+    width: 100dvw;
+}
+
 .div {
     display: flex;
     align-self: flex-end;
-    &.aaa{
-        color:red;
+    &.aaa {
+        color: red;
     }
 }

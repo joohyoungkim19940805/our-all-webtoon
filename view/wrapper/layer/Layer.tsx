@@ -1,11 +1,53 @@
 import styles from './layer.module.css';
-import { LoginContainer } from '@container/login/LoginContainer';
-import { LoadingRotate } from '@components/loading/Loading';
-import { Observable, flatMap, from, fromEvent, map, mergeMap, zip } from 'rxjs';
-import closeSvg from '@svg/close.svg';
-import { CloseButton } from '@components/button/CloseButton';
+import buttonStyles from '@components/button/Button.module.css';
+import { CloseSvg } from '@components/svg/CloseSvg';
+import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { $globalDimLayer } from '@handler/Subject/LayerEvent';
 
-export type DimLayerProps = {};
+export const GlobalDimLayer = () => {
+    const layerRef = useRef<HTMLDivElement>(null);
+    const [children, setChildren] = useState<
+        ReactNode | ReactElement | JSX.Element | undefined
+    >(false);
+    useEffect(() => {
+        const subscribe = $globalDimLayer.subscribe((children) => {
+            setChildren(children);
+        });
+        return () => {
+            subscribe.unsubscribe();
+        };
+    }, [layerRef]);
+    return (
+        <>
+            {children && (
+                <div
+                    className={`${styles.layer}`}
+                    ref={layerRef}
+                    onClick={(event) => {
+                        if (
+                            !layerRef.current ||
+                            event.nativeEvent.composedPath()[0] !==
+                                layerRef.current
+                        )
+                            return;
+                        $globalDimLayer.next(undefined);
+                    }}
+                >
+                    <div className={`${styles['layer-container']}`}>
+                        <button
+                            onClick={() => $globalDimLayer.next(undefined)}
+                            type="button"
+                            className={`${buttonStyles.button} ${buttonStyles['inherit']} ${buttonStyles.svg} ${buttonStyles[`svg_top`]}`}
+                        >
+                            <CloseSvg></CloseSvg>
+                        </button>
+                        {children}
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 /*
 export const dimLayer = ( () => {
 	const promise = new Promise<{layer:HTMLDivElement, layerContainer:HTMLDivElement}>(res => {

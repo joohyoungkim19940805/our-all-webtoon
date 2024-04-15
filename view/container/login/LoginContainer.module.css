@@ -1,21 +1,27 @@
-.login-container{
-	display: flex;
-	flex-direction: column;
-	gap: 4dvh;
-	width: 85dvw;
-	&& input, && button{
-		font-size: 1.3rem;
-	}
-	
-	&& .account-info-wrapper{
-		display: flex;
-		gap: 1dvh;
-		flex-direction: column;
-	}
-	
-	&& .account-info-wrapper .id-and-password-wrapper{
-		display: flex;
-		gap: 4dvh;
-		flex-direction: column;
-	}
+.login-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4dvh;
+    width: 85dvw;
+    & input,
+    && button {
+        font-size: 1.3rem;
+    }
+
+    & .account-info-wrapper {
+        display: flex;
+        gap: 1dvh;
+        flex-direction: column;
+    }
+
+    & .account-info-wrapper .id-and-password-wrapper {
+        display: flex;
+        gap: 4dvh;
+        flex-direction: column;
+    }
+
+    & .submit-button {
+        border: 1px outset #ededed;
+        font-weight: 700;
+    }
 }

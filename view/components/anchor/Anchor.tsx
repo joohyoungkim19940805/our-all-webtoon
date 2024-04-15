@@ -1,5 +1,5 @@
 import { from, of, Observable } from 'rxjs';
-import styles from './Link.module.css';
+import styles from './Anchor.module.css';
 import { HTMLAttributeAnchorTarget, HTMLAttributeReferrerPolicy } from 'react';
 
 export type AnchorAttribute = {

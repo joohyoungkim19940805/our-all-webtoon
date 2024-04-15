@@ -2,7 +2,7 @@ import { from, of, Observable, map, zip } from 'rxjs';
 import styles from './LoginContainer.module.css';
 import { Input } from '@components/input/Input';
 import { FindAccountInfo } from '@container/login/FindAccountInfoContainer';
-
+import buttonStyles from '@components/button/Button.module.css';
 export const UsernameInput = () => {
     return (
         <Input
@@ -28,7 +28,7 @@ export const LoginSubmitButton = () => {
     return (
         <button
             type="submit"
-            className={`${styles.button} ${styles['inherit']}`}
+            className={`${buttonStyles.button} ${buttonStyles['inherit']} ${styles['submit-button']}`}
         >
             로그인
         </button>
@@ -36,16 +36,18 @@ export const LoginSubmitButton = () => {
 };
 
 export const LoginContainer = () => {
-    <form className={styles['login-container']} id="login-form">
-        <div className={styles['account-info-wrapper']}>
-            <FindAccountInfo></FindAccountInfo>
-            <div className={styles['id-and-password-wrapper']}>
-                <UsernameInput></UsernameInput>
-                <PasswordInput></PasswordInput>
+    return (
+        <form className={styles['login-container']} id="login-form">
+            <div className={styles['account-info-wrapper']}>
+                <div className={styles['id-and-password-wrapper']}>
+                    <UsernameInput></UsernameInput>
+                    <PasswordInput></PasswordInput>
+                </div>
+                <FindAccountInfo></FindAccountInfo>
             </div>
-        </div>
-        <LoginSubmitButton></LoginSubmitButton>
-    </form>;
+            <LoginSubmitButton></LoginSubmitButton>
+        </form>
+    );
 };
 
 /*

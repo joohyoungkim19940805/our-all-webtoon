@@ -1,28 +1,31 @@
-.layer{
-	display: flex;
+.layer {
+    display: flex;
     width: 100%;
     height: 100%;
     position: fixed;
-    background: rgb(0 0 0 / 16%);
+    background: rgb(0 0 0 / 38%);
     justify-content: center;
     align-items: center;
     transition: opacity 0.5s;
     z-index: 9000;
-	&& .layer-container{
-		background-color: #ffffffad;
-		min-width: fit-content;
-		min-height: fit-content;
-		max-width: 100dvh;
-		max-height: 100dvh;
-		border-radius: 8px;
-		padding: 5% 3% 3%;
-		position: relative;
-	}
+    && .layer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        background-color: hsl(0deg 0% 100% / 96%);
+        min-width: fit-content;
+        min-height: fit-content;
+        max-width: 100dvh;
+        max-height: 100dvh;
+        border-radius: 8px;
+        padding: 5% 3% 3%;
+        position: relative;
+    }
 
-	&& .layer-container .layer-close-button{
-		position: absolute;
-		top: 0;
-		right: 0;
-		cursor: pointer;
-	}
+    && .layer-container .layer-close-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
 }
