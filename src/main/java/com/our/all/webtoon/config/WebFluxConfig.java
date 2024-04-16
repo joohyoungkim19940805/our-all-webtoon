@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
@@ -154,10 +155,27 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
 	*/
 	
 	@Bean
+	@DependsOn
+/**
+ * S3Handler.java 참조 
+ 		SecretKey key;
+		byte[] mdDigestHash;
+		try {
+			key = S3Util.generateKey(keyString, "{\"account_name\":\"%s\",\"slat\":\"%s\"}".formatted(sseCustomerKeyRequest.getAccountName(), s3SseCSlat));
+			mdDigestHash = S3Util.getMd5Digest(key.getEncoded());
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			return Mono.error(new S3ApiException(Result._501));
+		}
+		String base64Key = BaseEncoding.base64().encode(key.getEncoded());
+		String base64Md = BaseEncoding.base64().encode(mdDigestHash);
+ * @return
+ * @throws NoSuchAlgorithmException
+ */
 	public KeyPair keyPair() throws NoSuchAlgorithmException {
 		if(keyPairFileDir == null || keyPairFileDir.isEmpty()) {
 			keyPairFileDir = System.getProperty("user.home");
 		}
+		
 		var keyPairUtil = new KeyPairUtil();
 		keyPairUtil.saveAndSetVariableKeyPair(keyPairFileDir, keyPublicName, keyPrivateName);
 		return keyPairUtil.getKeyPair();

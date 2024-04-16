@@ -1,11 +1,15 @@
 package com.our.all.webtoon.config;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.LoggerSettings;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 
@@ -14,10 +18,15 @@ import com.mongodb.reactivestreams.client.MongoClients;
 public class ReactiveMongoConfiguration extends AbstractReactiveMongoConfiguration {
 
 	private String databaseName = "our_all_webtoon";
-	
+
 	@Override
     public MongoClient reactiveMongoClient() {
-        return MongoClients.create("mongodb+srv://application:3pv58lNGspSpaDkv@our-all-webtoon.kjxfgr6.mongodb.net/?retryWrites=true&w=majority");
+		
+		MongoClientSettings setting = MongoClientSettings.builder()
+                .applicationName("our-all-webtoon")
+                .applyConnectionString(new ConnectionString("mongodb+srv://application:3pv58lNGspSpaDkv@our-all-webtoon.kjxfgr6.mongodb.net/?retryWrites=true&w=majority"))
+                .build();
+        return MongoClients.create(setting);
     }
     @Bean
     public ReactiveMongoTemplate reactiveMongoTemplate() {

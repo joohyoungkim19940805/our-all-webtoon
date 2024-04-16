@@ -3,49 +3,38 @@ import styles from './LoginContainer.module.css';
 import { Input } from '@components/input/Input';
 import { FindAccountInfo } from '@container/login/FindAccountInfoContainer';
 import buttonStyles from '@components/button/Button.module.css';
-export const UsernameInput = () => {
-    return (
-        <Input
-            type="text"
-            autocomplete="username"
-            placeholder="아이디를 입력하세요."
-            lineColor="bright-purple"
-        ></Input>
-    );
-};
-export const PasswordInput = () => {
-    return (
-        <Input
-            type="password"
-            placeholder="비밀번호를 입력하세요."
-            autocomplete="current-password"
-            lineColor="bright-purple"
-        ></Input>
-    );
-};
-
-export const LoginSubmitButton = () => {
-    return (
-        <button
-            type="submit"
-            className={`${buttonStyles.button} ${buttonStyles['inherit']} ${styles['submit-button']}`}
-        >
-            로그인
-        </button>
-    );
-};
+import inputStyles from '@components/input/Input.module.css';
 
 export const LoginContainer = () => {
     return (
         <form className={styles['login-container']} id="login-form">
             <div className={styles['account-info-wrapper']}>
                 <div className={styles['id-and-password-wrapper']}>
-                    <UsernameInput></UsernameInput>
-                    <PasswordInput></PasswordInput>
+                    <input
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                        type="text"
+                        autoComplete="username webauthn"
+                        placeholder="아이디를 입력하세요."
+                        id="username"
+                        name="username"
+                    ></input>
+                    <input
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                        type="password"
+                        autoComplete="current-password webauthn"
+                        placeholder="비밀번호를 입력하세요."
+                        id="password"
+                        name="password"
+                    ></input>
                 </div>
                 <FindAccountInfo></FindAccountInfo>
             </div>
-            <LoginSubmitButton></LoginSubmitButton>
+            <button
+                type="submit"
+                className={`${buttonStyles.button} ${buttonStyles['inherit']} ${styles['submit-button']}`}
+            >
+                로그인
+            </button>
         </form>
     );
 };

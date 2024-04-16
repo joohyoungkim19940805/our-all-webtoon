@@ -43,7 +43,7 @@ public class JwtVerifyHandler {
     }
 
     private VerificationResult verify(String token) {
-        var claims = getJwt(token).getBody();
+        var claims = getJwt(token).getPayload();
         final Date expiration = claims.getExpiration();
         /**
          * Jwts 라이브러리에서 만료 시간 확인 후 throw 중인데 필요한 로직인지?
