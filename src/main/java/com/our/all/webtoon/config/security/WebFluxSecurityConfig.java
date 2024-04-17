@@ -108,13 +108,14 @@ public class WebFluxSecurityConfig {
                 .logout(logoutSpec -> logoutSpec
 	            		.logoutUrl("/logout")
 	            		.logoutSuccessHandler(logoutSuccessHandler("/loginPage?status=logout"))
+	            		
                 )
                 
-                .formLogin(formLoginSpec -> formLoginSpec
-	            		.authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("/"))
-	                    .authenticationFailureHandler(new RedirectServerAuthenticationFailureHandler("/loginPage?status=error"))
-	                    .loginPage("/login")
-                )
+//                .formLogin(formLoginSpec -> formLoginSpec
+//	            		.authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler("/"))
+//	                    .authenticationFailureHandler(new RedirectServerAuthenticationFailureHandler("/loginPage?status=error"))
+//	                    .loginPage("/login")
+//                )
 
                 //.requestCache(c->c.requestCache(new CookieServerRequestCache()))
                 .authenticationManager(authManager)
