@@ -24,4 +24,5 @@ public class S3Properties {
 	private String bucket;
 	
 	private String bucketPublic;
+	private SseCProperties sseCProperties;
 }

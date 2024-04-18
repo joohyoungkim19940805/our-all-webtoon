@@ -28,10 +28,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @With
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document
+@Document(collection = "account_log")
 public class AccountLogEntity {
 	
-    private UUID accountId;
+    private String accountId;
 
     private String ip;
     @CreatedDate

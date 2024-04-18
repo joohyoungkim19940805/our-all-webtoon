@@ -33,7 +33,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="account")
 public class AccountEntity implements TokenTemplate {
     @Id
-    private UUID accountId;
+    private String accountId;
     
     private String accountName;
     
