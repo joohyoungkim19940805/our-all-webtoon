@@ -7,7 +7,7 @@ import {
     $filterBarChange,
     Way,
     wayValues,
-} from '@handler/Subject/FilterBarEvent';
+} from '@handler/subject/FilterBarEvent';
 const testWebtoonList = [
     [...new Array(20)],
     [...new Array(20)],

@@ -8,7 +8,7 @@ import {
     sexValues,
     sortValues,
     wayValues,
-} from '@handler/Subject/FilterBarEvent';
+} from '@handler/subject/FilterBarEvent';
 import styles from './WebtoonFilterBar.module.css';
 import selectStyles from '@components/select/Select.module.css';
 import { useEffect, useRef } from 'react';

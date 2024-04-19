@@ -30,6 +30,7 @@
         "@types/react-dom": "^18",
         "@typescript-eslint/eslint-plugin": "^6.13.1",
         "@typescript-eslint/parser": "^6.13.1",
+        "@types/react-router-dom": "^5.3.3",
         "autoprefixer": "^10.4.17",
         "aws-sdk": "^2.1528.0",
         "css-loader": "^6.10.0",
@@ -76,11 +77,11 @@
         "typings-for-css-modules-loader": "^0.1.1",
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4",
-        "webpack-dev-server": "^4.2.1"
+        "webpack-dev-server": "^4.2.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
         "rxjs": "^7.8.1"
     },
     "prettier": {

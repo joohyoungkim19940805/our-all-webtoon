@@ -2,7 +2,7 @@ import styles from './layer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
-import { $globalDimLayer } from '@handler/Subject/LayerEvent';
+import { $globalDimLayer } from '@handler/subject/LayerEvent';
 
 export const GlobalDimLayer = () => {
     const layerRef = useRef<HTMLDivElement>(null);
