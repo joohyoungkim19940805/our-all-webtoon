@@ -4,7 +4,7 @@ import { Genre } from '@type/GenreType';
 import styles from './GenreListContainer.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import { useEffect, useRef, useState } from 'react';
-import { useShiftDownScrollWheelXState } from '@handler/hooks/ScrollHooks';
+import { useShiftDownScrollWheelX } from '@handler/hooks/ScrollHooks';
 import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
 import { useMouseSlider } from '@handler/hooks/SliderHooks';
 
@@ -70,7 +70,7 @@ export const GenreListContainer = ({
     id,
 }: GenreListContainerProps) => {
     const { isMouseDown, setIsMouseDown, listRef } = useMouseSlider();
-    const { isShft } = useShiftDownScrollWheelXState(listRef);
+    const { isShft } = useShiftDownScrollWheelX(listRef);
     const { addGenre, removeGenre } = useGenreChange();
 
     return (

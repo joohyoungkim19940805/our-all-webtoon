@@ -2,12 +2,14 @@ import { WebtoonEpisodeType } from '@type/WebtoonEpisodeType';
 import styles from './WebtoonEpisodeList.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import { EyeSvg } from '@svg/EyeSvg';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     $filterBarChange,
     Way,
     wayValues,
 } from '@handler/subject/FilterBarEvent';
+import { touchShowScrollHandle } from '@handler/hooks/ScrollHooks';
+
 const testWebtoonList = [
     [...new Array(20)],
     [...new Array(20)],
@@ -36,7 +38,9 @@ const testWebtoonList = [
 
 export const WebtoonEpisodeList = () => {
     const [way, setWay] = useState<Way | undefined>();
-    const listRef = useRef<HTMLUListElement>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+    const { handleTouchStart, handleTouchEnd } = touchShowScrollHandle(listRef);
+
     useEffect(() => {
         const subscribe = $filterBarChange.subscribe(({ value }) => {
             if (!value || !wayValues.some((e) => e[0] === value[0])) return;
@@ -47,10 +51,17 @@ export const WebtoonEpisodeList = () => {
         return () => {
             subscribe.unsubscribe();
         };
-    }, []);
+    }, [listRef]);
+
     return (
-        <div className={`${scrollStyles['list-scroll']} ${scrollStyles['y']}`}>
-            <ul className={`${styles['webtoon-episode-list']}`} ref={listRef}>
+        <div
+            ref={listRef}
+            className={`${scrollStyles['list-scroll']} ${scrollStyles['y']}`}
+            {...touchShowScrollHandle}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
+            <ul className={`${styles['webtoon-episode-list']}`}>
                 {testWebtoonList[0].map((item, i) => {
                     const { title, id, episode } = item;
                     return (

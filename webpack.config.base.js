@@ -42,7 +42,7 @@ module.exports = {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
-                                minimize: false,
+                                minimize: true,
                             },
                             sourceMap: true,
                         },

@@ -12,6 +12,7 @@
         padding-bottom: 0.7vh;
         padding-top: 0.7vh;
         text-wrap: pretty;
+        padding-right: 1.5%;
         &.one_way {
             width: 100%;
             font-size: 1.132rem;

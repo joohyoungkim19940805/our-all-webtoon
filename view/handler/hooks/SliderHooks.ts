@@ -1,5 +1,5 @@
 import { windowMouseMove, windowMouseUp } from '@handler/globalEvents';
-import { useShiftDownScrollWheelXState } from '@handler/hooks/ScrollHooks';
+import { useShiftDownScrollWheelX } from '@handler/hooks/ScrollHooks';
 import { useEffect, useRef, useState } from 'react';
 
 export const useSliderItemVisible = (

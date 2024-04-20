@@ -1,4 +1,4 @@
-import { useShiftDownScrollWheelXState } from '@handler/hooks/ScrollHooks';
+import { useShiftDownScrollWheelX } from '@handler/hooks/ScrollHooks';
 import styles from './GenreRankContent.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import React, { useEffect, useRef, useState } from 'react';
@@ -31,7 +31,7 @@ export const GenreRankContainer = () => {
         page,
         listRef,
     } = useVisibleSliderPaging();
-    const { isShft } = useShiftDownScrollWheelXState(listRef);
+    const { isShft } = useShiftDownScrollWheelX(listRef);
 
     // ${scrollStyles.none}
     return (

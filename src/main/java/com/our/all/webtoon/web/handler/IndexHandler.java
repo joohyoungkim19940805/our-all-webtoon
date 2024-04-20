@@ -62,6 +62,9 @@ public class IndexHandler {
                 "content/loginPage.html", Map.of("resourcesNameList", List.of("loginPage")));
     }
 
+    protected record CreateUserRequest(String email, String password, String newPassword) {
+    }
+
     public Mono<ServerResponse> create(ServerRequest request) {
         /*
          * return ok() .contentType(MediaType.APPLICATION_JSON)
