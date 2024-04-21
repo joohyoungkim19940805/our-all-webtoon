@@ -50,11 +50,18 @@ db.getCollection("account_log").insertOne({
     ip:'127.0.0.1'
 });
 */
+use('our_all_webtoon')
+db.getCollection('genres').insertOne({
+    name: "드라마",
+    description: "인간 관계와 감정을 다루는 웹툰",
+    createdAt: new Date()
+});
+
+
 use('our_all_webtoon');
 db.createCollection('webtoon');
 db.getCollection('webtoon').insertOne({
     title: '아마추어 작가의 꿈',
-    subtitle: '웹툰 제작에 대한 열정을 가진 아마추어 작가의 이야기',
     synopsis:
         '웹툰 제작에 대한 열정을 가진 아마추어 작가가 꿈을 향해 나아가는 이야기',
     author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
@@ -63,10 +70,24 @@ db.getCollection('webtoon').insertOne({
     createdAt: new Date(),
 });
 
+db.getCollection('episodes').insertOne({
+    webtoonId: ObjectId("637f5935a63146f4c3b32879"), // webtoons 컬렉션의 웹툰 ID
+    episodeNumber: 1,
+    title: "첫 번째 에피소드",
+    content: "웹툰 제작을 시작하는 주인공",
+    subtitle: '웹툰 제작에 대한 열정을 가진 아마추어 작가의 이야기',
+    images: [
+        "https://example.com/episode1_image1.jpg",
+        "https://example.com/episode1_image2.jpg"
+    ],
+    createdAt: new Date()
+});
+
+
 // rankings 컬렉션 생성
 use('our_all_webtoon');
 db.createCollection('rankings');
-db.rankings.insertOne({
+db.getCollection('rankings').insertOne({
     genre: '드라마',
     rankings: [
         { webtoonId: ObjectId('637f5935a63146f4c3b32879'), score: 4.5 },
@@ -80,7 +101,7 @@ db.rankings.insertOne({
 use('our_all_webtoon');
 db.createCollection('boards');
 // 공지사항 게시글
-db.boards.insertOne({
+db.getCollection('boards').insertOne({
     type: 'notice',
     content: '웹툰 사이트 오픈 안내',
     author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
@@ -89,7 +110,7 @@ db.boards.insertOne({
 });
 
 // 작가 피드 게시글
-db.boards.insertOne({
+db.getCollection('boards').insertOne({
     type: 'author_feed',
     content: '새로운 회차 업로드했습니다!',
     author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
@@ -101,7 +122,7 @@ db.boards.insertOne({
 use('our_all_webtoon');
 db.createCollection('bookmarks');
 // 북마크 데이터
-db.bookmarks.insertOne({
+db.getCollection('bookmarks').insertOne({
     userId: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
     webtoonId: ObjectId('637f5935a63146f4c3b32879'), // webtoons 컬렉션의 웹툰 ID
     createdAt: new Date(),
