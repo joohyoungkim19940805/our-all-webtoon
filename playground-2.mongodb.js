@@ -19,13 +19,13 @@ db.getCollection('account').insertOne({
     provider: 'local',
     username: 'mozu123',
     nickname: 'mozu',
-    profile_image: '',
+    profileImage: '',
     email: 'oozu1994@gmail.com',
     password: '1234',
     age: 30,
     gender: 'male',
-    created_at: new Date(),
-    is_enabled: true,
+    createdAt: new Date(),
+    isEnabled: true,
 });
 // 카카오톡 로그인 회원
 db.getCollection('account').insertOne({
@@ -35,7 +35,7 @@ db.getCollection('account').insertOne({
     refreshToken: 'kakaoRefreshToken',
     nickname: '카카오닉네임',
     profileImage: 'https://kakao.com/profile/123456789',
-    created_at: new Date(),
+    createdAt: new Date(),
 });
 /*
 db.createCollection("account_log", {
@@ -50,13 +50,68 @@ db.getCollection("account_log").insertOne({
     ip:'127.0.0.1'
 });
 */
-use('our_all_webtoon')
-db.getCollection('genres').insertOne({
-    name: "드라마",
-    description: "인간 관계와 감정을 다루는 웹툰",
-    createdAt: new Date()
-});
-
+use('our_all_webtoon');
+db.createCollection('genre');
+const genresNameList = [
+    'romance',
+    'fantasy',
+    'different_world',
+    'past_life',
+    'drama',
+    'action',
+    'academy',
+    'Reasoning',
+    'period_biography',
+    'documentary',
+    'history',
+    'middle_ages',
+    'martial_arts',
+    'thriller',
+    'sports',
+    'mukbang',
+    'love_comedy',
+    'gag',
+    'daily',
+    'music',
+    'sf',
+    'bl',
+    'lily',
+    'horror',
+    'fear',
+    'adult',
+];
+const genresList = [
+    '로맨스',
+    '판타지',
+    '이세계',
+    '전생',
+    '드라마',
+    '액션',
+    '학원',
+    '추리',
+    '시대/전기',
+    '다큐멘터리',
+    '사극',
+    '중세',
+    '무협',
+    '스릴러',
+    '스포츠',
+    '먹방',
+    '러브코미디',
+    '개그',
+    '일상',
+    '음악',
+    'SF',
+    'BL',
+    '백합',
+    '호러',
+    '공포',
+    '19',
+].map((e) => ({
+    name: e,
+    created_at: new Date(),
+}));
+db.getCollection('genre').insertMany(genresList);
 
 use('our_all_webtoon');
 db.createCollection('webtoon');
@@ -64,30 +119,35 @@ db.getCollection('webtoon').insertOne({
     title: '아마추어 작가의 꿈',
     synopsis:
         '웹툰 제작에 대한 열정을 가진 아마추어 작가가 꿈을 향해 나아가는 이야기',
-    author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
-    genre: '드라마',
-    thumbnail: 'https://example.com/thumbnail.jpg',
-    createdAt: new Date(),
-});
-
-db.getCollection('episodes').insertOne({
-    webtoonId: ObjectId("637f5935a63146f4c3b32879"), // webtoons 컬렉션의 웹툰 ID
-    episodeNumber: 1,
-    title: "첫 번째 에피소드",
-    content: "웹툰 제작을 시작하는 주인공",
-    subtitle: '웹툰 제작에 대한 열정을 가진 아마추어 작가의 이야기',
-    images: [
-        "https://example.com/episode1_image1.jpg",
-        "https://example.com/episode1_image2.jpg"
+    author: ObjectId('6625df6ec32676e476f8133d'), // 회원 ID
+    genre: [
+        ObjectId('6625db7e6207966d2fb74271'), // 장르 컬렉션의 ID
     ],
-    createdAt: new Date()
+    thumbnail: '/image/test.png',
+    latestComments: [],
+    createdAt: new Date(),
+    upadtedAt: new Date(),
+    serialScheduleAt: new Date(),
 });
 
+use('our_all_webtoon');
+db.getCollection('episode').insertOne({
+    webtoonId: ObjectId('6625dfb9d5cc032117692058'), // webtoons 컬렉션의 웹툰 ID
+    chapter: 1,
+    title: '첫 번째 에피소드',
+    content: '웹툰 제작을 시작하는 주인공',
+    subtitle: '웹툰 제작에 대한 열정을 가진 아마추어 작가의 이야기',
+    images: ['/image/test.png', '/image/test.png'],
+    latestComments: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    publishAt: new Date(),
+});
 
 // rankings 컬렉션 생성
 use('our_all_webtoon');
-db.createCollection('rankings');
-db.getCollection('rankings').insertOne({
+db.createCollection('ranking');
+db.getCollection('ranking').insertOne({
     genre: '드라마',
     rankings: [
         { webtoonId: ObjectId('637f5935a63146f4c3b32879'), score: 4.5 },
@@ -99,30 +159,54 @@ db.getCollection('rankings').insertOne({
 
 // boards 컬렉션 생성
 use('our_all_webtoon');
-db.createCollection('boards');
+db.createCollection('board');
 // 공지사항 게시글
-db.getCollection('boards').insertOne({
+db.getCollection('board').insertOne({
     type: 'notice',
     content: '웹툰 사이트 오픈 안내',
-    author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
-    comments: [],
+    author: ObjectId('6625df6ec32676e476f8133d'), // users 컬렉션의 일반 회원 ID
+    latest_comments: [],
     createdAt: new Date(),
+    isTop: true,
 });
 
 // 작가 피드 게시글
-db.getCollection('boards').insertOne({
-    type: 'author_feed',
+use('our_all_webtoon');
+db.getCollection('feed').insertOne({
     content: '새로운 회차 업로드했습니다!',
-    author: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
-    comments: [],
+    author: ObjectId('6625df6ec32676e476f8133d'), // users 컬렉션의 일반 회원 ID
+    latestComments: [],
     createdAt: new Date(),
+});
+
+use('our_all_webtoon');
+db.getCollection('feed_views').insertOne({
+    feedId: ObjectId('6625dff0401dfe71ec1cb5f6'),
+    userId: ObjectId('6625df6ec32676e476f8133d'),
+    createAt: new Date(),
+    isNew: true, // 첫 조회 여부 (true: 신규, false: 재시청)
+});
+use('our_all_webtoon');
+db.getCollection('board_views').insertOne({
+    boardId: ObjectId('6625dff0401dfe71ec1cb5f5'),
+    userId: ObjectId('6625df6ec32676e476f8133d'),
+    createAt: new Date(),
+    isNew: true, // 첫 조회 여부 (true: 신규, false: 재시청)
+});
+use('our_all_webtoon');
+db.getCollection('episode_views').insertOne({
+    webtoonId: ObjectId('6625dfb9d5cc032117692058'),
+    userId: ObjectId('6625df6ec32676e476f8133d'),
+    episodeId: ObjectId('6625dfca4a316a4a204f6bb0'),
+    createAt: new Date(),
+    isNew: true, // 첫 조회 여부 (true: 신규, false: 재시청)
 });
 
 // bookmarks 컬렉션 생성
 use('our_all_webtoon');
-db.createCollection('bookmarks');
+db.createCollection('bookmark');
 // 북마크 데이터
-db.getCollection('bookmarks').insertOne({
+db.getCollection('bookmark').insertOne({
     userId: ObjectId('637f5935a63146f4c3b32879'), // users 컬렉션의 일반 회원 ID
     webtoonId: ObjectId('637f5935a63146f4c3b32879'), // webtoons 컬렉션의 웹툰 ID
     createdAt: new Date(),
