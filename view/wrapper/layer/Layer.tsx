@@ -2,21 +2,16 @@ import styles from './layer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
-import { $globalDimLayer } from '@handler/subject/LayerEvent';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 export const GlobalDimLayer = () => {
     const layerRef = useRef<HTMLDivElement>(null);
     const [children, setChildren] = useState<
         ReactNode | ReactElement | JSX.Element | undefined
     >(false);
-    useEffect(() => {
-        const subscribe = $globalDimLayer.subscribe((children) => {
-            setChildren(children);
-        });
-        return () => {
-            subscribe.unsubscribe();
-        };
-    }, [layerRef]);
+    const location = useLocation();
+    const currentPath = location.pathname;
+
     return (
         <>
             {children && (
@@ -30,18 +25,22 @@ export const GlobalDimLayer = () => {
                                 layerRef.current
                         )
                             return;
-                        $globalDimLayer.next(undefined);
                     }}
                 >
                     <div className={`${styles['layer-container']}`}>
                         <button
-                            onClick={() => $globalDimLayer.next(undefined)}
+                            onClick={() => history.back()}
                             type="button"
                             className={`${buttonStyles.button} ${buttonStyles['inherit']} ${buttonStyles.svg} ${buttonStyles[`svg_top`]}`}
                         >
                             <CloseSvg></CloseSvg>
                         </button>
-                        {children}
+                        <Routes>
+                            <Route
+                                path={`${currentPath}/layer/*`}
+                                element={children}
+                            ></Route>
+                        </Routes>
                     </div>
                 </div>
             )}

@@ -5,12 +5,20 @@ import { AdsContainer } from '@container/ads/AdsContainer';
 import { GenreListContainer } from '@container/genre/GenreListContainer';
 import { Genre } from '@type/GenreType';
 import { LatestWebttonContainer } from '@container/webtoon-list/LatestWebtoonContainer';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 export const Center = () => {
     return (
         <flex-container data-is_resize={true} data-panel_mode="center-cylinder">
             <div className={styles['center-container']}>
-                <LatestWebttonContainer></LatestWebttonContainer>
+                <Routes>
+                    <Route
+                        path="/main/*"
+                        element={
+                            <LatestWebttonContainer></LatestWebttonContainer>
+                        }
+                    />
+                </Routes>
             </div>
         </flex-container>
     );

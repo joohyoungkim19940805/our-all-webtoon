@@ -1,5 +1,7 @@
 package com.our.all.webtoon.config;
 
+import java.net.URI;
+import java.util.Map;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -20,21 +22,17 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.function.server.ServerResponse.BodyBuilder;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
-
-
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
-
-import java.util.Map;
 
 
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-    public GlobalErrorWebExceptionHandler(GlobalErrorAttributes errorAttribute, ApplicationContext applicationContext,
-            ServerCodecConfigurer serverCodecConfigurer) {
+    public GlobalErrorWebExceptionHandler(
+                                          GlobalErrorAttributes errorAttribute,
+                                          ApplicationContext applicationContext,
+                                          ServerCodecConfigurer serverCodecConfigurer) {
         super(errorAttribute, new WebProperties.Resources(), applicationContext);
         super.setMessageWriters(serverCodecConfigurer.getWriters());
         super.setMessageReaders(serverCodecConfigurer.getReaders());
@@ -42,7 +40,10 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
     @Override
     protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {
-        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
+        return RouterFunctions.route(RequestPredicates.all(), (req) -> {
+            errorAttributes.getError(req).printStackTrace();
+            return this.renderErrorResponse(req);
+        });
     }
 
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
@@ -50,62 +51,46 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
         HttpStatus status;
         int code = (Integer) errorPropertiesMap.get("code");
-        if(code == Result._999.code()) {
-        	status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }else {
-        	status = HttpStatus.OK;
+        if (code == Result._999.code()) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            status = HttpStatus.OK;
         }
-        
-        boolean isHTML = request.headers().accept().stream().filter(e->e.equals(MediaType.TEXT_HTML)).findFirst().isPresent();
-        
+
+        boolean isHTML = request.headers().accept().stream().filter(e -> e.equals(MediaType.TEXT_HTML)).findFirst().isPresent();
+
         BodyBuilder bodyBuilder;
-        
-        if(isHTML) {
-        	bodyBuilder = ServerResponse.temporaryRedirect(URI.create("/login-page"));
-        }else {
-        	bodyBuilder = ServerResponse.status(status);
+
+        if (isHTML) {
+            bodyBuilder = ServerResponse.temporaryRedirect(URI.create("/login-page"));
+        } else {
+            bodyBuilder = ServerResponse.status(status);
         }
-        
-        if(code == Result._100.code() ||
-        		code == Result._105.code() ||
-				code == Result._106.code() ||
-				code == Result._107.code()
-        		) {
-        	bodyBuilder.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "")
-        			.httpOnly(true)
-					.secure(true)
-					.sameSite("Strict")
-					.path("/")
-    				.build());
+
+        if (code == Result._100.code() || code == Result._105.code() || code == Result._106.code() || code == Result._107.code()) {
+            bodyBuilder.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "").httpOnly(true).secure(true).sameSite("Strict").path("/").build());
         }
-        
-        if(isHTML) {
-        	/*
-        	return bodyBuilder
-        			.contentType(MediaType.parseMediaType("text/html;charset=UTF-8"))
-        			.render("content/loginPage.html", Map.of("loginStatus", "FAILED", "resourcesNameList", List.of("loginPage")));
-        	*/
-        	return bodyBuilder.build();
-        }else {
-        	return bodyBuilder
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(errorPropertiesMap));
+
+        if (isHTML) {
+            /*
+             * return bodyBuilder .contentType(MediaType.parseMediaType("text/html;charset=UTF-8"))
+             * .render("content/loginPage.html", Map.of("loginStatus", "FAILED", "resourcesNameList",
+             * List.of("loginPage")));
+             */
+            return bodyBuilder.build();
+        } else {
+            return bodyBuilder.contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(errorPropertiesMap));
         }
-        
+
         /*
-        BodyBuilder bodyBuilder = ServerResponse.status(status)
-        		.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "")
-            			.httpOnly(true)
-    					.secure(true)
-    					.sameSite("Strict")
-    					.path("/")
-        				.build());
-        
-        return null;
-        
-        		.contentType(MediaType.APPLICATION_JSON)
-        		.body(BodyInserters.fromValue(errorPropertiesMap));
-        		*/
+         * BodyBuilder bodyBuilder = ServerResponse.status(status)
+         * .cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "") .httpOnly(true)
+         * .secure(true) .sameSite("Strict") .path("/") .build());
+         * 
+         * return null;
+         * 
+         * .contentType(MediaType.APPLICATION_JSON) .body(BodyInserters.fromValue(errorPropertiesMap));
+         */
     }
 
 }

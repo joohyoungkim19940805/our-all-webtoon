@@ -21,7 +21,7 @@ public class MainRouter {
 
     @Bean
     public RouterFunction<ServerResponse> index() {
-        return route(GET("/"), req -> ServerResponse.temporaryRedirect(URI.create("/page/main/")).build());
+        return route(GET("/"), req -> ServerResponse.temporaryRedirect(URI.create("/page/main")).build());
     }
 
     @Bean
@@ -29,12 +29,10 @@ public class MainRouter {
         //
         return route()
             .nest(
-                path("/page"), builder -> builder
-                    .nest(
-                        path("/main"), mainPathBuilder -> mainPathBuilder
-                            .GET("/", accept(MediaType.TEXT_HTML), pageHandler::main)
-                            // .GET("/get-account-info", accept(MediaType.APPLICATION_JSON), accountHandler::getAccountInfo)
-                            .build())
+                path("/page"), mainPathBuilder -> mainPathBuilder
+                    .GET("/main", accept(MediaType.TEXT_HTML), pageHandler::main)
+                    // .GET("/get-account-info", accept(MediaType.APPLICATION_JSON), accountHandler::getAccountInfo)
+                    .build()
 
             ).build();
     }

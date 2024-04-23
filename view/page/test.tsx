@@ -5,6 +5,9 @@ import { Top } from '@wrapper/layout/Top';
 import { createRoot } from 'react-dom/client';
 import styles from './test3.module.css';
 import { GlobalDimLayer } from '@wrapper/layer/Layer';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import React from 'react';
+import { LoginContainer } from '@container/login/LoginContainer';
 styles;
 FlexLayout;
 document.body.dataset.mode = 'black';
@@ -14,8 +17,30 @@ root.id = styles.root;
 document.body.append(root);
 
 const main = createRoot(root);
-//
 
+const router = createBrowserRouter([
+    {
+        path: '/page/*',
+        element: (
+            <>
+                <flex-layout data-direction="column">
+                    <Top></Top>
+                    <Center></Center>
+                    <Bottom></Bottom>
+                </flex-layout>
+                <GlobalDimLayer></GlobalDimLayer>
+            </>
+        ),
+    },
+]);
+//
+//
+main.render(
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>,
+);
+/*
 main.render(
     <>
         <flex-layout data-direction="column">
@@ -26,3 +51,4 @@ main.render(
         <GlobalDimLayer></GlobalDimLayer>
     </>,
 );
+*/
