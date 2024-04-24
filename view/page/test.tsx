@@ -5,7 +5,13 @@ import { Top } from '@wrapper/layout/Top';
 import { createRoot } from 'react-dom/client';
 import styles from './test3.module.css';
 import { GlobalDimLayer } from '@wrapper/layer/Layer';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+    createBrowserRouter,
+    Route,
+    RouterProvider,
+    Routes,
+    useRoutes,
+} from 'react-router-dom';
 import React from 'react';
 import { LoginContainer } from '@container/login/LoginContainer';
 styles;
@@ -17,10 +23,10 @@ root.id = styles.root;
 document.body.append(root);
 
 const main = createRoot(root);
-
 const router = createBrowserRouter([
     {
         path: '/page/*',
+        index: true,
         element: (
             <>
                 <flex-layout data-direction="column">

@@ -1,20 +1,23 @@
 import styles from './layer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
+import { LoginContainer } from '@container/login/LoginContainer';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
+export type GlobalDimLayerProps = {
+    children: ReactNode | ReactElement | JSX.Element;
+};
 export const GlobalDimLayer = () => {
     const layerRef = useRef<HTMLDivElement>(null);
-    const [children, setChildren] = useState<
+    /*const [children, setChildren] = useState<
         ReactNode | ReactElement | JSX.Element | undefined
-    >(false);
+    >(false);*/
     const location = useLocation();
     const currentPath = location.pathname;
-
     return (
         <>
-            {children && (
+            {currentPath.includes('/layer') && (
                 <div
                     className={`${styles.layer}`}
                     ref={layerRef}
@@ -25,6 +28,7 @@ export const GlobalDimLayer = () => {
                                 layerRef.current
                         )
                             return;
+                        history.back();
                     }}
                 >
                     <div className={`${styles['layer-container']}`}>
@@ -37,8 +41,11 @@ export const GlobalDimLayer = () => {
                         </button>
                         <Routes>
                             <Route
-                                path={`${currentPath}/layer/*`}
-                                element={children}
+                                handle={(e: any) => {
+                                    console.log('eee', e);
+                                }}
+                                path={`/layer/login-layer`}
+                                element={<LoginContainer></LoginContainer>}
                             ></Route>
                         </Routes>
                     </div>

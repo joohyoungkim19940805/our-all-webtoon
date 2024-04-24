@@ -13,7 +13,7 @@ export const Center = () => {
             <div className={styles['center-container']}>
                 <Routes>
                     <Route
-                        path="/main/*"
+                        path="/*"
                         element={
                             <LatestWebttonContainer></LatestWebttonContainer>
                         }

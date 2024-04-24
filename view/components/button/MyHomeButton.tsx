@@ -14,7 +14,7 @@ export const MyHomeButton = () => {
     const currentPath = location.pathname;
     return (
         <Link
-            to={`${currentPath}/layer/login-layer`}
+            to={`/page/layer/login-layer`}
             //type="button"
             className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]}`}
             onClick={() => {
