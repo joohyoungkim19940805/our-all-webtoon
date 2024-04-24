@@ -6,6 +6,7 @@
     justify-content: space-around;
     font-size: 1.8vmax;
     align-items: center;
+    text-decoration-line: none;
     body[data-mode='black'] && {
         /*background-color: #343434;*/
         /*border-color: #464646;*/
