@@ -1,7 +1,7 @@
 import styles from './layer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
-import { LoginContainer } from '@container/login/LoginContainer';
+import { LoginContainer } from '@container/account/LoginContainer';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 

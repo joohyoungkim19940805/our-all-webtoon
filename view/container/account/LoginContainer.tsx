@@ -1,9 +1,10 @@
 import { from, of, Observable, map, zip } from 'rxjs';
 import styles from './LoginContainer.module.css';
 import { Input } from '@components/input/Input';
-import { FindAccountInfo } from '@container/login/FindAccountInfoContainer';
+import { FindAccountInfo } from '@container/account/FindAccountInfoContainer';
 import buttonStyles from '@components/button/Button.module.css';
 import inputStyles from '@components/input/Input.module.css';
+import { SnsLoginContainer } from '@container/account/SnsLoginContainer';
 
 export const LoginContainer = () => {
     return (
@@ -28,6 +29,7 @@ export const LoginContainer = () => {
                     ></input>
                 </div>
                 <FindAccountInfo></FindAccountInfo>
+                <SnsLoginContainer></SnsLoginContainer>
             </div>
             <button
                 type="submit"
