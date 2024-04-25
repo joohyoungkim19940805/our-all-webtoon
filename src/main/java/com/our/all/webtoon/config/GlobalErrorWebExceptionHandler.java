@@ -49,13 +49,9 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
 
         final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-        HttpStatus status;
+        // HttpStatus status2;
         int code = (Integer) errorPropertiesMap.get("code");
-        if (code == Result._999.code()) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        } else {
-            status = HttpStatus.OK;
-        }
+        HttpStatus status = HttpStatus.valueOf((Integer) errorPropertiesMap.get("status"));
 
         boolean isHTML = request.headers().accept().stream().filter(e -> e.equals(MediaType.TEXT_HTML)).findFirst().isPresent();
 
@@ -64,13 +60,19 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         if (isHTML) {
             bodyBuilder = ServerResponse.temporaryRedirect(URI.create("/login-page"));
         } else {
-            bodyBuilder = ServerResponse.status(status);
+            bodyBuilder = ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (code == Result._100.code() || code == Result._105.code() || code == Result._106.code() || code == Result._107.code()) {
+        if (code == Result._100.code() || //
+            code == Result._105.code() || //
+            code == Result._106.code() || //
+            code == Result._107.code() || //
+            status.equals(HttpStatus.UNAUTHORIZED)) {
             bodyBuilder.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "").httpOnly(true).secure(true).sameSite("Strict").path("/").build());
-        }
 
+        }
+        errorPropertiesMap.get("statusCode");
+        System.out.println("kjh test :::  " + errorPropertiesMap);
         if (isHTML) {
             /*
              * return bodyBuilder .contentType(MediaType.parseMediaType("text/html;charset=UTF-8"))
