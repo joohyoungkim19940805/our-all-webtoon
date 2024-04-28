@@ -7,7 +7,11 @@ export const FindAccountInfo = () => {
     return (
         <>
             <div className={styles['find-account-info-container']}>
-                <Link to="/" className={styles['find-account-info-container']}>
+                <Link
+                    to="/page/layer/sing-up"
+                    className={styles['find-account-info-container']}
+                    style={{ justifyContent: 'flex-start' }}
+                >
                     회원 가입
                 </Link>
                 <div className={styles['find-account-info-container']}>

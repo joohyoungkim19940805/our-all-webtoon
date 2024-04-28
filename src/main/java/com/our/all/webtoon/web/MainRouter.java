@@ -21,29 +21,16 @@ public class MainRouter {
 
     @Bean
     public RouterFunction<ServerResponse> page(PageHandler pageHandler) {
-        route().filter((req, res) -> {
-            return pageHandler.
-        });
-
-        return null;
+        return route(//
+            request -> request.path().startsWith("/page") //
+                && request.headers().accept().contains(MediaType.TEXT_HTML), //
+            request -> pageHandler.main(request)//
+        );
     }
 
     @Bean
     public RouterFunction<ServerResponse> index() {
         return route(GET("/"), req -> ServerResponse.temporaryRedirect(URI.create("/page/main")).build());
-    }
-
-    @Bean
-    public RouterFunction<ServerResponse> page2(PageHandler pageHandler) {
-        //
-        return route()
-            .nest(
-                path("/page"), mainPathBuilder -> mainPathBuilder
-                    .GET("/main", accept(MediaType.TEXT_HTML), pageHandler::main)
-                    // .GET("/get-account-info", accept(MediaType.APPLICATION_JSON), accountHandler::getAccountInfo)
-                    .build()
-
-            ).build();
     }
 
     @Bean

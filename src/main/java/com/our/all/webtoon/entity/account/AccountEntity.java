@@ -1,14 +1,17 @@
 package com.our.all.webtoon.entity.account;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.our.all.webtoon.config.security.Role;
 import com.our.all.webtoon.config.security.TokenTemplate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.UUID;
-
+import com.our.all.webtoon.util.constants.ProviderAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
@@ -30,30 +29,43 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection="account")
+@Document(collection = "account")
 public class AccountEntity implements TokenTemplate {
+
     @Id
-    private String accountId;
-    
+    private String id;
+
+    private String accessToken;
+
     private String accountName;
-    
+
+    private Integer age;
+
+    private LocalDateTime createdAt;
+
+    private String email;
+
+    private String gender;
+
+    private Boolean isEnabled;
+
+    private String nickname;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private String nickname;
-    
-    private Boolean isEnabled;
+    private String profileImage;
+
+    private ProviderAccount provider;
+
+    private String providerId;
 
     private List<Role> roles;
 
-    private String firstName;
-    
-    private String lastName;
-    
-    private String email;
+    private String refreshToken;
 
-    private String profileImage;
-    
+    private String username;
+
     @CreatedDate
     private LocalDateTime createAt;
 
@@ -63,7 +75,7 @@ public class AccountEntity implements TokenTemplate {
     @Override
     public String getIssuer() {
         // TODO Auto-generated method stub
-        return this.accountName;
+        return this.username;
     }
 
     @Override
@@ -75,7 +87,7 @@ public class AccountEntity implements TokenTemplate {
     @Override
     public String getName() {
         // TODO Auto-generated method stub
-        return this.firstName + this.lastName;
+        return this.username;
     }
-    
+
 }

@@ -1,0 +1,21 @@
+.sns-container {
+    margin-top: 2vh;
+    & .sns-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1vh;
+        justify-content: center;
+        align-items: center;
+        & img {
+            width: 40vw;
+        }
+        & .google {
+        }
+        & .kakao {
+        }
+        & .naver {
+        }
+        & .apple {
+        }
+    }
+}

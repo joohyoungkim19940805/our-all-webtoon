@@ -2,6 +2,7 @@ import styles from './layer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
 import { LoginContainer } from '@container/account/LoginContainer';
+import { SingUpContainer } from '@container/account/SingUpContainer';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
@@ -41,11 +42,12 @@ export const GlobalDimLayer = () => {
                         </button>
                         <Routes>
                             <Route
-                                handle={(e: any) => {
-                                    console.log('eee', e);
-                                }}
                                 path={`/layer/login-layer`}
                                 element={<LoginContainer></LoginContainer>}
+                            ></Route>
+                            <Route
+                                path={`/layer/sing-up`}
+                                element={<SingUpContainer></SingUpContainer>}
                             ></Route>
                         </Routes>
                     </div>

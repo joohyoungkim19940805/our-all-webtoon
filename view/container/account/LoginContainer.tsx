@@ -8,7 +8,11 @@ import { SnsLoginContainer } from '@container/account/SnsLoginContainer';
 
 export const LoginContainer = () => {
     return (
-        <form className={styles['login-container']} id="login-form">
+        <form
+            className={styles['login-container']}
+            id="login-form"
+            method="post"
+        >
             <div className={styles['account-info-wrapper']}>
                 <div className={styles['id-and-password-wrapper']}>
                     <input
@@ -29,14 +33,14 @@ export const LoginContainer = () => {
                     ></input>
                 </div>
                 <FindAccountInfo></FindAccountInfo>
+                <button
+                    type="submit"
+                    className={`${buttonStyles.button} ${buttonStyles['inherit']} ${styles['submit-button']}`}
+                >
+                    로그인
+                </button>
                 <SnsLoginContainer></SnsLoginContainer>
             </div>
-            <button
-                type="submit"
-                className={`${buttonStyles.button} ${buttonStyles['inherit']} ${styles['submit-button']}`}
-            >
-                로그인
-            </button>
         </form>
     );
 };

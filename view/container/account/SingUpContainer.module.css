@@ -1,0 +1,44 @@
+.sing-up-container {
+    width: 85dvw;
+    display: flex;
+    flex-direction: column;
+    gap: 4dvh;
+    & label {
+        color: #b9b9b9;
+        font-size: 1.2rem;
+    }
+    & input:not([type='radio']) {
+        width: 80%;
+    }
+    & input[type='radio'] {
+        &:checked + label {
+            color: #b9b9b9;
+            font-weight: 700;
+            text-shadow: 0 0 20px #ff8b35;
+        }
+    }
+    & div {
+        display: flex;
+        justify-content: space-between;
+    }
+    & .password-container {
+        flex-direction: column;
+        gap: 2dvh;
+    }
+    & .sex-container {
+        justify-content: space-around;
+        & label {
+            border: solid 1px;
+            padding: 0.7%;
+            &[for='sex-male'] {
+                border-color: #abcd97;
+            }
+            &[for='sex-female'] {
+                border-color: #f7deb7;
+            }
+            &[for='sex-nonbinary'] {
+                border-color: #c1c10e #dbdbdb #d897ff #dbdbdb;
+            }
+        }
+    }
+}

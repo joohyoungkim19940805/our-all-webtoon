@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
@@ -32,6 +33,10 @@ public class WebFluxSecurityConfig {
 
     @Autowired
     private SecurityContextRepository securityContextRepository;
+
+    @Autowired
+    private ReactiveClientRegistrationRepository clientRegistrationRepository;
+
     /*
      * @Bean public MapReactiveUserDetailsService userDetailsService() {
      * 
@@ -83,8 +88,9 @@ public class WebFluxSecurityConfig {
 
             .logout(logoutSpec -> logoutSpec.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler("/loginPage?status=logout"))
 
-            )
-
+            ).oauth2Login(oauth2Spec -> {
+                oauth2Spec.clientRegistrationRepository(clientRegistrationRepository);
+            })
             // .formLogin(formLoginSpec -> formLoginSpec
             // .authenticationSuccessHandler(new
             // RedirectServerAuthenticationSuccessHandler("/"))

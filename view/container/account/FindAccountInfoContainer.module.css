@@ -1,8 +1,10 @@
 .find-account-info-container {
     display: flex;
-    justify-content: space-between;
+    flex: 1 0;
+    gap: 1rem;
     font-size: 1.07rem;
-    flex: 1 0 0%;
+    justify-content: flex-end;
+    text-wrap: nowrap;
     & > a {
         text-decoration: underline;
         color: #717171;
