@@ -1,4 +1,4 @@
-package com.our.all.webtoon.config.security;
+package com.our.all.webtoon.config.security.google;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,23 +25,19 @@ public class OAuth2GoogleLoginConfig {
     }
 
     private ClientRegistration googleClientRegistration() {
-        System.out.println("kjh test ::: ");
-        System.out.println(clientId);
-        System.out.println(clientSecret);
-        return ClientRegistration
-            .withRegistrationId("google")//
-            .clientId(clientId)//
-            .clientSecret(clientSecret)//
-            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)//
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)//
-            .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")//
-            .scope("openid", "profile", "email", "address", "phone")//
-            .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")//
-            .tokenUri("https://www.googleapis.com/oauth2/v4/token")//
-            .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")//
-            .userNameAttributeName(IdTokenClaimNames.SUB)//
-            .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")//
-            .clientName("Google")//
-            .build();
+        return ClientRegistration.withRegistrationId("google")//
+                .clientId(clientId)//
+                .clientSecret(clientSecret)//
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)//
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)//
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")//
+                .scope("openid", "profile", "email", "address", "phone")//
+                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")//
+                .tokenUri("https://www.googleapis.com/oauth2/v4/token")//
+                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")//
+                .userNameAttributeName(IdTokenClaimNames.SUB)//
+                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")//
+                .clientName("Google")//
+                .build();
     }
 }
