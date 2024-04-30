@@ -1,6 +1,8 @@
 package com.our.all.webtoon.config.security;
 
 import java.net.URI;
+import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,8 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
@@ -37,6 +41,9 @@ public class WebFluxSecurityConfig {
 
     @Autowired
     private ReactiveClientRegistrationRepository clientRegistrationRepository;
+
+    @Autowired
+    private KeyPair keyPair;
 
     /*
      * @Bean public MapReactiveUserDetailsService userDetailsService() {
@@ -103,8 +110,11 @@ public class WebFluxSecurityConfig {
                 .logout(logoutSpec -> logoutSpec.logoutUrl("/logout")
                         .logoutSuccessHandler(logoutSuccessHandler("/loginPage?status=logout"))
 
-                ).oauth2Login(oauth2Spec -> {
-                    oauth2Spec.clientRegistrationRepository(clientRegistrationRepository)
+                )//
+                .oauth2Login(oauth2Spec -> {
+                    oauth2Spec.authenticationManager(authManager)
+                            .securityContextRepository(securityContextRepository)
+                            .clientRegistrationRepository(clientRegistrationRepository)
                             .authenticationSuccessHandler(new OAuth2GoogleLoginSuccessHandler());
                     // .authenticationSuccessHandler(new OAuth2LoginSuccessHandler(userService));
                 })
@@ -148,6 +158,11 @@ public class WebFluxSecurityConfig {
                 .setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/**"));
         bearerAuthenticationFilter.setSecurityContextRepository(securityContextRepository);
         return bearerAuthenticationFilter;
+    }
+
+    @Bean
+    public ReactiveJwtDecoder jwtDecoder() {
+        return NimbusReactiveJwtDecoder.withPublicKey((RSAPublicKey) keyPair.getPublic()).build();
     }
 }
 

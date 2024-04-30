@@ -13,18 +13,27 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
             Authentication authentication) {
         // TODO Auto-generated method stub
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+
         String userId = oauth2User.getName();
         String name = oauth2User.getAttribute("name");
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("profileImage");
         String token = oauth2User.getAttribute("token");
-        System.out.println("kjh test ::: ");
+        System.out.println("kjh test ::: " + oauth2User);
+        System.out.println("kjh test ::: " + authentication.getCredentials());
+        System.out.println("kjh test ::: " + authentication.getAuthorities());
+        System.out.println("kjh test ::: " + authentication.getName());
+        System.out.println("kjh test ::: " + authentication.getDetails());
+        System.out.println("kjh test ::: " + authentication.getPrincipal());
+        System.out.println("kjh test ::: " + webFilterExchange.getExchange());
+        System.out.println("kjh test ::: " + webFilterExchange);
+        System.out.println("kjh test ::: " + webFilterExchange.getExchange().getRequest().getURI());
         System.out.println(userId);
         System.out.println(name);
         System.out.println(email);
         System.out.println(profileImageUrl);
         System.out.println(token);
-
+        System.out.println("auth ::: " + authentication.getCredentials());
         return Mono.empty();
 
 
