@@ -110,21 +110,23 @@ public class AccountService {
 
                     return accountLogRepository
                         .save(accountLogEntity).flatMap(
-                            e -> Mono
-                                .just(
+                            e -> Mono.just(
                                     generateAccessToken(account, JwtIssuerType.ACCOUNT)
                                         .toBuilder()
                                         // .userId(account.getId())
-                                        .build()));
+                                    .build() )//
+                    );
                 }
             });
         });
     }
 
-    public Mono<AccountEntity> createUser(Mono<AccountEntity> accountMono) {
+    public Mono<AccountEntity> createUser(Mono<AccountEntity> accountMono, boolean isLocalCreate) {
         return accountMono
             .map(account -> account.toBuilder().password(passwordEncoder.encode(account.getPassword())).roles(List.of(Role.ROLE_USER, Role.ROLE_GUEST)).isEnabled(false).build())
             .flatMap(account -> accountRepository.save(account)).doOnSuccess(account -> {
+                if (!isLocalCreate)
+                    return;
                 Mono.fromRunnable(() -> {
                     mailService.sendAccountVerifyTemplate(account);
                 }).subscribeOn(Schedulers.boundedElastic()).subscribe();
@@ -135,7 +137,7 @@ public class AccountService {
 
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).flatMap(auth -> {
             UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-            return accountRepository.findByEmail(userPrincipal.getId()).switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
+            return accountRepository.findByEmail( userPrincipal.getId() );// .switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
         });
     }
 

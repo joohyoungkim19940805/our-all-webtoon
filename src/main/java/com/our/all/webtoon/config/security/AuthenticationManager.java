@@ -29,7 +29,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
          * .map(user -> authentication);
          */
         // 인증 매니저 하나 더 만들 것(구글용으로) 20240430
-        System.out.println("kjh auth ::: " + authentication.getCredentials().toString());
         return Mono.just(authentication.getCredentials().toString())
                 .flatMap(jwtVerifyHandler::check).flatMap(verificationResult -> {
                     Claims claims = verificationResult.claims;

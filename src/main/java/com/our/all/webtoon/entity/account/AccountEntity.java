@@ -58,7 +58,7 @@ public class AccountEntity implements TokenTemplate {
 
     private ProviderAccount provider;
 
-    private String providerId;
+    private String providerToken;
 
     private List<Role> roles;
 

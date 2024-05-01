@@ -26,9 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import com.our.all.webtoon.AutoDbMappingGenerater.UnderType.UnderTypeRecord;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -433,7 +431,7 @@ public class AutoDbMappingGenerater  {
 	            			String camelColumnName = convertUnderbarToCamelName(columnName, tableName);
 	            			Map<String, ColumnRecord> cloumnMapper = new HashMap<>();
 
-	            			List<String> pkNameList = new ArrayList<>();
+                            List<String> pkNameList = new ArrayList<>();
 	            			String pkName;
 	            			try(var res = databaseMetaData.getPrimaryKeys(connection.getCatalog(), option.schema, tableName)){
 				        		while(res.next()){// && pkName == null) {

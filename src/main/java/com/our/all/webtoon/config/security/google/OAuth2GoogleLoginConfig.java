@@ -24,11 +24,12 @@ public class OAuth2GoogleLoginConfig {
         return new InMemoryReactiveClientRegistrationRepository(this.googleClientRegistration());
     }
 
-    private ClientRegistration googleClientRegistration() {
+    @Bean
+    public ClientRegistration googleClientRegistration() {
         return ClientRegistration.withRegistrationId("google")//
                 .clientId(clientId)//
                 .clientSecret(clientSecret)//
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)//
+                .clientAuthenticationMethod( ClientAuthenticationMethod.CLIENT_SECRET_BASIC )//
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)//
                 .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")//
                 .scope("openid", "profile", "email", "address", "phone")//

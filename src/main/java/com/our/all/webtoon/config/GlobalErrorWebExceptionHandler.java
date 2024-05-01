@@ -58,7 +58,8 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         BodyBuilder bodyBuilder;
 
         if (isHTML) {
-            bodyBuilder = ServerResponse.temporaryRedirect(URI.create("/login-page"));
+            bodyBuilder = ServerResponse
+                .temporaryRedirect( URI.create( "/page/layer/login-layer" ) );
         } else {
             bodyBuilder = ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR);
         }
