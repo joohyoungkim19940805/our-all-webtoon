@@ -29,8 +29,12 @@ public class MainRouter {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> index() {
-        return route(GET("/"), req -> ServerResponse.temporaryRedirect(URI.create("/page/main")).build());
+	public RouterFunction<ServerResponse> index(
+		IndexHandler indexHandler
+	) {
+
+		return route( GET( "/" ), req -> ServerResponse.temporaryRedirect( URI.create( "/page/main" ) ).build() )
+			.and( route( GET( "/is-login" ).and( accept( MediaType.APPLICATION_JSON ) ), indexHandler::isLogin ) );
     }
 
     @Bean

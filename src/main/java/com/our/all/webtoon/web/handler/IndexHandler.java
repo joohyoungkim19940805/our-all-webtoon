@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -27,7 +28,6 @@ import com.our.all.webtoon.util.exception.BirdPlusException.Result;
 import com.our.all.webtoon.util.exception.ForgotPasswordException;
 import com.our.all.webtoon.util.properties.S3Properties;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -50,12 +50,6 @@ public class IndexHandler {
 
     @Autowired
     private JwtVerifyHandler jwtVerifyHandler;
-
-    public Mono<ServerResponse> test(ServerRequest request) {
-
-        return ok().contentType( MediaType.TEXT_HTML ).render( "/test.html" );
-
-    }
 
     public Mono<ServerResponse> index(ServerRequest request) {
 
@@ -94,8 +88,7 @@ public class IndexHandler {
             .contentType( MediaType.parseMediaType( "text/html;charset=UTF-8" ) );
         String returnHtml = "content/account/accountVerify.html";
         String token = request.pathVariable( "token" ).replace( "bearer-", "" );
-        return Mono.just( request.queryParam( "email" ) ).flatMap( emial -> {
-            Jws<Claims> jws = jwtVerifyHandler.getJwt( token );
+		return jwtVerifyHandler.getJwt( token ).flatMap( jws -> {
             Claims claims = jws.getPayload();
             JwsHeader header = jws.getHeader();
             Date expiration = claims.getExpiration();
@@ -219,11 +212,9 @@ public class IndexHandler {
     }
 
     public Mono<ServerResponse> changePasswordPage(ServerRequest request) {
-
-        return Mono.just( request.queryParam( "email" ) ).flatMap( emial -> {
-            String token = request.pathVariable( "token" ).replace( "bearer-", "" );
-
-            Jws<Claims> jws = jwtVerifyHandler.getJwt( token );
+    	String token = request.pathVariable( "token" ).replace( "bearer-", "" );
+    	
+		return jwtVerifyHandler.getJwt( token ).flatMap( jws -> {
             Claims claims = jws.getPayload();
             JwsHeader header = jws.getHeader();
             Date expiration = claims.getExpiration();
@@ -240,9 +231,8 @@ public class IndexHandler {
                 .render(
                     "content/account/changePassword.html",
                     Map.of( "email", claims.getSubject(), "token", token ) );
-        } ).onErrorResume( e -> {
-            return Mono.error( new AccountException( Result._104 ) );
-        } );
+
+		} ).onErrorResume( e -> Mono.error( e ) );
 
     }
 
@@ -306,5 +296,13 @@ public class IndexHandler {
                                                             // "roomId", roomId));
 
     }
+
+	@PreAuthorize("hasRole('USER')")
+	public Mono<ServerResponse> isLogin(ServerRequest request) {
+		return ok()
+			.contentType( MediaType.APPLICATION_JSON )
+			.body( response( Result._0 ), ResponseWrapper.class );
+
+	}
 
 }

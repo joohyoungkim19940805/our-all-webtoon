@@ -1,7 +1,7 @@
 import { Subject, catchError, map, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 
-export const myHomeService = ajax('/gnb/search/my').pipe(
+export const myHomeService = ajax('/is-login').pipe(
     map((response) => {
         console.log(333, response);
         return 1;

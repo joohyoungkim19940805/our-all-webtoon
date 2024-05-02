@@ -16,4 +16,5 @@ public interface AccountRepository extends ReactiveMongoRepository<AccountEntity
 
     Mono<AccountEntity> findByProviderId(String providerId);
 
+	Mono<AccountEntity> findByToken(String token);
 }

@@ -14,10 +14,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Token {
-  private Long userId;
-  private String token;
-  private Date issuedAt;
-  private Date expiresAt;
-  private Boolean isDifferentIp;
-  private Boolean isFirstLogin;
+
+	private Long userId;
+
+	private String token;
+
+	private Token refreshToken;
+
+	private Date issuedAt;
+
+	private Date expiresAt;
+
+	private Boolean isDifferentIp;
+
+	private Boolean isFirstLogin;
 }

@@ -69,13 +69,20 @@ public class AccountService {
         var createdDate = new Date();
 
         var token = Jwts
-            .builder().json(new JacksonSerializer<Map<String, ?>>(this.om)).claims(claims).issuer(tokenTemplate.getIssuer()).subject(tokenTemplate.getSubject()).issuedAt(createdDate)
+            .builder()
+            .json( new JacksonSerializer<Map<String, ?>>( this.om ) )
+            .claims( claims )
+            .issuer( tokenTemplate.getIssuer() )
+            .subject( tokenTemplate.getSubject() )
+            .issuedAt( createdDate )
             .id(UUID.randomUUID().toString())
             // .setHeaderParams(Map.of("typ", "jwt", "alg", "HS256"))
             // .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
             .header().add(Map.of("typ", "jwt", "alg", "RS256", "name", tokenTemplate.getName(), "jwtIssuerType", type.name())).and()
-            .signWith(keyPair.getPrivate(), StandardSecureDigestAlgorithms.findBySigningKey(keyPair.getPrivate()));
-
+            .signWith(
+                keyPair.getPrivate(),
+                StandardSecureDigestAlgorithms.findBySigningKey( keyPair.getPrivate() ) )//
+        ;
         Date expirationDate = null;
         if (type.equals(JwtIssuerType.BOT)) {
             expirationDate = new Date(new Date().getTime() + LocalDate.of(9000, 12, 31).atStartOfDay(ZoneOffset.systemDefault()).toInstant().toEpochMilli());
@@ -85,7 +92,11 @@ public class AccountService {
         }
         token.expiration(expirationDate);
         return Token
-            .builder().token(token.compact()).issuedAt(createdDate).expiresAt(expirationDate)
+			.builder()
+			.token( token.compact() )
+			.issuedAt( createdDate )
+			.expiresAt( expirationDate )
+			.refreshToken( type.equals( JwtIssuerType.ACCOUNT ) ? generateAccessToken( tokenTemplate, JwtIssuerType.REFRESH ) : null )
             // .isDifferentIp(account.getIsDifferentIp())
             // .isFirstLogin(account.getIsFirstLogin())
             .build();
@@ -136,7 +147,7 @@ public class AccountService {
     public Mono<AccountEntity> convertRequestToAccount(ServerRequest request) {
 
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication).flatMap(auth -> {
-            UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+			UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
             return accountRepository.findByEmail( userPrincipal.getId() );// .switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
         });
     }

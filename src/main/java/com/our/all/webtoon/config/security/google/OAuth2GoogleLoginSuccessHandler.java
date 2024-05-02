@@ -25,6 +25,7 @@ import com.our.all.webtoon.config.security.UserPrincipal;
 import com.our.all.webtoon.entity.account.AccountEntity;
 import com.our.all.webtoon.repository.account.AccountRepository;
 import com.our.all.webtoon.service.AccountService;
+import com.our.all.webtoon.util.constants.ProviderAccount;
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 
@@ -56,14 +57,13 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("picture");
         String token = oauth2User.getAttribute("token");
-
         System.out.println("kjh test ::: " + oauth2User);
         System.out.println("kjh test ::: " + authentication.getCredentials());
         System.out.println("kjh test ::: " + authentication.getAuthorities());
         System.out.println("kjh test ::: " + authentication.getName());
         System.out.println("kjh test ::: " + authentication.getDetails());
         System.out.println("kjh test ::: " + authentication.getPrincipal());
-        System.out.println("kjh test ::: " + webFilterExchange.getExchange());
+        System.out.println("kjh test ::: " + webFilterExchange);
         System.out.println("kjh test ::: " + webFilterExchange);
         System.out.println("kjh test ::: " + webFilterExchange.getExchange().getRequest().getURI());
         System.out.println(userId);
@@ -73,40 +73,39 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         System.out.println(token);
         System.out.println("auth ::: " + authentication.getCredentials());
 
-        Mono<AccountEntity> accountEntityMono = accountRepository.findByProviderId(userId)
-                .switchIfEmpty(accountRepository.findByEmail(email))
-                .defaultIfEmpty(AccountEntity.builder()//
-                        .accountName(name)//
-                        .email(email)//
-                        .profileImage(profileImageUrl)//
-                        .providerId(userId)//
-                        .isEnabled(true)//
-                        .roles(List.of(Role.ROLE_USER))//
-                        .build());
-
         // accountEntityMono.flatMap(accountEntity->)
 
         return accountRepository.findByProviderId(userId)
                 .switchIfEmpty(accountRepository.findByEmail(email))
-                .defaultIfEmpty(AccountEntity.builder()//
-                        .accountName(name)//
-                        .email(email)//
-                        .profileImage(profileImageUrl)//
-                        .providerId(userId)//
-                        .isEnabled(true)//
-                        .roles(List.of(Role.ROLE_USER))//
-                        .build())
+				.defaultIfEmpty( //
+					AccountEntity
+						.builder()//
+						.accountName( name )//
+						.email( email )//
+						.profileImage( profileImageUrl )//
+						.providerId( userId )//
+						.isEnabled( true )//
+						.roles( List.of( Role.ROLE_USER ) )//
+						.provider( ProviderAccount.GOOGLE )
+						.build() //
+				)
+			// TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02
                 .flatMap(accountEntity -> accountRepository.save(//
-                        accountEntity.withAccountName(name).withEmail(email)
-                                .withProfileImage(profileImageUrl).withProviderId(userId)
-                                .withIsEnabled(true).withRoles(List.of(Role.ROLE_USER))//
+                    accountEntity.withProvider( ProviderAccount.GOOGLE )
+							.withAccountName( name )
+							.withEmail( email )
+							.withProfileImage( profileImageUrl )
+							.withProviderId( userId )
+							.withIsEnabled( true )
+							.withRoles( List.of( Role.ROLE_USER ) )//
                 ))
                 .map(accountEntity -> accountService.generateAccessToken(accountEntity,
                         JwtIssuerType.ACCOUNT))
                 .flatMap(tokenResult -> jwtVerifyHandler.check(tokenResult.getToken()))
                 .flatMap(verificationResult -> {
-                    Claims claims = verificationResult.claims;
-                    String subject = claims.getSubject();
+
+					Claims claims = verificationResult.claims;
+					String subject = claims.getSubject();
                     @SuppressWarnings("unchecked")
                     List<String> roles = claims.get("role", List.class);
                     var authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
@@ -115,14 +114,18 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                         return Mono.empty(); // invalid value for any of jwt auth parts
 
                     var principal = new UserPrincipal(subject, claims.getIssuer());
+
                     Authentication auth = new UsernamePasswordAuthenticationToken(principal,
                             verificationResult.getToken(), authorities);
+
                     ReactiveSecurityContextHolder.withAuthentication(auth);
+
                     webFilterExchange.getExchange().getResponse()
                             .addCookie(ResponseCookie
                                     .fromClientResponse(HttpHeaders.AUTHORIZATION,
                                             verificationResult.getToken())
                                     .httpOnly(false).sameSite("Strict").path("/").build());
+
                     return OAuth2GoogleLoginSuccessHandler.requestCache
                             .getRedirectUri(webFilterExchange.getExchange())
                             .defaultIfEmpty(

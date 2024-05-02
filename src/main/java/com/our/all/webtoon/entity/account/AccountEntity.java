@@ -64,6 +64,11 @@ public class AccountEntity implements TokenTemplate {
 
     private String username;
 
+	private String token;
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private String refreshToken;
+
     @CreatedDate
     private LocalDateTime createAt;
 

@@ -11,6 +11,7 @@ export const myHomeButtonEvent = new Subject<Event>();
 export const MyHomeButton = () => {
     const location = useLocation();
     const currentPath = location.pathname;
+    //link to에 isLogin으로 분기처리 시키기 20240502
     return (
         <Link
             to={`/page/layer/login-layer`}
