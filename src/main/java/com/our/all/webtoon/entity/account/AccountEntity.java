@@ -35,7 +35,7 @@ public class AccountEntity implements TokenTemplate {
     @Id
     private String id;
 
-    private String accessToken;
+    private String deviceId;
 
     private String accountName;
 
@@ -56,13 +56,11 @@ public class AccountEntity implements TokenTemplate {
 
     private String profileImage;
 
+    private String providerId;
+
     private ProviderAccount provider;
 
-    private String providerToken;
-
     private List<Role> roles;
-
-    private String refreshToken;
 
     private String username;
 

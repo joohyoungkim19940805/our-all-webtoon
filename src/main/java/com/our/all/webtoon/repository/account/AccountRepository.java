@@ -6,7 +6,7 @@ import com.our.all.webtoon.entity.account.AccountEntity;
 import reactor.core.publisher.Mono;
 
 
-public interface AccountRepository extends ReactiveMongoRepository<AccountEntity, Long> {
+public interface AccountRepository extends ReactiveMongoRepository<AccountEntity, String> {
 
     Mono<AccountEntity> findByAccountName(String accountName);
 
@@ -14,8 +14,6 @@ public interface AccountRepository extends ReactiveMongoRepository<AccountEntity
 
     Mono<AccountEntity> findByAccountNameAndEmail(String accountName, String email);
 
-    Mono<Boolean> existsByProviderToken(String providerToken);
-
-    Mono<AccountEntity> findByProviderToken(String providerToken);
+    Mono<AccountEntity> findByProviderId(String providerId);
 
 }
