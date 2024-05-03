@@ -3,7 +3,6 @@ package com.our.all.webtoon.config.security;
 import java.security.KeyPair;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.our.all.webtoon.repository.account.AccountRepository;
 import com.our.all.webtoon.util.exception.AccountException;
@@ -19,18 +18,18 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
 
-
-@Component
 public class JwtVerifyHandler {
 
-	@Autowired
-	private KeyPair keyPair;
-
-	@Autowired
+    private KeyPair keyPair;
     private ObjectMapper om;
 
-	@Autowired
-	private AccountRepository accountRepository;
+    public JwtVerifyHandler(KeyPair keyPair, ObjectMapper om) {
+        this.keyPair = keyPair;
+        this.om = om;
+    }
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     /**
      * 토큰의 유효성과 만료시간을 체크하는 함수
@@ -38,29 +37,32 @@ public class JwtVerifyHandler {
      * @param accessToken
      * @return
      */
-	public Mono<VerificationResult> check(String token) {
+    public Mono<VerificationResult> check(String token) {
 
-		return getJwt( token ).onErrorResume( e -> Mono.error( e ) ).map( jws -> {
-			var claims = jws.getPayload();
-			return new VerificationResult( claims, token );
+        return getJwt(token).onErrorResume(e -> Mono.error(e)).map(jws -> {
+            var claims = jws.getPayload();
+            return new VerificationResult(claims, token);
 
-		} );
+        });
     }
-	public Mono<Jws<Claims>> getJwt(String token, boolean isRefresh) {
+
+    public Mono<Jws<Claims>> getJwt(String token, boolean isRefresh) {
+        System.out.println("kjh ????????????");
+        accountRepository.findByAccountName("mozu123").doOnNext(e -> {
+            System.out.println("kjh test ::: ??? 222" + e);
+        }).subscribe(e -> {
+            System.out.println("kjh test ::: ???" + e);
+        });
         try {
-            return Mono.just(Jwts.parser()
-            .json(new JacksonDeserializer<Map<String,?>>(this.om))
-                .verifyWith( keyPair.getPublic() )
-                .build()
-                .parseSignedClaims( token ));
+            return Mono.just(Jwts.parser().json(new JacksonDeserializer<Map<String, ?>>(this.om))
+                    .verifyWith(keyPair.getPublic()).build().parseSignedClaims(token));
         } catch (ExpiredJwtException e) {
             // e.printStackTrace();
-			// TODO 리프레시 토큰사용
-			if (! isRefresh)
-				return accountRepository
-					.findByToken( token )
-					.switchIfEmpty( Mono.error( new AccountException( Result._100 ) ) )
-					.flatMap( account -> getJwt( account.getRefreshToken(), true ) );
+            // TODO 리프레시 토큰사용
+            if (!isRefresh)
+                return accountRepository.findByToken(token)
+                        .switchIfEmpty(Mono.error(new AccountException(Result._100)))
+                        .flatMap(account -> getJwt(account.getRefreshToken(), true));
             throw new AccountException(Result._100);
         } catch (UnsupportedJwtException e) {
             e.printStackTrace();
@@ -73,10 +75,10 @@ public class JwtVerifyHandler {
             throw new AccountException(Result._107);
         }
 
-	}
+    }
 
-	public Mono<Jws<Claims>> getJwt(String token) {
-		return getJwt( token, false );
+    public Mono<Jws<Claims>> getJwt(String token) {
+        return getJwt(token, false);
     }
 
     @Getter

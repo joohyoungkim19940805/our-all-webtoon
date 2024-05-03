@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.our.all.webtoon.config.security.JwtIssuerType;
 import com.our.all.webtoon.config.security.JwtVerifyHandler;
 import com.our.all.webtoon.config.security.Role;
+import com.our.all.webtoon.config.security.Token;
 import com.our.all.webtoon.config.security.UserPrincipal;
 import com.our.all.webtoon.entity.account.AccountEntity;
 import com.our.all.webtoon.repository.account.AccountRepository;
@@ -56,7 +57,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         String name = oauth2User.getAttribute("name");
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("picture");
-        String token = oauth2User.getAttribute("token");
+        String tokenValue = oauth2User.getAttribute("token");
         System.out.println("kjh test ::: " + oauth2User);
         System.out.println("kjh test ::: " + authentication.getCredentials());
         System.out.println("kjh test ::: " + authentication.getAuthorities());
@@ -70,42 +71,41 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         System.out.println(name);
         System.out.println(email);
         System.out.println(profileImageUrl);
-        System.out.println(token);
+        System.out.println(tokenValue);
         System.out.println("auth ::: " + authentication.getCredentials());
 
         // accountEntityMono.flatMap(accountEntity->)
 
         return accountRepository.findByProviderId(userId)
-                .switchIfEmpty(accountRepository.findByEmail(email))
-				.defaultIfEmpty( //
-					AccountEntity
-						.builder()//
-						.accountName( name )//
-						.email( email )//
-						.profileImage( profileImageUrl )//
-						.providerId( userId )//
-						.isEnabled( true )//
-						.roles( List.of( Role.ROLE_USER ) )//
-						.provider( ProviderAccount.GOOGLE )
-						.build() //
-				)
-			// TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02
-                .flatMap(accountEntity -> accountRepository.save(//
-                    accountEntity.withProvider( ProviderAccount.GOOGLE )
-							.withAccountName( name )
-							.withEmail( email )
-							.withProfileImage( profileImageUrl )
-							.withProviderId( userId )
-							.withIsEnabled( true )
-							.withRoles( List.of( Role.ROLE_USER ) )//
-                ))
-                .map(accountEntity -> accountService.generateAccessToken(accountEntity,
-                        JwtIssuerType.ACCOUNT))
+                .switchIfEmpty(accountRepository.findByEmail(email)).defaultIfEmpty( //
+                        AccountEntity.builder()//
+                                .username(name)//
+                                .email(email)//
+                                .profileImage(profileImageUrl)//
+                                .providerId(userId)//
+                                .isEnabled(true)//
+                                .roles(List.of(Role.ROLE_USER))//
+                                .provider(ProviderAccount.GOOGLE).build() //
+                )
+                // TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02
+                .map(accountEntity -> {
+                    Token token = accountService.generateAccessToken(accountEntity,
+                            JwtIssuerType.ACCOUNT);
+                    accountRepository.save(//
+                            accountEntity.withProvider(ProviderAccount.GOOGLE).withAccountName(name)
+                                    .withEmail(email).withProfileImage(profileImageUrl)
+                                    .withProviderId(userId).withIsEnabled(true)
+                                    .withRoles(List.of(Role.ROLE_USER))//
+                                    .withToken(token.getToken())
+                                    .withRefreshToken(token.getRefreshToken().getToken()//
+                    )).subscribe();
+                    return token;
+                })//
                 .flatMap(tokenResult -> jwtVerifyHandler.check(tokenResult.getToken()))
                 .flatMap(verificationResult -> {
 
-					Claims claims = verificationResult.claims;
-					String subject = claims.getSubject();
+                    Claims claims = verificationResult.claims;
+                    String subject = claims.getSubject();
                     @SuppressWarnings("unchecked")
                     List<String> roles = claims.get("role", List.class);
                     var authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
@@ -152,13 +152,4 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         // super.onAuthenticationSuccess(request, response, authentication);
     }
 
-    public static void main(String a[]) {
-        Mono<String> aaa = Mono.just("abcd");
-        Mono.zip(aaa.flatMap(e -> Mono.just(e + "aaa")), aaa.flatMap(e -> Mono.just(e + "bbb")))
-                .flatMap(tuple -> {
-                    System.out.println("kjh test 111 :::" + tuple.getT1());
-                    System.out.println("kjh test 111 :::" + tuple.getT2());
-                    return null;
-                }).subscribe();
-    }
 }

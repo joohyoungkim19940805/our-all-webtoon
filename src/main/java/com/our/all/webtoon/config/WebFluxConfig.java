@@ -60,9 +60,6 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
     @Autowired
     private ObjectMapper objectMapper;
 
-	@Autowired
-	private JwtVerifyHandler jwtVerifyHandler;
-
     @Value("${key.pair.file.dir}")
     private String keyPairFileDir;
 
@@ -169,6 +166,11 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
         keyPairUtil.saveAndSetVariableKeyPair();
         return keyPairUtil.getKeyPair();
         // return keyPair;//Keys.keyPairFor(SignatureAlgorithm.RS256);
+    }
+
+    @Bean
+    public JwtVerifyHandler jwtVerifyHandler(KeyPair keyPair, ObjectMapper objectMapper) {
+        return new JwtVerifyHandler(keyPair, objectMapper);
     }
 
     @Bean
