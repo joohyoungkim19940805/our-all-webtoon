@@ -79,7 +79,7 @@ select {
     align-items: center;
     outline: none;
     & option {
-        font-size: 1.2vw;
+        font-size: 1.2vmax;
         text-align: center;
     }
 }

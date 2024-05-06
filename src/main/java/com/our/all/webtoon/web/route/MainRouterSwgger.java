@@ -1,4 +1,4 @@
-package com.our.all.webtoon.web;
+package com.our.all.webtoon.web.route;
 
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;

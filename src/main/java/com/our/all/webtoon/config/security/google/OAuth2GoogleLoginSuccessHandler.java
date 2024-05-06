@@ -87,7 +87,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                                 .roles(List.of(Role.ROLE_USER))//
                                 .provider(ProviderAccount.GOOGLE).build() //
                 )
-                // TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02
+			// TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02 // 반영 완료 2024 05 03
                 .map(accountEntity -> {
                     Token token = accountService.generateAccessToken(accountEntity,
                             JwtIssuerType.ACCOUNT);

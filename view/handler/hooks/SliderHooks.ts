@@ -18,7 +18,7 @@ export const useSliderItemVisible = (
                 }),
             {
                 root: ref.current,
-                threshold: 0.6,
+                threshold: 0.3,
             },
         );
         setObserver(observer);
@@ -127,6 +127,7 @@ export const useVisibleSliderPaging = () => {
         visibleObserver,
         visibleTarget,
         page,
+        setPage,
         listRef: ref,
     };
 };

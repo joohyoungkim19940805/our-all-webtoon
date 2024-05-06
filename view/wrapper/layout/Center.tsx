@@ -18,6 +18,12 @@ export const Center = () => {
                             <LatestWebttonContainer></LatestWebttonContainer>
                         }
                     />
+                    <Route
+                        path="/my-home"
+                        element={
+                            <LatestWebttonContainer></LatestWebttonContainer>
+                        }
+                    />
                 </Routes>
             </div>
         </flex-container>

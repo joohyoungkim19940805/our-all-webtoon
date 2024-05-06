@@ -51,4 +51,9 @@
         width: 19.52%;
         height: 4rem;
     }
+
+    &.active {
+        color: #a78888 !important;
+        font-weight: bold;
+    }
 }

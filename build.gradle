@@ -50,5 +50,5 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 	implementation 'com.google.guava:guava:32.1.1-jre'
-	implementation 'org.jsmpp:jsmpp:3.0.1'
+	implementation 'org.mongodb:mongodb-driver-reactivestreams:5.1.0'
 }
