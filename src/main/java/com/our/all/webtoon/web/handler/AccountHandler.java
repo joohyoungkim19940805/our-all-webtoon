@@ -17,41 +17,37 @@ import com.our.all.webtoon.util.ResponseWrapper;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
 import reactor.core.publisher.Mono;
 
-
 @Component
 public class AccountHandler {
 
-	@Autowired
-	private AccountService accountService;
+    @Autowired
+    private AccountService accountService;
 
-	@Autowired
-	private MailService mailService;
+    @Autowired
+    private MailService mailService;
 
-	@Autowired
-	private AccountRepository accountRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
-	@Autowired
-	private JwtVerifyHandler jwtVerifyHandler;
+    @Autowired
+    private JwtVerifyHandler jwtVerifyHandler;
 
-	protected record CreateUserRequest(String email, String password, String newPassword) {}
+    protected record CreateUserRequest(String email, String password, String newPassword) {
+    }
 
-	public Mono<ServerResponse> create(
-		ServerRequest request
-	) {
+    public Mono<ServerResponse> create(ServerRequest request) {
 
-		/* return ok() .contentType(MediaType.APPLICATION_JSON)
-		 * .body(accountService.createUser(request.bodyToMono(AccountEntity.class)) .map(e ->
-		 * response(Result._0, e)), Response.class ) .onErrorResume(e -> Mono.error(new
-		 * UnauthorizedException(Result._110))); */
-		return accountService
-			.createUser( request.bodyToMono( AccountEntity.class ), true )//
-			.flatMap(
-				account -> ok()
-					.contentType( MediaType.APPLICATION_JSON )
-					.body( response( Result._0 ), ResponseWrapper.class )
-			);
+        /*
+         * return ok() .contentType(MediaType.APPLICATION_JSON)
+         * .body(accountService.createUser(request.bodyToMono(AccountEntity.class)) .map(e ->
+         * response(Result._0, e)), Response.class ) .onErrorResume(e -> Mono.error(new
+         * UnauthorizedException(Result._110)));
+         */
+        return accountService.createUser(request.bodyToMono(AccountEntity.class))//
+                .flatMap(account -> ok().contentType(MediaType.APPLICATION_JSON)
+                        .body(response(Result._0), ResponseWrapper.class));
 
-	}
+    }
 
 
 }
