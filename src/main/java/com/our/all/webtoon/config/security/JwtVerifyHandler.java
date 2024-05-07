@@ -47,12 +47,6 @@ public class JwtVerifyHandler {
     }
 
     public Mono<Jws<Claims>> getJwt(String token, boolean isRefresh) {
-        System.out.println("kjh ????????????");
-        accountRepository.findByAccountName("mozu123").doOnNext(e -> {
-            System.out.println("kjh test ::: ??? 222" + e);
-        }).subscribe(e -> {
-            System.out.println("kjh test ::: ???" + e);
-        });
         try {
             return Mono.just(Jwts.parser().json(new JacksonDeserializer<Map<String, ?>>(this.om))
                     .verifyWith(keyPair.getPublic()).build().parseSignedClaims(token));

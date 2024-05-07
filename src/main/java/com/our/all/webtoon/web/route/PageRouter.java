@@ -1,4 +1,4 @@
-package com.our.all.webtoon.web;
+package com.our.all.webtoon.web.route;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
@@ -11,22 +11,54 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import com.our.all.webtoon.web.handler.GnbHandler;
+import com.our.all.webtoon.web.handler.AccountHandler;
 import com.our.all.webtoon.web.handler.IndexHandler;
 import com.our.all.webtoon.web.handler.PageHandler;
 
 
 @Configuration
-public class MainRouter {
+public class PageRouter {
 
     @Bean
     public RouterFunction<ServerResponse> page(PageHandler pageHandler) {
-        return route(//
+
+		return route( //
             request -> request.path().startsWith("/page") //
                 && request.headers().accept().contains(MediaType.TEXT_HTML), //
             request -> pageHandler.main(request)//
-        );
+		);
     }
+
+	@Bean
+	public RouterFunction<ServerResponse> account(AccountHandler accountHandler) {
+
+		return route().nest(
+			path( "/api/account" ),
+			builder -> builder
+				.nest(
+					path( "search" ),
+					searchPathBuilder -> searchPathBuilder
+						.GET(
+							"/is-login",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::isLogin )
+						.GET(
+							"/get-info",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::isLogin )
+						.build() )
+				/* .nest(path("/create"), createPathBuilder -> createPathBuilder
+				 * .build()) */
+				.nest(
+					path( "update" ),
+					updatePathBuilder -> updatePathBuilder
+						.PUT(
+							"/change-info",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::isLogin )
+						.build() )
+			).build();
+	}
 
     @Bean
 	public RouterFunction<ServerResponse> index(
@@ -34,7 +66,7 @@ public class MainRouter {
 	) {
 
 		return route( GET( "/" ), req -> ServerResponse.temporaryRedirect( URI.create( "/page/main" ) ).build() )
-			.and( route( GET( "/is-login" ).and( accept( MediaType.APPLICATION_JSON ) ), indexHandler::isLogin ) );
+			;
     }
 
     @Bean
@@ -74,9 +106,4 @@ public class MainRouter {
             .and(route(GET("/logout").and(accept(MediaType.APPLICATION_JSON)), indexHandler::logout));
     }
 
-    @Bean
-    public RouterFunction<ServerResponse> gnb(GnbHandler gnbHandler) {
-        return route()
-            .nest(path("/gnb"), builder -> builder.nest(path("search"), searchPathBuilder -> searchPathBuilder.GET("/my", accept(MediaType.APPLICATION_JSON), gnbHandler::my).build())).build();
-    }
 }

@@ -1,0 +1,30 @@
+대시보드 디자인 = simple white, 흐릿한 border
+홈버튼 - 죄측 상단
+
+lnb 메뉴(햄버거) 누를 시 -- 누구 작가 --님     X 버튼  width 약 70%
+
+내 대시보드
+- 내 웹툰 목록 (각 웹툰 목록 별 대표 썸네일, 타이틀, 최신 회차 등록일, 다음 연재 예정일, 누적 조회수) | 내 역할
+-- 웹툰 목록 상단 우측에 신규 웹툰 등록하기 버튼
+-- 각 웹툰 클릭시 웹툰 대시보드로 이동
+
+웹툰 대시보드
+- 대시보드 메인 
+- 회차 등록
+- 협업 초대 및 권한 설정
+- 작업 파일 관리
+- 메신저
+- 게시판
+- 작업 공간
+-- 클립 스튜디오 페인트  //   https://www.celsys.com/en/service/creative/
+-- 펜타브 스튜디오  //  https://www.youtube.com/watch?v=sSNkD6zUXcU
+-- 메디방 페인트 프로  //  X https://medibangpaint.com/en/pc/
+-- 피스코믹  //  https://www.pixton.com/welcome
+-- Krita  //  https://krita.org/en/download/
+-- Smith Micro Anime Studio  //  https://my.smithmicro.com/
+-- OpenToonz  //  https://opentoonz.github.io/e/
+-- Cartoon Animator 4  //  https://www.reallusion.com/
+-- Moho Pro 13  //  https://my.smithmicro.com/
+-- Adobe Animate  //  https://www.adobe.com/products/animate.html
+-- Toon Boom Harmony  //  https://www.toonboom.com/
+

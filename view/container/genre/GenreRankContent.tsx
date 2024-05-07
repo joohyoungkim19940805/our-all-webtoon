@@ -29,10 +29,13 @@ export const GenreRankContainer = () => {
         visibleObserver,
         visibleTarget,
         page,
+        setPage,
         listRef,
     } = useVisibleSliderPaging();
     const { isShft } = useShiftDownScrollWheelX(listRef);
 
+    //[page, setPage] 이용시 스크롤 이벤트가 중복 발생하여 별도 스테이트로 분리
+    const [movePage, setMovePage] = useState<number>();
     // ${scrollStyles.none}
     return (
         <div className={`${styles['genre-rank-list-container']}`}>
@@ -78,6 +81,10 @@ export const GenreRankContainer = () => {
                                     ? (node) => {
                                           if (!node || !visibleObserver) return;
                                           visibleObserver.observe(node);
+                                          if (movePage === i / 3) {
+                                              setMovePage(-1);
+                                              hanldeScrollIntoView(node);
+                                          }
                                       }
                                     : null
                             }
@@ -103,6 +110,10 @@ export const GenreRankContainer = () => {
                                     ? styles['target-page']
                                     : ''
                             }
+                            data-page={i}
+                            onClick={() => {
+                                setMovePage(i);
+                            }}
                         ></li>
                     );
                 })}

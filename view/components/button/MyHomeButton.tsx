@@ -4,29 +4,33 @@ import { UserlaneSvg } from '@components/svg/UserlaneSvg';
 
 import styles from './Button.module.css';
 import { myHomeService } from '@handler/service/GnbService';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useIsLoignService } from '@handler/service/AccountService';
+import { useState } from 'react';
 
 // 마이페이지 버튼
-export const myHomeButtonEvent = new Subject<Event>();
+export const locationPath = '/page/gnb/my-home';
 export const MyHomeButton = () => {
     const location = useLocation();
-    const currentPath = location.pathname;
-    //link to에 isLogin으로 분기처리 시키기 20240502
+
+    const subscription = useIsLoignService(locationPath);
     return (
-        <Link
-            to={`/page/layer/login-layer`}
-            //type="button"
-            className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]}`}
-            onClick={() => {
-                const subscribe = myHomeService.subscribe({
-                    next: (value) => console.log(value),
-                    error: (err) => console.log(err),
-                });
+        <button
+            //to={`/page/gnb/my-home`}
+            type="button"
+            className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]} ${locationPath === location.pathname && styles[`active`]}`}
+            onClick={(event) => {
+                console.log(location);
+                if (location.pathname === locationPath) return;
+                const unsubscribe = subscription.subscribe();
+                return () => {
+                    unsubscribe.unsubscribe();
+                };
                 // $globalDimLayer.next(<LoginContainer></LoginContainer>);
             }}
         >
             MY
             <UserlaneSvg></UserlaneSvg>
-        </Link>
+        </button>
     );
 };

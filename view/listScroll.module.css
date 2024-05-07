@@ -25,8 +25,8 @@
     &:hover::-webkit-scrollbar {
         scrollbar-width: initial;
         display: initial;
-        width: 3dvw;
-        height: 3dvh;
+        width: 1dvw;
+        height: 1dvh;
     }
     &.show-scroll::-webkit-scrollbar-thumb,
     &:hover::-webkit-scrollbar-thumb {

@@ -296,7 +296,5 @@ public class IndexHandler {
     public Mono<ServerResponse> isLogin(ServerRequest request) {
         return ok().contentType(MediaType.APPLICATION_JSON).body(response(Result._0),
                 ResponseWrapper.class);
-
     }
-
 }
