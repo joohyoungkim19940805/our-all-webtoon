@@ -12,7 +12,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
  */
 module.exports = {
     entry: {
-        testPageRenderer: './view/page/test.tsx',
+        testPageRenderer: './view/page/index.tsx',
     },
     output: {
         filename: '[name].js',

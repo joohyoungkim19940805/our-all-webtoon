@@ -1,6 +1,8 @@
 import inputStyles from '@components/input/Input.module.css';
 import styles from './SingUpContainer.module.css';
+import { useState } from 'react';
 export const SingUpContainer = () => {
+    const [isEmailAuth, setEmailAuth] = useState();
     return (
         <form className={styles['sing-up-container']}>
             <div>
@@ -37,6 +39,16 @@ export const SingUpContainer = () => {
                         required
                     ></input>
                 </div>
+            </div>
+            <div>
+                <label htmlFor="sign_up_email"></label>
+                <input
+                    type="email"
+                    name="email"
+                    id="sign_up_email"
+                    placeholder="이메일을 입력하세요"
+                ></input>
+                <button type="button">인증하기</button>
             </div>
             <div className={styles['sex-container']}>
                 <input type="radio" id="sex-male" name="sex" hidden></input>

@@ -3,7 +3,7 @@ import { Bottom } from '@wrapper/layout/Bottom';
 import { Center } from '@wrapper/layout/Center';
 import { Top } from '@wrapper/layout/Top';
 import { createRoot } from 'react-dom/client';
-import styles from './test3.module.css';
+import styles from './index.module.css';
 import { GlobalDimLayer } from '@wrapper/layer/Layer';
 import {
     createBrowserRouter,
