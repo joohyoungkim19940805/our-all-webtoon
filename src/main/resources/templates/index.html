@@ -2,21 +2,27 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self'">
-		<meta name="google-adsense-account" content="ca-pub-9686589206245944">
-		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-visual">
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="script-src 'self'"
+        />
+        <meta name="google-adsense-account" content="ca-pub-9686589206245944" />
+        <meta
+            name="viewport"
+            content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-visual"
+        />
         <title>hello word</title>
         <link
             rel="stylesheet"
             type="text/css"
-            th:href="@{/dist/testPageRenderer.css}"
+            th:href="@{/dist/pageRenderer.css}"
         />
     </head>
 
     <body>
         <script
             type="text/javascript"
-            th:src="@{/dist/testPageRenderer.js}"
+            th:src="@{/dist/pageRenderer.js}"
         ></script>
     </body>
 </html>

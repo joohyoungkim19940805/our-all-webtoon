@@ -1,7 +1,7 @@
 import { FlexLayout } from '@wrapper/FlexLayout';
-import { Bottom } from '@wrapper/layout/Bottom';
-import { Center } from '@wrapper/layout/Center';
-import { Top } from '@wrapper/layout/Top';
+import { Bottom } from '@wrapper/layout/page/Bottom';
+import { Center } from '@wrapper/layout/page/Center';
+import { Top } from '@wrapper/layout/page/Top';
 import { createRoot } from 'react-dom/client';
 import styles from './index.module.css';
 import { GlobalDimLayer } from '@wrapper/layer/Layer';
