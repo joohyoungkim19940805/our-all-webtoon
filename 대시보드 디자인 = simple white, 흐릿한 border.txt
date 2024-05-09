@@ -22,7 +22,5 @@ lnb 메뉴(햄버거) 누를 시 -- 누구 작가 --님     X 버튼  width 약 
 -- Krita  //  https://krita.org/en/download/
 -- OpenToonz  //  https://opentoonz.github.io/e/
 -- Cartoon Animator 4  //  https://www.reallusion.com/
--- Moho Pro 13  //  https://my.smithmicro.com/
--- Adobe Animate  //  https://www.adobe.com/products/animate.html
 -- Toon Boom Harmony  //  https://www.toonboom.com/
 
