@@ -17,11 +17,9 @@ lnb 메뉴(햄버거) 누를 시 -- 누구 작가 --님     X 버튼  width 약 
 - 게시판
 - 작업 공간
 -- 클립 스튜디오 페인트  //   https://www.celsys.com/en/service/creative/
--- 펜타브 스튜디오  //  https://www.youtube.com/watch?v=sSNkD6zUXcU
--- 메디방 페인트 프로  //  X https://medibangpaint.com/en/pc/
+-- 메디방 페인트 프로 X // https://medibangpaint.com/en/pc/
 -- 피스코믹  //  https://www.pixton.com/welcome
 -- Krita  //  https://krita.org/en/download/
--- Smith Micro Anime Studio  //  https://my.smithmicro.com/
 -- OpenToonz  //  https://opentoonz.github.io/e/
 -- Cartoon Animator 4  //  https://www.reallusion.com/
 -- Moho Pro 13  //  https://my.smithmicro.com/
