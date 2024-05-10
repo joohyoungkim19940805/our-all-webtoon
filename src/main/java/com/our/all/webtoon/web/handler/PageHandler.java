@@ -15,4 +15,8 @@ public class PageHandler {
 
     }
 
+    public Mono<ServerResponse> dashboard(ServerRequest request) {
+        return ok().contentType(MediaType.TEXT_HTML).render("/dashboard.html");
+
+    }
 }

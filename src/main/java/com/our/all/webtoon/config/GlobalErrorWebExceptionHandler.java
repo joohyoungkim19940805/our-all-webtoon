@@ -29,17 +29,16 @@ import reactor.core.publisher.Mono;
 @Order(-2)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-    public GlobalErrorWebExceptionHandler(
-                                          GlobalErrorAttributes errorAttribute,
-                                          ApplicationContext applicationContext,
-                                          ServerCodecConfigurer serverCodecConfigurer) {
+    public GlobalErrorWebExceptionHandler(GlobalErrorAttributes errorAttribute,
+            ApplicationContext applicationContext, ServerCodecConfigurer serverCodecConfigurer) {
         super(errorAttribute, new WebProperties.Resources(), applicationContext);
         super.setMessageWriters(serverCodecConfigurer.getWriters());
         super.setMessageReaders(serverCodecConfigurer.getReaders());
     }
 
     @Override
-    protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {
+    protected RouterFunction<ServerResponse> getRoutingFunction(
+            final ErrorAttributes errorAttributes) {
         return RouterFunctions.route(RequestPredicates.all(), (req) -> {
             errorAttributes.getError(req).printStackTrace();
             return this.renderErrorResponse(req);
@@ -48,28 +47,30 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
     private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
 
-        final Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
+        final Map<String, Object> errorPropertiesMap =
+                getErrorAttributes(request, ErrorAttributeOptions.defaults());
         // HttpStatus status2;
         int code = (Integer) errorPropertiesMap.get("code");
         HttpStatus status = HttpStatus.valueOf((Integer) errorPropertiesMap.get("status"));
 
-        boolean isHTML = request.headers().accept().stream().filter(e -> e.equals(MediaType.TEXT_HTML)).findFirst().isPresent();
+        boolean isHTML = request.headers().accept().stream()
+                .filter(e -> e.equals(MediaType.TEXT_HTML)).findFirst().isPresent();
 
         BodyBuilder bodyBuilder;
 
         if (isHTML) {
-            bodyBuilder = ServerResponse
-                .temporaryRedirect( URI.create( "/page/layer/login-layer" ) );
+            bodyBuilder = ServerResponse.temporaryRedirect(URI.create("/page/layer/login-layer"));
         } else {
             bodyBuilder = ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if (code == Result._100.code() || //
-            code == Result._105.code() || //
-            code == Result._106.code() || //
-            code == Result._107.code() || //
-            status.equals(HttpStatus.UNAUTHORIZED)) {
-            bodyBuilder.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "").httpOnly(true).secure(true).sameSite("Strict").path("/").build());
+                code == Result._105.code() || //
+                code == Result._106.code() || //
+                code == Result._107.code() || //
+                status.equals(HttpStatus.UNAUTHORIZED)) {
+            bodyBuilder.cookie(ResponseCookie.fromClientResponse(HttpHeaders.AUTHORIZATION, "")
+                    .httpOnly(true).secure(true).sameSite("Strict").path("/").build());
 
         }
         errorPropertiesMap.get("statusCode");
@@ -77,12 +78,13 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
         if (isHTML) {
             /*
              * return bodyBuilder .contentType(MediaType.parseMediaType("text/html;charset=UTF-8"))
-             * .render("content/loginPage.html", Map.of("loginStatus", "FAILED", "resourcesNameList",
-             * List.of("loginPage")));
+             * .render("content/loginPage.html", Map.of("loginStatus", "FAILED",
+             * "resourcesNameList", List.of("loginPage")));
              */
             return bodyBuilder.build();
         } else {
-            return bodyBuilder.contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(errorPropertiesMap));
+            return bodyBuilder.contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(errorPropertiesMap));
         }
 
         /*
@@ -92,7 +94,8 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
          * 
          * return null;
          * 
-         * .contentType(MediaType.APPLICATION_JSON) .body(BodyInserters.fromValue(errorPropertiesMap));
+         * .contentType(MediaType.APPLICATION_JSON)
+         * .body(BodyInserters.fromValue(errorPropertiesMap));
          */
     }
 

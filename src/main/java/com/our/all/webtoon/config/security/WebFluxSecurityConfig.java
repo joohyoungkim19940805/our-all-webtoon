@@ -15,6 +15,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter;
@@ -69,15 +72,14 @@ public class WebFluxSecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
-        return http
-                .exceptionHandling(
-                        exceptionSpec -> exceptionSpec
-                                .authenticationEntryPoint((swe,
-                                        e) -> Mono.fromRunnable(() -> swe.getResponse()
-                                                .setStatusCode(HttpStatus.UNAUTHORIZED)))
-                                .accessDeniedHandler((swe,
-                                        e) -> Mono.fromRunnable(() -> swe.getResponse()
-                                                .setStatusCode(HttpStatus.FORBIDDEN))))
+        return http.exceptionHandling(exceptionSpec -> exceptionSpec
+                // .authenticationEntryPoint((swe,
+                // error) -> Mono.fromRunnable(() -> swe.getResponse()
+                // .setStatusCode(HttpStatus.UNAUTHORIZED)))
+                .authenticationEntryPoint(
+                        new RedirectServerAuthenticationEntryPoint("/page/layer/login-layer"))
+                .accessDeniedHandler((swe, error) -> Mono
+                        .fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN))))
 
                 .httpBasic(
                         httpBasicSpec -> httpBasicSpec
@@ -119,26 +121,27 @@ public class WebFluxSecurityConfig {
                             .authenticationSuccessHandler(googleLoginSuccessHandler);
                     // .authenticationSuccessHandler(new OAuth2LoginSuccessHandler(userService));
                 })
-                // .formLogin(formLoginSpec -> formLoginSpec
-                // .authenticationSuccessHandler(new
-                // RedirectServerAuthenticationSuccessHandler("/"))
-                // .authenticationFailureHandler(new
-                // RedirectServerAuthenticationFailureHandler("/loginPage?status=error"))
-                // .loginPage("/login")
-                // )
+                .formLogin(formLoginSpec -> formLoginSpec
+                        .authenticationSuccessHandler(
+                                new RedirectServerAuthenticationSuccessHandler("/"))
+                        .authenticationFailureHandler(
+                                new RedirectServerAuthenticationFailureHandler(
+                                        "/page/layer/login-layer?status=error"))
+                        .loginPage("/page/layer/login-layer"))
 
                 // .requestCache(c->c.requestCache(new CookieServerRequestCache()))
                 .authenticationManager(authManager)
                 .authorizeExchange(authSpec -> authSpec.pathMatchers(HttpMethod.OPTIONS).permitAll()//
                         .pathMatchers("/api/auth/**").authenticated()//
+                        .pathMatchers("/dashboard/**").authenticated()//
+
                         .pathMatchers("/**").permitAll()//
-                        .pathMatchers("/files/**", "/dist/**", "images/**", "/**.ico", "/model/**",
-                                "/manifest.json", "/Ads.txt", "/**.Ads.txt")
-                        .permitAll() // resources/static)
-                        .pathMatchers("/", "/*", "/account-verify/*").permitAll() // auth 검사 안 할 url
-                                                                                  // path
-                        .pathMatchers("/v3/webjars/**", "/swagger-ui/**", "/v3/api-docs/**")
-                        .permitAll() // api doc
+                // .pathMatchers("/files/**", "/dist/**", "images/**", "/**.ico", "/model/**",
+                // "/manifest.json", "/Ads.txt", "/**.Ads.txt")
+                // .permitAll()//
+                // .pathMatchers("/", "/*", "/account-verify/*").permitAll() // auth
+                // .pathMatchers("/v3/webjars/**", "/swagger-ui/**", "/v3/api-docs/**")
+                // .permitAll() // api doc
                 // .pathMatchers("/api/generate-presigned-url/test/").permitAll()
                 // .anyExchange().authenticated()
                 )

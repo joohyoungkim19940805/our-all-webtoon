@@ -1,0 +1,9 @@
+.head-container {
+    display: flex;
+    justify-content: flex-start;
+
+    & .lbn-button {
+        padding-left: 1vw;
+        padding-top: 1vh;
+    }
+}

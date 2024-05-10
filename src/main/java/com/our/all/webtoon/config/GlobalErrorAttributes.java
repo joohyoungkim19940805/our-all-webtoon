@@ -13,7 +13,8 @@ import com.our.all.webtoon.util.exception.CommonExceptionResult.CommonResultCode
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
 
     @Override
-    public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
+    public Map<String, Object> getErrorAttributes(ServerRequest request,
+            ErrorAttributeOptions options) {
         Map<String, Object> map = super.getErrorAttributes(request, options);
         // map.remove("status");
         // map.remove("error");
@@ -26,11 +27,13 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             map.put("message", error.message());
             map.put("summary", error.summary());
             map.put("resultType", "error");
+            map.put("redirectUrl", error.redirectUrl());
         } else {
             map.put("message", Result._999.message());// throwable.getMessage());
             map.put("code", Result._999.code());
             map.put("summary", Result._999.summary());
             map.put("resultType", "error");
+            map.put("redirectUrl", ".");
         }
         return map;
     }

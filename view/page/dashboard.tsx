@@ -13,6 +13,8 @@ import {
     useRoutes,
 } from 'react-router-dom';
 import React from 'react';
+import { Head } from '@wrapper/layout/dashboard/Head';
+import { Body } from '@wrapper/layout/dashboard/Body';
 styles;
 FlexLayout;
 document.body.dataset.mode = 'black';
@@ -29,7 +31,9 @@ const router = createBrowserRouter([
         index: true,
         element: (
             <>
-                <flex-layout data-direction="row">
+                <flex-layout data-direction="column">
+                    <Head></Head>
+                    <Body></Body>
                 </flex-layout>
                 <GlobalDimLayer></GlobalDimLayer>
             </>
