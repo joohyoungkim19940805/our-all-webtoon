@@ -1,9 +1,12 @@
 import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import listScrollStyle from '@root/listScroll.module.css';
-export const DashboardDetailLnb = () => {
+import { forwardRef } from 'react';
+import styles from './DashboardLng.module.css';
+export const DashboardDetailLnb = forwardRef<HTMLUListElement>((_, ref) => {
     return (
         <ul
-            className={`${listScrollStyle['list-scroll']} ${listScrollStyle.y}`}
+            ref={ref}
+            className={`${styles.dashboard} ${listScrollStyle['list-scroll']} ${listScrollStyle.y}`}
         >
             <li>
                 <button type="button">대시보드 메인</button>
@@ -26,69 +29,70 @@ export const DashboardDetailLnb = () => {
             </li>
 
             <li>
-                <b>작업 공간</b>
-                <ul>
-                    <li>
-                        <button type="button">주의 사항</button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://www.celsys.com/en/service/creative/"
-                        >
-                            클립 스튜디오 페인트(미구현)
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://medibangpaint.com/en/pc/"
-                        >
-                            메디방 페인트 프로 X(미구현)
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://www.pixton.com/welcome"
-                        >
-                            Pixton(미구현)
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://krita.org/en/download/"
-                        >
-                            Krita(미구현)
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://opentoonz.github.io/e/"
-                        >
-                            OpenToonz
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://www.reallusion.com/"
-                        >
-                            Cartoon Animator(미구현)
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            data-url_info="https://www.toonboom.com/"
-                        >
-                            Toon Boom(미구현)
-                        </button>
-                    </li>
-                </ul>
+                <details>
+                    <summary style={{ fontSize: '2rem' }}>
+                        <strong>작업 공간</strong>
+                    </summary>
+                    <ul>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://www.celsys.com/en/service/creative/"
+                            >
+                                클립 스튜디오 페인트(미구현)
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://medibangpaint.com/en/pc/"
+                            >
+                                메디방 페인트 프로 X(미구현)
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://www.pixton.com/welcome"
+                            >
+                                Pixton(미구현)
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://krita.org/en/download/"
+                            >
+                                Krita(미구현)
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://opentoonz.github.io/e/"
+                            >
+                                OpenToonz
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://www.reallusion.com/"
+                            >
+                                Cartoon Animator(미구현)
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                data-url_info="https://www.toonboom.com/"
+                            >
+                                Toon Boom(미구현)
+                            </button>
+                        </li>
+                    </ul>
+                </details>
             </li>
         </ul>
     );
-};
+});

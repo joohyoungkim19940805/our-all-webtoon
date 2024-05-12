@@ -1,0 +1,5 @@
+.dashboard {
+    width: fit-content;
+    & li {
+    }
+}

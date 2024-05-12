@@ -15,8 +15,18 @@ import {
 import React from 'react';
 import { Head } from '@wrapper/layout/dashboard/Head';
 import { Body } from '@wrapper/layout/dashboard/Body';
+import { windowResize } from '@handler/globalEvents';
 styles;
 FlexLayout;
+
+const html = document.body.parentElement;
+if (html) {
+    html.style.fontSize = Math.max(0.6, 2 / (window.innerWidth / 200)) + 'vmax';
+    windowResize.subscribe(() => {
+        html.style.fontSize =
+            Math.max(0.6, 2 / (window.innerWidth / 200)) + 'vmax';
+    });
+}
 document.body.dataset.mode = 'black';
 const root = document.createElement('main');
 root.id = styles.root;

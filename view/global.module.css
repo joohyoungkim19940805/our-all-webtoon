@@ -20,10 +20,7 @@ html {
 }
 /* summary 마크 화살표 제거 */
 summary {
-    list-style: none;
-
     &&::marker {
-        display: none;
     }
 }
 

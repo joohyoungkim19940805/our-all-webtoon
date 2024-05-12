@@ -1,12 +1,15 @@
-interface FlexLayoutHTMLAttributes<FlexLayout>
+export interface FlexLayoutHTMLAttributes<FlexLayout>
     extends React.HTMLAttributes<FlexLayout> {
     ['data-direction']: 'row' | 'column';
 }
-interface FlexContainerHTMLAttributes<FlexContainer>
+export interface FlexContainerHTMLAttributes<FlexContainer>
     extends React.HTMLAttributes<FlexContainer> {
     ['data-is_resize']: boolean;
     ['data-panel_mode']?: ResizePanelMode;
     ['data-grow']?: number;
+    ['data-prev_grow']?: number;
+    ['closeEndCallback']?: Function;
+    ['openEndCallback']?: Function;
 }
 declare global {
     namespace JSX {
@@ -431,7 +434,7 @@ export class FlexLayout extends HTMLElement {
         return target;
     }
 
-    closeFlex(resizeTarget: HTMLElement, { isResize = false } = {}) {
+    closeFlex(resizeTarget: FlexContainer, { isResize = false } = {}) {
         return new Promise((resolve) => {
             if (!resizeTarget.hasAttribute('data-is_resize')) {
                 resolve(resizeTarget);
@@ -456,11 +459,8 @@ export class FlexLayout extends HTMLElement {
                     }
                     e.style.transition = '';
                     e.ontransitionend = () => {};
-                    if (
-                        e == resizeTarget &&
-                        (resizeTarget as any)._closeEndCallback
-                    ) {
-                        (resizeTarget as any)._closeEndCallback(this);
+                    if (e == resizeTarget) {
+                        resizeTarget.closeEndCallback(this);
                     }
                 };
 
@@ -494,7 +494,7 @@ export class FlexLayout extends HTMLElement {
     }
 
     openFlex(
-        resizeTarget: HTMLElement,
+        resizeTarget: FlexContainer,
         { isPrevSizeOpen = false, isResize = false } = {},
     ) {
         return new Promise((resolve) => {
@@ -526,11 +526,8 @@ export class FlexLayout extends HTMLElement {
                     }
                     e.style.transition = '';
                     e.ontransitionend = () => {};
-                    if (
-                        e == resizeTarget &&
-                        (resizeTarget as any)._openEndCallback
-                    ) {
-                        (resizeTarget as any)._openEndCallback(this);
+                    if (e == resizeTarget) {
+                        resizeTarget.openEndCallback(this);
                     }
                 };
 
@@ -635,15 +632,6 @@ export class FlexLayout extends HTMLElement {
 
         return childContents.length * (childSize / parentSize);
     }
-
-    isVisible(target: HTMLElement) {
-        if (!target.hasAttribute('data-flex_visibility')) {
-            throw new Error('is not flex-layout child');
-            //return false;
-        }
-
-        return target.dataset.flex_visibility == 'v';
-    }
 }
 
 export class FlexContainer extends HTMLElement {
@@ -683,6 +671,22 @@ export class FlexContainer extends HTMLElement {
     get getRoot() {
         return this.#root;
     }
+    #closeEndCallback: Function = () => {};
+    get closeEndCallback() {
+        return this.#closeEndCallback;
+    }
+    set closeEndCallback(callback: Function) {
+        this.#closeEndCallback = callback;
+    }
+
+    #openEndCallback: Function = () => {};
+    get openEndCallback() {
+        return this.#openEndCallback;
+    }
+    set openEndCallback(callback: Function) {
+        this.#openEndCallback = callback;
+    }
+
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         if (oldValue == newValue) return;
         if (name === 'data-is_resize') {
@@ -708,6 +712,31 @@ export class FlexContainer extends HTMLElement {
             this.#panelMode = 'default';
         }
         this.#resizePanel.style.display = this.#isResize ? '' : 'none';
+    }
+
+    isVisible() {
+        return this.dataset.flex_visibility == 'v';
+    }
+    #getRoot() {
+        let root;
+        if (!this.#root && this.parentElement instanceof FlexLayout) {
+            root = this.parentElement as FlexLayout;
+        } else {
+            root = this.#root;
+        }
+        return root;
+    }
+    openFlex({ isPrevSizeOpen = false, isResize = false } = {}) {
+        let root = this.#getRoot();
+
+        if (!root) return;
+        root.openFlex(this, { isPrevSizeOpen, isResize });
+    }
+    closeFlex({ isResize = false } = {}) {
+        let root = this.#getRoot();
+
+        if (!root) return;
+        root.closeFlex(this, { isResize });
     }
 }
 
