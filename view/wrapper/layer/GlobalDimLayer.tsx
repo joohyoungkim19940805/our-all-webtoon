@@ -1,4 +1,4 @@
-import styles from './layer.module.css';
+import styles from './GlobalDimLayer.module.css';
 import buttonStyles from '@components/button/Button.module.css';
 import { CloseSvg } from '@components/svg/CloseSvg';
 import { LoginContainer } from '@container/account/LoginContainer';
@@ -6,19 +6,19 @@ import { SingUpContainer } from '@container/account/SingUpContainer';
 import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 
-export type GlobalDimLayerProps = {
-    children: ReactNode | ReactElement | JSX.Element;
-};
+// export type GlobalDimLayerProps = {
+//     children: ReactNode | ReactElement | JSX.Element;
+// };
 export const GlobalDimLayer = () => {
     const layerRef = useRef<HTMLDivElement>(null);
     /*const [children, setChildren] = useState<
         ReactNode | ReactElement | JSX.Element | undefined
     >(false);*/
     const location = useLocation();
-    const currentPath = location.pathname;
+
     return (
         <>
-            {currentPath.includes('/layer') && (
+            {location.pathname.includes('/layer') && (
                 <div
                     className={`${styles.layer}`}
                     ref={layerRef}

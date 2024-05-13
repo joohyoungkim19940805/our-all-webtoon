@@ -1,11 +1,11 @@
 .spin {
     &&.on {
         color: #9f6b6b;
-        transition: 1s transform;
+        transition: transform 1s;
         transform: rotate(270deg);
     }
     &&:not(.on) {
-        transition: 1s transform;
+        transition: transform 1s;
         transform: rotate(0deg);
     }
 }

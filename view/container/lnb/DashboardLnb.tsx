@@ -21,6 +21,14 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
             </li>
             <li>
                 <Link
+                    className={`${styles.link} ${(location.pathname === '/dashboard/profile' && styles.active) || ''}`}
+                    to="/dashboard/profile"
+                >
+                    내 프로필
+                </Link>
+            </li>
+            <li>
+                <Link
                     className={`${styles.link} ${(location.pathname === '/dashboard/collaboration' && styles.active) || ''}`}
                     to="/dashboard/collaboration"
                 >

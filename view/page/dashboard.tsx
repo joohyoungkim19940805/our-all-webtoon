@@ -4,7 +4,7 @@ import { Center } from '@wrapper/layout/page/Center';
 import { Top } from '@wrapper/layout/page/Top';
 import { createRoot } from 'react-dom/client';
 import styles from './index.module.css';
-import { GlobalDimLayer } from '@wrapper/layer/Layer';
+import { GlobalDimLayer } from '@wrapper/layer/GlobalDimLayer';
 import {
     createBrowserRouter,
     Route,
@@ -16,12 +16,13 @@ import React from 'react';
 import { Head } from '@wrapper/layout/dashboard/Head';
 import { Body } from '@wrapper/layout/dashboard/Body';
 import { windowResize } from '@handler/globalEvents';
+import { GlobalBottomLayer } from '@wrapper/layer/GlobalBottomLayer';
 styles;
 FlexLayout;
 
 const html = document.body.parentElement;
 if (html) {
-    html.style.fontSize = Math.max(0.6, 3 / (window.innerWidth / 200)) + 'vmax';
+    html.style.fontSize = Math.max(0.6, 2 / (window.innerWidth / 200)) + 'vmax';
     windowResize.subscribe(() => {
         html.style.fontSize =
             Math.max(0.6, 3 / (window.innerWidth / 200)) + 'vmax';
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
                     <Body></Body>
                 </flex-layout>
                 <GlobalDimLayer></GlobalDimLayer>
+                <GlobalBottomLayer></GlobalBottomLayer>
             </>
         ),
     },

@@ -4,7 +4,7 @@ import { Center } from '@wrapper/layout/page/Center';
 import { Top } from '@wrapper/layout/page/Top';
 import { createRoot } from 'react-dom/client';
 import styles from './index.module.css';
-import { GlobalDimLayer } from '@wrapper/layer/Layer';
+import { GlobalDimLayer } from '@wrapper/layer/GlobalDimLayer';
 import {
     createBrowserRouter,
     Route,
@@ -13,6 +13,7 @@ import {
     useRoutes,
 } from 'react-router-dom';
 import React from 'react';
+import { GlobalBottomLayer } from '@wrapper/layer/GlobalBottomLayer';
 styles;
 FlexLayout;
 document.body.dataset.mode = 'black';
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
                     <Bottom></Bottom>
                 </flex-layout>
                 <GlobalDimLayer></GlobalDimLayer>
+                <GlobalBottomLayer></GlobalBottomLayer>
             </>
         ),
     },

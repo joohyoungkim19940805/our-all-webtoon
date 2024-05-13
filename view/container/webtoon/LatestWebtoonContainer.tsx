@@ -3,8 +3,8 @@ import {
     GenreListContainer,
     useGenreChange,
 } from '@container/genre/GenreListContainer';
-import { WebtoonEpisodeList } from '@container/webtoon-list/WebtoonEpisodeList';
-import { WebtoonFilterBar } from '@container/webtoon-list/WebtoonFilterBar';
+import { WebtoonEpisodeList } from '@container/webtoon/WebtoonEpisodeList';
+import { WebtoonFilterBar } from '@container/webtoon/WebtoonFilterBar';
 import { Genre } from '@type/GenreType';
 import { WebtoonEpisodeType } from '@type/WebtoonEpisodeType';
 import { useEffect } from 'react';

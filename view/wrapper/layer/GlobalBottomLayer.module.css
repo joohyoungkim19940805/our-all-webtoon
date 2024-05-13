@@ -1,0 +1,23 @@
+.layer {
+    display: flex;
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 9000;
+    & .layer-container {
+        display: flex;
+        max-width: 100dvh;
+        max-height: 100dvh;
+        border-radius: 8px;
+        position: absolute;
+        bottom: -100%;
+        min-width: fit-content;
+        min-height: fit-content;
+        transition: all 1s;
+        &.open {
+            bottom: 0;
+        }
+    }
+}

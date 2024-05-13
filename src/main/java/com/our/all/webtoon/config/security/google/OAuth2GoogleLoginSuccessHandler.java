@@ -58,22 +58,23 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("picture");
         String tokenValue = oauth2User.getAttribute("token");
-        System.out.println("kjh test ::: " + oauth2User);
-        System.out.println("kjh test ::: " + authentication.getCredentials());
-        System.out.println("kjh test ::: " + authentication.getAuthorities());
-        System.out.println("kjh test ::: " + authentication.getName());
-        System.out.println("kjh test ::: " + authentication.getDetails());
-        System.out.println("kjh test ::: " + authentication.getPrincipal());
-        System.out.println("kjh test ::: " + webFilterExchange);
-        System.out.println("kjh test ::: " + webFilterExchange);
-        System.out.println("kjh test ::: " + webFilterExchange.getExchange().getRequest().getURI());
-        System.out.println(userId);
-        System.out.println(name);
-        System.out.println(email);
-        System.out.println(profileImageUrl);
-        System.out.println(tokenValue);
-        System.out.println("auth ::: " + authentication.getCredentials());
-        System.out.println(webFilterExchange.getExchange().getRequest().getQueryParams());
+		// System.out.println("kjh test ::: " + oauth2User);
+		// System.out.println("kjh test ::: " + authentication.getCredentials());
+		// System.out.println("kjh test ::: " + authentication.getAuthorities());
+		// System.out.println("kjh test ::: " + authentication.getName());
+		// System.out.println("kjh test ::: " + authentication.getDetails());
+		// System.out.println("kjh test ::: " + authentication.getPrincipal());
+		// System.out.println("kjh test ::: " + webFilterExchange);
+		// System.out.println("kjh test ::: " + webFilterExchange);
+		// System.out.println("kjh test ::: " +
+		// webFilterExchange.getExchange().getRequest().getURI());
+		// System.out.println(userId);
+		// System.out.println(name);
+		// System.out.println(email);
+		// System.out.println(profileImageUrl);
+		// System.out.println(tokenValue);
+		// System.out.println("auth ::: " + authentication.getCredentials());
+		// System.out.println(webFilterExchange.getExchange().getRequest().getQueryParams());
         // accountEntityMono.flatMap(accountEntity->)
 
         return accountRepository.findByProviderId(userId)
@@ -92,6 +93,8 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                     Token token = accountService.generateAccessToken(accountEntity,
                             JwtIssuerType.ACCOUNT);
                     accountRepository.save(//
+					// TODO email 및 profileImage을 account 안에 각각 google{email:'', profileImage:''},
+					// naver{email:''}같은 형식으로 공급자별로 쌓이도록 변경 할 것 // 2024 05 13
                             accountEntity.withProvider(ProviderAccount.GOOGLE).withAccountName(name)
                                     .withEmail(email).withProfileImage(profileImageUrl)
                                     .withProviderId(userId).withIsEnabled(true)
