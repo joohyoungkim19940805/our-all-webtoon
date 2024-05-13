@@ -71,7 +71,7 @@ export const DashboardDetailLnb = forwardRef<HTMLUListElement>((_, ref) => {
                                 type="button"
                                 data-url_info="https://opentoonz.github.io/e/"
                             >
-                                OpenToonz
+                                OpenToonz(미구현)
                             </button>
                         </li>
                         <li>

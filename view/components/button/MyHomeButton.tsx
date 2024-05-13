@@ -20,7 +20,6 @@ export const MyHomeButton = () => {
             type="button"
             className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]} ${locationPath === location.pathname && styles[`active`]}`}
             onClick={(event) => {
-                console.log(location);
                 if (location.pathname === locationPath) return;
                 const unsubscribe = subscription.subscribe();
                 return () => {

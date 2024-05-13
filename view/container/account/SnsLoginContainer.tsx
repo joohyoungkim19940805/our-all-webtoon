@@ -5,7 +5,7 @@ export const SnsLoginContainer = () => {
         <div className={styles['sns-container']}>
             <ul className={styles['sns-list']}>
                 <li className={styles.google}>
-                    <a href="/oauth2/authorization/google">
+                    <a href="/oauth2/authorization/google?kjh-test=1">
                         <img src="/image/google_login.png" />
                     </a>
                 </li>

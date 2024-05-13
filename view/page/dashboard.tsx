@@ -21,10 +21,10 @@ FlexLayout;
 
 const html = document.body.parentElement;
 if (html) {
-    html.style.fontSize = Math.max(0.6, 2 / (window.innerWidth / 200)) + 'vmax';
+    html.style.fontSize = Math.max(0.6, 3 / (window.innerWidth / 200)) + 'vmax';
     windowResize.subscribe(() => {
         html.style.fontSize =
-            Math.max(0.6, 2 / (window.innerWidth / 200)) + 'vmax';
+            Math.max(0.6, 3 / (window.innerWidth / 200)) + 'vmax';
     });
 }
 document.body.dataset.mode = 'black';

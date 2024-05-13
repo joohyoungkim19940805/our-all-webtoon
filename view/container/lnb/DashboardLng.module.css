@@ -1,5 +1,15 @@
 .dashboard {
     width: fit-content;
     & li {
+        padding-top: 0.5vh;
+        padding-bottom: 0.5vh;
+    }
+    & .link {
+        font-size: 2rem;
+        text-decoration: none;
+        color: black;
+        &.active {
+            font-weight: bold;
+        }
     }
 }

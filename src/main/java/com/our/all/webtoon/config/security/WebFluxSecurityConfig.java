@@ -15,7 +15,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
@@ -76,8 +75,7 @@ public class WebFluxSecurityConfig {
                 // .authenticationEntryPoint((swe,
                 // error) -> Mono.fromRunnable(() -> swe.getResponse()
                 // .setStatusCode(HttpStatus.UNAUTHORIZED)))
-                .authenticationEntryPoint(
-                        new RedirectServerAuthenticationEntryPoint("/page/layer/login-layer"))
+                .authenticationEntryPoint(new CustomRedirectEntryPoint())
                 .accessDeniedHandler((swe, error) -> Mono
                         .fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN))))
 

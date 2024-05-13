@@ -73,7 +73,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         System.out.println(profileImageUrl);
         System.out.println(tokenValue);
         System.out.println("auth ::: " + authentication.getCredentials());
-
+        System.out.println(webFilterExchange.getExchange().getRequest().getQueryParams());
         // accountEntityMono.flatMap(accountEntity->)
 
         return accountRepository.findByProviderId(userId)
@@ -87,7 +87,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                                 .roles(List.of(Role.ROLE_USER))//
                                 .provider(ProviderAccount.GOOGLE).build() //
                 )
-			// TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02 // 반영 완료 2024 05 03
+                // TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02 // 반영 완료 2024 05 03
                 .map(accountEntity -> {
                     Token token = accountService.generateAccessToken(accountEntity,
                             JwtIssuerType.ACCOUNT);
@@ -127,10 +127,14 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                                     .httpOnly(false).sameSite("Strict").path("/").build());
 
                     return OAuth2GoogleLoginSuccessHandler.requestCache
-                            .getRedirectUri(webFilterExchange.getExchange())
+                            .getRedirectUri(webFilterExchange.getExchange()).doOnNext(e -> {
+                                System.out.println("kjh redirect url ::: " + e);
+                            })
                             .defaultIfEmpty(
                                     UriComponentsBuilder.newInstance().path("/").build().toUri())
-                            .flatMap(location -> OAuth2GoogleLoginSuccessHandler.redirectStrategy
+                            .doOnNext(e -> {
+                                System.out.println("kjh redirect url222 ::: " + e);
+                            }).flatMap(location -> OAuth2GoogleLoginSuccessHandler.redirectStrategy
                                     .sendRedirect(webFilterExchange.getExchange(), location));
                     // return Mono.justOrEmpty(auth);
                 });
