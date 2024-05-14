@@ -12,12 +12,17 @@
         max-height: 100dvh;
         border-radius: 8px;
         position: absolute;
-        bottom: -100%;
-        min-width: fit-content;
-        min-height: fit-content;
+        bottom: -70%;
+        min-width: 30dvw;
+        min-height: 30dvh;
         transition: all 1s;
         &.open {
             bottom: 0;
+        }
+
+        body[data-mode='black'] & {
+            background-color: #343434;
+            color: #fff;
         }
     }
 }

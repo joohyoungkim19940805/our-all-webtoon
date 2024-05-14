@@ -6,13 +6,7 @@
     height: 30dvh;
     justify-content: center;
     width: 35dvw;
-
-    body[data-mode='black'] & {
-        background-color: #343434;
-        border-color: #464646;
-        color: #fff;
-    }
-
+    border-color: #464646;
     & ul {
         width: 100%;
         text-align: center;
