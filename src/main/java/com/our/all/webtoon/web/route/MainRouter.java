@@ -17,7 +17,7 @@ import com.our.all.webtoon.web.handler.PageHandler;
 
 
 @Configuration
-public class PageRouter {
+public class MainRouter {
 
     @Bean
     public RouterFunction<ServerResponse> page(PageHandler pageHandler) {
@@ -43,7 +43,7 @@ public class PageRouter {
                                         .GET("/is-login", accept(MediaType.APPLICATION_JSON),
                                                 accountHandler::isLogin)
                                         .GET("/get-info", accept(MediaType.APPLICATION_JSON),
-                                                accountHandler::isLogin)
+                                                accountHandler::getAccountInfo)
                                         .build())
                         /*
                          * .nest(path("/create"), createPathBuilder -> createPathBuilder .build())

@@ -24,6 +24,7 @@ import com.our.all.webtoon.config.security.Role;
 import com.our.all.webtoon.config.security.Token;
 import com.our.all.webtoon.config.security.UserPrincipal;
 import com.our.all.webtoon.entity.account.AccountEntity;
+import com.our.all.webtoon.entity.account.AccountEntity.GoogleProviderInfo;
 import com.our.all.webtoon.repository.account.AccountRepository;
 import com.our.all.webtoon.service.AccountService;
 import com.our.all.webtoon.util.constants.ProviderAccount;
@@ -86,7 +87,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                                 .providerId(userId)//
                                 .isEnabled(true)//
                                 .roles(List.of(Role.ROLE_USER))//
-                                .provider(ProviderAccount.GOOGLE).build() //
+                                .lastProvider(ProviderAccount.GOOGLE).build() //
                 )
                 // TDOD 토큰 먼저 발급 후 save 해야 함 (db에 토큰 저장 필요) 2024 05 02 // 반영 완료 2024 05 03
                 .map(accountEntity -> {
@@ -95,13 +96,20 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
                     accountRepository.save(//
 					// TODO email 및 profileImage을 account 안에 각각 google{email:'', profileImage:''},
 					// naver{email:''}같은 형식으로 공급자별로 쌓이도록 변경 할 것 // 2024 05 13
-                            accountEntity.withProvider(ProviderAccount.GOOGLE).withAccountName(name)
-                                    .withEmail(email).withProfileImage(profileImageUrl)
+                            accountEntity.withLastProvider(ProviderAccount.GOOGLE).withAccountName(name)
+                            		.withEmail( accountEntity.getEmail() == null ? email: accountEntity.getEmail() )
+                                    .withProfileImage(accountEntity.getProfileImage() == null ? profileImageUrl : accountEntity.getProfileImage())
                                     .withProviderId(userId).withIsEnabled(true)
                                     .withRoles(List.of(Role.ROLE_USER))//
                                     .withToken(token.getToken())
-                                    .withRefreshToken(token.getRefreshToken().getToken()//
-                    )).subscribe();
+                                    .withRefreshToken(token.getRefreshToken().getToken())//
+						.withGoogleProviderInfo(
+							GoogleProviderInfo.builder()//
+								.email( email )//
+								.profileImageUrl( profileImageUrl )//
+								.id( userId )
+								.build() )
+                    ).subscribe();
                     return token;
                 })//
                 .flatMap(tokenResult -> jwtVerifyHandler.check(tokenResult.getToken()))

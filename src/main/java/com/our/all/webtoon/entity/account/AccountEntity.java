@@ -58,12 +58,13 @@ public class AccountEntity implements TokenTemplate {
 
     private String providerId;
 
-    private ProviderAccount provider;
+	private ProviderAccount lastProvider;
 
     private List<Role> roles;
 
     private String username;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String token;
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -74,6 +75,8 @@ public class AccountEntity implements TokenTemplate {
 
     @LastModifiedDate
     private LocalDateTime updateAt;
+
+	private GoogleProviderInfo googleProviderInfo;
 
     @Override
     public String getIssuer() {
@@ -91,6 +94,21 @@ public class AccountEntity implements TokenTemplate {
     public String getName() {
         // TODO Auto-generated method stub
         return this.username;
+    }
+
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	@NoArgsConstructor
+    @Builder
+    @With
+	public static class GoogleProviderInfo {
+
+		private String email;
+
+		private String profileImageUrl;
+
+		private String id;
     }
 
 }

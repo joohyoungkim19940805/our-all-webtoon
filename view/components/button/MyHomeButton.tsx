@@ -21,9 +21,9 @@ export const MyHomeButton = () => {
             className={`${styles.button} ${styles['short']} ${styles.svg} ${styles[`svg_top`]} ${locationPath === location.pathname && styles[`active`]}`}
             onClick={(event) => {
                 if (location.pathname === locationPath) return;
-                const unsubscribe = subscription.subscribe();
+                const subscribe = subscription.subscribe();
                 return () => {
-                    unsubscribe.unsubscribe();
+                    subscribe.unsubscribe();
                 };
                 // $globalDimLayer.next(<LoginContainer></LoginContainer>);
             }}

@@ -13,18 +13,10 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
         >
             <li>
                 <Link
-                    className={`${styles.link} ${(location.pathname === '/dashboard' && styles.active) || ''}`}
+                    className={`${styles.link} ${location.pathname === '/dashboard/' || (location.pathname === '/dashboard' && styles.active) || ''}`}
                     to="/dashboard"
                 >
                     내 웹툰 목록
-                </Link>
-            </li>
-            <li>
-                <Link
-                    className={`${styles.link} ${(location.pathname === '/dashboard/profile' && styles.active) || ''}`}
-                    to="/dashboard/profile"
-                >
-                    내 프로필
                 </Link>
             </li>
             <li>
@@ -33,6 +25,14 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
                     to="/dashboard/collaboration"
                 >
                     협업 요청하기
+                </Link>
+            </li>
+            <li>
+                <Link
+                    className={`${styles.link} ${(location.pathname === '/dashboard/profile' && styles.active) || ''}`}
+                    to="/dashboard/profile"
+                >
+                    내 프로필
                 </Link>
             </li>
         </ul>

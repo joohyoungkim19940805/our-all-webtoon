@@ -52,10 +52,19 @@ public class AccountHandler {
 
 	@PreAuthorize("hasRole('USER')")
 	public Mono<ServerResponse> isLogin(ServerRequest request) {
-
 		return ok()
 			.contentType( MediaType.APPLICATION_JSON )
 			.body( response( Result._0 ), ResponseWrapper.class );
+	}
+	
+	public Mono<ServerResponse> getAccountInfo(ServerRequest request){
+
+		return accountService.convertRequestToAccount( request )
+			.flatMap(
+				e -> ok().contentType( MediaType.APPLICATION_JSON )
+					.body( response( Result._0, e ), ResponseWrapper.class ) //
+			);
 
 	}
+	
 }

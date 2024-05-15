@@ -15,7 +15,7 @@
         bottom: -70%;
         min-width: 30dvw;
         min-height: 30dvh;
-        transition: all 1s;
+        transition: bottom 1s;
         &.open {
             bottom: 0;
         }
