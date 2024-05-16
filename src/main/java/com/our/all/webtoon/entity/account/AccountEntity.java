@@ -56,19 +56,20 @@ public class AccountEntity implements TokenTemplate {
 
     private String profileImage;
 
-    private String providerId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String lastProviderId;
 
-	private ProviderAccount lastProvider;
+    private ProviderAccount lastProvider;
 
     private List<Role> roles;
 
     private String username;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String token;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String token;
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String refreshToken;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String refreshToken;
 
     @CreatedDate
     private LocalDateTime createAt;
@@ -76,39 +77,43 @@ public class AccountEntity implements TokenTemplate {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-	private GoogleProviderInfo googleProviderInfo;
+    private GoogleProviderInfo googleProviderInfo;
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getIssuer() {
         // TODO Auto-generated method stub
         return this.username;
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getSubject() {
         // TODO Auto-generated method stub
         return this.email;
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getName() {
         // TODO Auto-generated method stub
         return this.username;
     }
 
-	@Getter
-	@Setter
-	@AllArgsConstructor
-	@NoArgsConstructor
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     @With
-	public static class GoogleProviderInfo {
+    public static class GoogleProviderInfo {
 
-		private String email;
+        private String email;
 
-		private String profileImageUrl;
+        private String profileImageUrl;
 
-		private String id;
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        private String id;
     }
 
 }

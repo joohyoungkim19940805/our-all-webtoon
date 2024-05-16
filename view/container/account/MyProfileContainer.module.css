@@ -1,0 +1,12 @@
+.my-profile-container {
+    display: flex;
+    word-wrap: anywhere;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    label {
+        font-size: 1.7rem;
+    }
+}

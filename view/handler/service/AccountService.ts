@@ -26,7 +26,6 @@ export const useIsLoignService = (moveUrl?: string) => {
 };
 
 export const getAccountInfoService = () => {
-    const navigate = useNavigate();
     return ajax<ResponseWrapper<Account>>('/api/account/search/get-info').pipe(
         map((response) => {
             console.log(response.response);
@@ -34,9 +33,6 @@ export const getAccountInfoService = () => {
         }),
         catchError((error: AjaxError) => {
             console.log(error);
-            if (error.status === 401 || error.status === 403) {
-                navigate('/page/layer/login-layer');
-            }
             return of(null);
         }),
     );

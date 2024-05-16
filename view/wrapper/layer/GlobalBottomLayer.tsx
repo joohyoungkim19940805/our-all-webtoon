@@ -37,7 +37,6 @@ export const GlobalBottomLayer = () => {
         };
     });
     useEffect(() => {
-        console.log(location);
         if (location.pathname.includes('/page/bottom')) {
             setIsOpen(true);
             setTimeout(() => {
