@@ -12,6 +12,7 @@
     & option {
         font-size: 1.7rem;
         text-wrap: nowrap;
+        width: 70%;
     }
     .my-profile-form {
         display: flex;
@@ -28,6 +29,14 @@
             justify-content: space-between;
             width: 35dvw;
             align-items: center;
+            &.submit-button-wrapper {
+                display: flex;
+                justify-content: flex-end;
+                & button {
+                    border: 2px solid rgb(0 0 0 / 15%);
+                    border-radius: 9px;
+                }
+            }
         }
     }
 }
