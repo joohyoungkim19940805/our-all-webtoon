@@ -74,7 +74,7 @@ export const MyProfileContainer = () => {
                         id="account-email"
                         name="email"
                         className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
-                        value={(account && account.email) || ''}
+                        defaultValue={(account && account.email) || ''}
                     ></input>
                 </div>
                 <div>
@@ -84,7 +84,7 @@ export const MyProfileContainer = () => {
                         id="account-age"
                         name="age"
                         className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
-                        value={(account && account.age) || ''}
+                        defaultValue={(account && account.age) || ''}
                     ></input>
                 </div>
                 <div>
