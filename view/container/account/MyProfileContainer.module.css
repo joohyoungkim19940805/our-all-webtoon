@@ -6,7 +6,28 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    label {
+    & label,
+    & input,
+    & select,
+    & option {
         font-size: 1.7rem;
+        text-wrap: nowrap;
+    }
+    .my-profile-form {
+        display: flex;
+        word-wrap: anywhere;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        width: 100%;
+        align-items: center;
+
+        & > div {
+            display: flex;
+            padding-bottom: 2dvh;
+            justify-content: space-between;
+            width: 35dvw;
+            align-items: center;
+        }
     }
 }

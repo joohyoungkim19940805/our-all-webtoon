@@ -8,7 +8,7 @@ export interface Account {
     age: number;
     createAt: string;
     email: string;
-    gender: string;
+    gender: 'MALE' | 'FEMALE' | 'NONBINARY';
     isEnabled: boolean;
     nickname: string;
     profileImage: string;

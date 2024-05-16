@@ -51,10 +51,22 @@ export const SingUpContainer = () => {
                 <button type="button">인증하기</button>
             </div>
             <div className={styles['sex-container']}>
-                <input type="radio" id="sex-male" name="sex" hidden></input>
+                <input
+                    type="radio"
+                    id="sex-male"
+                    name="sex"
+                    value="MALE"
+                    hidden
+                ></input>
                 <label htmlFor="sex-male">남성</label>
 
-                <input type="radio" id="sex-female" name="sex" hidden></input>
+                <input
+                    type="radio"
+                    id="sex-female"
+                    name="sex"
+                    value="FEMALE"
+                    hidden
+                ></input>
                 <label htmlFor="sex-female">여성</label>
 
                 <input
@@ -62,6 +74,7 @@ export const SingUpContainer = () => {
                     id="sex-nonbinary"
                     name="sex"
                     hidden
+                    value="NONBINARY"
                 ></input>
                 <label htmlFor="sex-nonbinary">논바이너리</label>
             </div>

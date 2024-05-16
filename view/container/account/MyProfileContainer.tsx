@@ -46,7 +46,7 @@ export const MyProfileContainer = () => {
      */
     return (
         <div className={`${styles['my-profile-container']}`}>
-            <form ref={ref}>
+            <form className={`${styles['my-profile-form']}`} ref={ref}>
                 <div>
                     <label htmlFor="account-name">ID</label>
                     <input
@@ -64,7 +64,56 @@ export const MyProfileContainer = () => {
                         type="password"
                         id="account-password"
                         name="password"
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                     ></input>
+                </div>
+                <div>
+                    <label htmlFor="account-age">EMAIL</label>
+                    <input
+                        type="email"
+                        id="account-email"
+                        name="email"
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                        value={(account && account.email) || ''}
+                    ></input>
+                </div>
+                <div>
+                    <label htmlFor="account-age">AGE</label>
+                    <input
+                        type="number"
+                        id="account-age"
+                        name="age"
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                        value={(account && account.age) || ''}
+                    ></input>
+                </div>
+                <div>
+                    <label htmlFor="account-gender">GENDER</label>
+                    <select
+                        id="account-gender"
+                        name="gender"
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                    >
+                        <option>what is your gender?</option>
+                        <option
+                            value="MALE"
+                            selected={account && account.gender === 'MALE'}
+                        >
+                            남성
+                        </option>
+                        <option
+                            value="FEMALE"
+                            selected={account && account.gender === 'FEMALE'}
+                        >
+                            여성
+                        </option>
+                        <option
+                            value="NONBINARY"
+                            selected={account && account.gender === 'NONBINARY'}
+                        >
+                            논바이너리
+                        </option>
+                    </select>
                 </div>
             </form>
         </div>
