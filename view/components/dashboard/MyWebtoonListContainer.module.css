@@ -11,8 +11,20 @@
     align-items: center;
     width: 100%;
     justify-content: space-around;
+    font-size: 1.5rem;
+    overflow: hidden;
+    overflow-wrap: revert;
+    gap: 1dvw;
     &.head {
     }
     &.body {
+        align-items: flex-start;
+    }
+    & > div {
+        white-space: nowrap;
+        width: 9999rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

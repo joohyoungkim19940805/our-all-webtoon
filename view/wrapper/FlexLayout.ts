@@ -459,7 +459,6 @@ export class FlexLayout extends HTMLElement {
                     e.ontransitionend = () => {};
                     if (e == resizeTarget) {
                         resizeTarget.closeEndCallback(this);
-                        console.log(resizeTarget.closeEndCallback);
                     }
                 };
 
