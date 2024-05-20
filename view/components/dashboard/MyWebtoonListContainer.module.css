@@ -1,0 +1,18 @@
+.add-webtoon-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+}
+.my-webtoon-list {
+    display: flex;
+    align-content: center;
+    height: 100%;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+    &.head {
+    }
+    &.body {
+    }
+}

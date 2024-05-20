@@ -8,8 +8,6 @@ export interface FlexContainerHTMLAttributes<FlexContainer>
     ['data-panel_mode']?: ResizePanelMode;
     ['data-grow']?: number;
     ['data-prev_grow']?: number;
-    ['closeEndCallback']?: Function;
-    ['openEndCallback']?: Function;
 }
 declare global {
     namespace JSX {
@@ -461,6 +459,7 @@ export class FlexLayout extends HTMLElement {
                     e.ontransitionend = () => {};
                     if (e == resizeTarget) {
                         resizeTarget.closeEndCallback(this);
+                        console.log(resizeTarget.closeEndCallback);
                     }
                 };
 
@@ -596,6 +595,7 @@ export class FlexLayout extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        //if (name === 'data-direction') {
         if (newValue == 'row') {
             this.#direction = row;
         } else if (newValue == 'column') {
@@ -603,6 +603,7 @@ export class FlexLayout extends HTMLElement {
         } else {
             throw new Error('direction is "row" or "column" required value');
         }
+        //}
     }
 
     mathWeight(list: Array<HTMLElement>, total: number) {
@@ -676,6 +677,7 @@ export class FlexContainer extends HTMLElement {
         return this.#closeEndCallback;
     }
     set closeEndCallback(callback: Function) {
+        console.log('???');
         this.#closeEndCallback = callback;
     }
 
@@ -697,6 +699,7 @@ export class FlexContainer extends HTMLElement {
     }
     constructor(attribute: any = {}) {
         super();
+        console.log(this, attribute);
 
         /*if (attribute.hasOwnProperty('className')) {
             this.classList.add(attribute.className);

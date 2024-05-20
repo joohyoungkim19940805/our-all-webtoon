@@ -61,6 +61,7 @@ public class AccountEntity implements TokenTemplate {
 
     private ProviderAccount lastProvider;
 
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Role> roles;
 
     private String username;

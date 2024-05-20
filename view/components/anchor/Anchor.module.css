@@ -1,13 +1,24 @@
-.link{
-	cursor: pointer;
-	transition: color 0.3s, background-color 0.9s;
-	padding: 0.1%;
-	&&:active{
-		border-radius: 3px;
-		background-color: rgb(198 171 255 / 63%);
-		box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
-	}
-	&&:hover{
-		color: #0040ff69;
-	}		
+.link {
+    cursor: pointer;
+    transition:
+        color 0.3s,
+        background-color 0.9s;
+    padding: 0.1%;
+    &&:active {
+        border-radius: 3px;
+        background-color: rgb(198 171 255 / 63%);
+        box-shadow:
+            rgb(204, 219, 232) 3px 3px 6px 0px inset,
+            rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    }
+    &:hover {
+        color: #0040ff69;
+    }
+    &.none {
+        text-decoration: none;
+        color: black;
+    }
+    &.active {
+        font-weight: bold;
+    }
 }

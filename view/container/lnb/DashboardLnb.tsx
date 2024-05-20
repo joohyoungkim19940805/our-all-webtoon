@@ -4,6 +4,8 @@ import { forwardRef } from 'react';
 import styles from './DashboardLng.module.css';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import anchorStyles from '@components/anchor/Anchor.module.css';
+
 export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
     const location = useLocation();
     return (
@@ -13,7 +15,7 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
         >
             <li>
                 <Link
-                    className={`${styles.link} ${location.pathname === '/dashboard/' || (location.pathname === '/dashboard' && styles.active) || ''}`}
+                    className={`${anchorStyles.link} ${anchorStyles.none} ${location.pathname === '/dashboard/' || (location.pathname === '/dashboard' && anchorStyles.active) || ''}`}
                     to="/dashboard"
                 >
                     내 웹툰 목록
@@ -21,7 +23,7 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
             </li>
             <li>
                 <Link
-                    className={`${styles.link} ${(location.pathname === '/dashboard/collaboration' && styles.active) || ''}`}
+                    className={`${anchorStyles.link} ${anchorStyles.none} ${(location.pathname === '/dashboard/collaboration' && anchorStyles.active) || ''}`}
                     to="/dashboard/collaboration"
                 >
                     협업 요청하기
@@ -29,7 +31,7 @@ export const DashboardLnb = forwardRef<HTMLUListElement>((_, ref) => {
             </li>
             <li>
                 <Link
-                    className={`${styles.link} ${(location.pathname === '/dashboard/profile' && styles.active) || ''}`}
+                    className={`${anchorStyles.link} ${anchorStyles.none} ${(location.pathname === '/dashboard/profile' && anchorStyles.active) || ''}`}
                     to="/dashboard/profile"
                 >
                     내 프로필

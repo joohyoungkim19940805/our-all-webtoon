@@ -2,6 +2,7 @@ import { Lnb } from '@wrapper/layout/dashboard/Lnb';
 import styles from './Body.module.css';
 import { Route, Routes } from 'react-router-dom';
 import { MyProfileContainer } from '@container/account/MyProfileContainer';
+import { MyWebtoonListContainer } from '@components/dashboard/MyWebtoonListContainer';
 
 export const Body = () => {
     return (
@@ -15,7 +16,7 @@ export const Body = () => {
                             <Route
                                 path="/*"
                                 element={
-                                    <MyProfileContainer></MyProfileContainer>
+                                    <MyWebtoonListContainer></MyWebtoonListContainer>
                                 }
                             ></Route>
                             <Route

@@ -18,33 +18,6 @@ export const MyProfileContainer = () => {
             subscribe.unsubscribe();
         };
     }, [ref]);
-
-    /**
-     * {
-    "accountName": "김주형",
-    "age": 30,
-    "createdAt": "2024-04-22T12:54:22.921",
-    "email": "oozu1994@gmail.com",
-    "gender": "male",
-    "isEnabled": true,
-    "nickname": "mozu",
-    "profileImage": "https://lh3.googleusercontent.com/a/ACg8ocLYZiRX_EG-sNeLU5W8KAao11H43Yv4QMpvdCADYZVqmCtCSw=s96-c",
-    "providerId": "108542824068504068846",
-    "lastProvider": "GOOGLE",
-    "roles": [
-        "ROLE_USER"
-    ],
-    "username": "김주형",
-    "googleProviderInfo": {
-        "email": "oozu1994@gmail.com",
-        "profileImageUrl": "https://lh3.googleusercontent.com/a/ACg8ocLYZiRX_EG-sNeLU5W8KAao11H43Yv4QMpvdCADYZVqmCtCSw=s96-c",
-        "id": "108542824068504068846"
-    },
-    "name": "김주형",
-    "subject": "oozu1994@gmail.com",
-    "issuer": "김주형"
-}
-     */
     return (
         <div className={`${styles['my-profile-container']}`}>
             <form
