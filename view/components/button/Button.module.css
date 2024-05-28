@@ -56,4 +56,10 @@
         color: #a78888 !important;
         font-weight: bold;
     }
+    &.standard {
+        border: outset;
+        &:active {
+            box-shadow: inset 2px 2px 5px #636363;
+        }
+    }
 }

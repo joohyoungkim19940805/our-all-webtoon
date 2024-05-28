@@ -2,7 +2,8 @@ import { Lnb } from '@wrapper/layout/dashboard/Lnb';
 import styles from './Body.module.css';
 import { Route, Routes } from 'react-router-dom';
 import { MyProfileContainer } from '@container/account/MyProfileContainer';
-import { MyWebtoonListContainer } from '@components/dashboard/MyWebtoonListContainer';
+import { MyWebtoonListContainer } from '@container/dashboard/MyWebtoonListContainer';
+import { PaintingWebtoonContainer } from '@container/painting/PaintingWebtoonContainer';
 
 export const Body = () => {
     return (
@@ -23,6 +24,12 @@ export const Body = () => {
                                 path="/profile"
                                 element={
                                     <MyProfileContainer></MyProfileContainer>
+                                }
+                            ></Route>
+                            <Route
+                                path="/painting"
+                                element={
+                                    <PaintingWebtoonContainer></PaintingWebtoonContainer>
                                 }
                             ></Route>
                         </Routes>

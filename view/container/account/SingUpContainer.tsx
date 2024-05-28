@@ -1,5 +1,6 @@
 import inputStyles from '@components/input/Input.module.css';
 import styles from './SingUpContainer.module.css';
+import buttonStyles from '@components/button/Button.module.css';
 import { useState } from 'react';
 export const SingUpContainer = () => {
     const [isEmailAuth, setEmailAuth] = useState();
@@ -41,14 +42,22 @@ export const SingUpContainer = () => {
                 </div>
             </div>
             <div>
-                <label htmlFor="sign_up_email"></label>
+                <label htmlFor="sign_up_email">EMAIL</label>
                 <input
+                    className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                     type="email"
                     name="email"
                     id="sign_up_email"
                     placeholder="이메일을 입력하세요"
                 ></input>
-                <button type="button">인증하기</button>
+            </div>
+            <div>
+                <button
+                    className={`${buttonStyles.button} ${buttonStyles.standard}`}
+                    type="button"
+                >
+                    이메일 인증하기
+                </button>
             </div>
             <div className={styles['sex-container']}>
                 <input

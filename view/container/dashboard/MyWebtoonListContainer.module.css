@@ -3,6 +3,10 @@
     align-items: center;
     justify-content: flex-end;
     height: 100%;
+    .move-painting {
+        display: flex;
+        align-items: center;
+    }
 }
 .my-webtoon-list {
     display: flex;

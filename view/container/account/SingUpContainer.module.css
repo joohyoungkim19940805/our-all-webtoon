@@ -30,14 +30,16 @@
         & label {
             border: solid 1px;
             padding: 0.7%;
+            border-radius: 9px;
+            border-width: 2px;
             &[for='sex-male'] {
-                border-color: #abcd97;
+                border-color: #abcd9763;
             }
             &[for='sex-female'] {
-                border-color: #f7deb7;
+                border-color: #f7deb794;
             }
             &[for='sex-nonbinary'] {
-                border-color: #c1c10e #dbdbdb #d897ff #dbdbdb;
+                border-color: #c1c10e45 #dbdbdbb5 #d897ff61;
             }
         }
     }

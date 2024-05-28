@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import styles from './MyWebtoonListContainer.module.css';
+import anchorStyles from '@components/anchor/Anchor.module.css';
 
 export const MyWebtoonListContainer = () => {
     return (
@@ -9,10 +11,15 @@ export const MyWebtoonListContainer = () => {
                 data-grow={0.5}
             >
                 <div className={`${styles['add-webtoon-container']}`}>
-                    <span>
-                        <h2>+</h2>
-                    </span>
-                    <button>웹툰 등록하기</button>
+                    <Link
+                        className={`${anchorStyles.link} ${anchorStyles.none}`}
+                        to="/dashboard/painting"
+                    >
+                        <div className={`${styles['move-painting']}`}>
+                            <h2>+</h2>
+                            <h1>웹툰 등록하기</h1>
+                        </div>
+                    </Link>
                 </div>
             </flex-container>
             <flex-container
