@@ -3,6 +3,7 @@ package com.our.all.webtoon.entity.webtoon;
 
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,6 +29,7 @@ import lombok.With;
 @Document(collection = "episode")
 public class EpisodeEntity {
 
+	@Id
 	private String id;
 
 	private String webtoonId;

@@ -22,10 +22,11 @@ FlexLayout;
 
 const html = document.body.parentElement;
 if (html) {
-    html.style.fontSize = Math.max(1, 3 / (window.innerWidth / 200)) + 'vmax';
+    html.style.fontSize = Math.max(0.5, 5 / (window.innerWidth / 200)) + 'vmax';
     windowResize.subscribe(() => {
+        console.log(4.5 / (window.innerWidth / 200));
         html.style.fontSize =
-            Math.max(1, 3 / (window.innerWidth / 200)) + 'vmax';
+            Math.max(0.5, 5 / (window.innerWidth / 200)) + 'vmax';
     });
 }
 document.body.dataset.mode = 'black';

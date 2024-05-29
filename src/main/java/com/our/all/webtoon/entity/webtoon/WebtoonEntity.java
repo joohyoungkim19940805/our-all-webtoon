@@ -33,8 +33,6 @@ public class WebtoonEntity {
 
 	private String title;
 
-	private String subtitle;
-
 	private String synopsis;
 
 	private String authorId;

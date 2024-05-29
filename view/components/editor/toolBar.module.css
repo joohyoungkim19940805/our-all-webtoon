@@ -1,0 +1,32 @@
+.toolbar {
+    background-color: #e1e1e1;
+    padding-left: 1%;
+    padding-right: 1%;
+    /*border-top: ridge 2px;*/
+    border-color: #dbdbdb;
+    overflow-wrap: anywhere;
+    display: flex;
+    flex-wrap: wrap;
+    & button {
+        background: none;
+        border: none;
+        outline: none;
+        font-family: revert;
+        font-weight: 900;
+        color: #7c7c7cd1;
+        padding-bottom: 3.675px;
+        padding-top: 5.125px;
+        border-bottom: groove 1px #9f9f9f17;
+        transition: background-color 0.7s;
+        min-height: 22px;
+        display: flex;
+        align-self: center;
+        &:hover {
+            background-color: #c7c7c7;
+        }
+        &[data-tool-status='active'],
+        &[data-tool_status='connected'] {
+            color: #d94c4c !important;
+        }
+    }
+}

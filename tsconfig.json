@@ -45,6 +45,12 @@
             }
         ]
     },
-    "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx"],
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/**/*.ts",
+        "**/**/*.tsx",
+        "view/components/editor/FreeWillEditor.js"
+    ],
     "exclude": ["node_modues"]
 }

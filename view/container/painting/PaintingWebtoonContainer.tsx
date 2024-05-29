@@ -1,4 +1,68 @@
+import inputStyles from '@components/input/Input.module.css';
+import FreeWillEditor from '@components/editor/FreeWillEditor';
+import Strong from '@components/editor/tools/Strong';
+import Color from '@components/editor/tools/Color';
+import Background from '@components/editor/tools/Background';
+import Strikethrough from '@components/editor/tools/Strikethrough';
+import Underline from '@components/editor/tools/Underline';
+import FontFamily from '@components/editor/tools/FontFamily';
+import Quote from '@components/editor/tools/Quote';
+import NumericPoint from '@components/editor/tools/NumericPoint';
+import BulletPoint from '@components/editor/tools/BulletPoint';
+import Sort from '@components/editor/tools/Sort';
+import Italic from '@components/editor/tools/Italic';
+import toolBarStyles from '@components/editor/toolBar.module.css';
+import { useEffect, useRef } from 'react';
+import { FlexLayout } from '@wrapper/FlexLayout';
+interface SynopsisEditorHTMLAttributes<SynopsisEditor>
+    extends React.HTMLAttributes<SynopsisEditor> {}
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            'synopsis-editor': React.DetailedHTMLProps<
+                SynopsisEditorHTMLAttributes<SynopsisEditor>,
+                SynopsisEditor
+            >;
+        }
+    }
+}
+class SynopsisEditor extends FreeWillEditor {
+    static {
+        window.customElements.define('synopsis-editor', SynopsisEditor);
+    }
+    static tools = [
+        Strong,
+        Color,
+        Background,
+        Strikethrough,
+        Underline,
+        FontFamily,
+        Quote,
+        NumericPoint,
+        BulletPoint,
+        Sort,
+        Italic,
+    ];
+
+    static option = {
+        isDefaultStyle: true,
+    };
+    constructor() {
+        super(SynopsisEditor.tools, SynopsisEditor.option);
+        super.placeholder = '스토리를 입력하세요.';
+    }
+}
+
 export const PaintingWebtoonContainer = () => {
+    const synopsisEditorRef = useRef<SynopsisEditor>(null);
+    const toolbarRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (!synopsisEditorRef.current || !toolbarRef.current) return;
+        console.log(SynopsisEditor.tools);
+        toolbarRef.current.append(
+            ...SynopsisEditor.tools.map((e) => e.toolHandler.toolButton),
+        );
+    }, [synopsisEditorRef, toolbarRef]);
     return (
         <div>
             <div data-info="운영원칙">
@@ -13,19 +77,25 @@ export const PaintingWebtoonContainer = () => {
                 </div>
                 <div>
                     <span>
-                        성인물, 폭렬물 등의 게시물은 별도의 통보 없이 삭제될 수
+                        성인물, 폭력물 등의 게시물은 별도의 통보 없이 삭제될 수
                         있습니다.
                     </span>
                 </div>
                 <div>
-                    <input type="checkbox"></input>
-                    <label>동의합니다.</label>
+                    <input id="agree_promise" type="checkbox"></input>
+                    <label htmlFor="agree_promise">동의합니다.</label>
                 </div>
             </div>
             <div>
                 <div data-info="작품명">
-                    <label></label>
-                    <input></input>
+                    <label>작품 이름</label>
+                    <input
+                        type="text"
+                        placeholder="작품 이름"
+                        id="webtoon_title"
+                        name="title"
+                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                    ></input>
                 </div>
                 <div data-info="장르">
                     <label></label>
@@ -34,11 +104,21 @@ export const PaintingWebtoonContainer = () => {
                     </ul>
                 </div>
                 <div data-info="작품 한 줄 요약 (gpt 사용)">
-                    <label></label>
+                    <label htmlFor="webtoon_summary">한 줄 요약</label>
+                    <input
+                        type="text"
+                        id="webtoon_summary"
+                        name="summary"
+                        placeholder="자동으로 채워집니다."
+                        readOnly
+                    ></input>
                 </div>
                 <div data-info="줄거리">
-                    <label></label>
-                    <div data-info="텍스트 에디터 사용"></div>
+                    <div
+                        className={`${toolBarStyles.toolbar}`}
+                        ref={toolbarRef}
+                    ></div>
+                    <synopsis-editor ref={synopsisEditorRef}></synopsis-editor>
                 </div>
             </div>
         </div>
