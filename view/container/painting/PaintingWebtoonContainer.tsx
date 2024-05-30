@@ -12,7 +12,7 @@ import BulletPoint from '@components/editor/tools/BulletPoint';
 import Sort from '@components/editor/tools/Sort';
 import Italic from '@components/editor/tools/Italic';
 import toolBarStyles from '@components/editor/toolBar.module.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
@@ -63,6 +63,7 @@ export const PaintingWebtoonContainer = () => {
             ...SynopsisEditor.tools.map((e) => e.toolHandler.toolButton),
         );
     }, [synopsisEditorRef, toolbarRef]);
+    const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
     return (
         <div>
             <div data-info="운영원칙">
@@ -102,6 +103,42 @@ export const PaintingWebtoonContainer = () => {
                     <ul data-info="wrap overflow 사용">
                         <li></li>
                     </ul>
+                </div>
+                <div data-info="썸네일">
+                    <label>썸네일</label>
+                    <input
+                        id="webtoon_thumbnail"
+                        name="thumbnail"
+                        type="file"
+                        accept="image/*"
+                        onInput={(ev) => {
+                            console.log('ev', ev);
+                            if (
+                                !(ev.target instanceof HTMLInputElement) ||
+                                !ev.target.files ||
+                                ev.target.files.length == 0
+                            )
+                                return;
+                            console.log(
+                                'ev.target.files[0]',
+                                ev.target.files[0],
+                            );
+                            const url = URL.createObjectURL(ev.target.files[0]);
+                            setTempThumbnailUrl(url);
+                            setTimeout(() => {
+                                URL.revokeObjectURL(url);
+                            }, 1000);
+                            //ev.nativeEvent.
+                            //URL.createObjectURL(ev.target);
+                        }}
+                    ></input>
+                    {tempThumbnailUrl && (
+                        <img
+                            src={tempThumbnailUrl}
+                            width={'10dvw'}
+                            height={'10dvh'}
+                        ></img>
+                    )}
                 </div>
                 <div data-info="작품 한 줄 요약 (gpt 사용)">
                     <label htmlFor="webtoon_summary">한 줄 요약</label>

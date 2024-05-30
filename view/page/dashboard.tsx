@@ -43,7 +43,10 @@ const router = createBrowserRouter([
         index: true,
         element: (
             <>
-                <flex-layout data-direction="column">
+                <flex-layout
+                    id={`${styles['root-dashboard']}`}
+                    data-direction="column"
+                >
                     <Head></Head>
                     <Body></Body>
                 </flex-layout>
