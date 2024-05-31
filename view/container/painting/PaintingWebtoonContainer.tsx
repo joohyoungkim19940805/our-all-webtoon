@@ -14,6 +14,7 @@ import Italic from '@components/editor/tools/Italic';
 import toolBarStyles from '@components/editor/toolBar.module.css';
 import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
+import styles from './PaintingWebtoonContainer.module.css';
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
 declare global {
@@ -65,7 +66,7 @@ export const PaintingWebtoonContainer = () => {
     }, [synopsisEditorRef, toolbarRef]);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
     return (
-        <div>
+        <div className={`${styles['painting-webtoon-container']}`}>
             <div data-info="운영원칙">
                 <div>
                     <h2>운영원칙</h2>
@@ -87,75 +88,88 @@ export const PaintingWebtoonContainer = () => {
                     <label htmlFor="agree_promise">동의합니다.</label>
                 </div>
             </div>
-            <div>
-                <div data-info="작품명">
-                    <label>작품 이름</label>
-                    <input
-                        type="text"
-                        placeholder="작품 이름"
-                        id="webtoon_title"
-                        name="title"
-                        className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
-                    ></input>
+            <div
+                data-info="웹툰 내용 등록"
+                className={`${styles['painting-webtoon-content']}`}
+            >
+                <div className={`${styles['webtoon-detail']}`}>
+                    <div data-info="작품명">
+                        <label>작품 이름</label>
+                        <input
+                            type="text"
+                            placeholder="작품 이름"
+                            id="webtoon_title"
+                            name="title"
+                            className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
+                        ></input>
+                    </div>
+                    <div data-info="장르">
+                        <label></label>
+                        <ul data-info="wrap overflow 사용">
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div data-info="썸네일">
+                        <label>썸네일</label>
+                        <input
+                            id="webtoon_thumbnail"
+                            name="thumbnail"
+                            type="file"
+                            accept="image/*"
+                            onInput={(ev) => {
+                                console.log('ev', ev);
+                                if (
+                                    !(ev.target instanceof HTMLInputElement) ||
+                                    !ev.target.files ||
+                                    ev.target.files.length == 0
+                                )
+                                    return;
+                                console.log(
+                                    'ev.target.files[0]',
+                                    ev.target.files[0],
+                                );
+                                const url = URL.createObjectURL(
+                                    ev.target.files[0],
+                                );
+                                setTempThumbnailUrl(url);
+                                setTimeout(() => {
+                                    URL.revokeObjectURL(url);
+                                }, 1000);
+                                //ev.nativeEvent.
+                                //URL.createObjectURL(ev.target);
+                            }}
+                        ></input>
+                    </div>
+                    <div data-info="작품 한 줄 요약 (gpt 사용)">
+                        <label htmlFor="webtoon_summary">한 줄 요약</label>
+                        <input
+                            type="text"
+                            id="webtoon_summary"
+                            name="summary"
+                            placeholder="자동으로 채워집니다."
+                            readOnly
+                        ></input>
+                    </div>
+                    <div data-info="줄거리">
+                        <div
+                            className={`${toolBarStyles.toolbar}`}
+                            ref={toolbarRef}
+                        ></div>
+                        <synopsis-editor
+                            ref={synopsisEditorRef}
+                        ></synopsis-editor>
+                    </div>
                 </div>
-                <div data-info="장르">
-                    <label></label>
-                    <ul data-info="wrap overflow 사용">
-                        <li></li>
-                    </ul>
-                </div>
-                <div data-info="썸네일">
-                    <label>썸네일</label>
-                    <input
-                        id="webtoon_thumbnail"
-                        name="thumbnail"
-                        type="file"
-                        accept="image/*"
-                        onInput={(ev) => {
-                            console.log('ev', ev);
-                            if (
-                                !(ev.target instanceof HTMLInputElement) ||
-                                !ev.target.files ||
-                                ev.target.files.length == 0
-                            )
-                                return;
-                            console.log(
-                                'ev.target.files[0]',
-                                ev.target.files[0],
-                            );
-                            const url = URL.createObjectURL(ev.target.files[0]);
-                            setTempThumbnailUrl(url);
-                            setTimeout(() => {
-                                URL.revokeObjectURL(url);
-                            }, 1000);
-                            //ev.nativeEvent.
-                            //URL.createObjectURL(ev.target);
-                        }}
-                    ></input>
+                <div
+                    data-info="썸네일"
+                    className={`${styles['thumbnail-container']}`}
+                >
                     {tempThumbnailUrl && (
                         <img
+                            className={`${styles.thumbnail}`}
                             src={tempThumbnailUrl}
-                            width={'10dvw'}
-                            height={'10dvh'}
                         ></img>
                     )}
-                </div>
-                <div data-info="작품 한 줄 요약 (gpt 사용)">
-                    <label htmlFor="webtoon_summary">한 줄 요약</label>
-                    <input
-                        type="text"
-                        id="webtoon_summary"
-                        name="summary"
-                        placeholder="자동으로 채워집니다."
-                        readOnly
-                    ></input>
-                </div>
-                <div data-info="줄거리">
-                    <div
-                        className={`${toolBarStyles.toolbar}`}
-                        ref={toolbarRef}
-                    ></div>
-                    <synopsis-editor ref={synopsisEditorRef}></synopsis-editor>
                 </div>
             </div>
         </div>
