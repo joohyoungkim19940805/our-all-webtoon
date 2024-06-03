@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import styles from './GlobalBottomLayer.module.css';
-import { PaintingAddContainer } from '@container/painting/PaintingListContainer';
+import { PaintingListContainer } from '@container/painting/PaintingListContainer';
 import { $pageChange } from '@handler/subject/PageChangeAnimationEvent';
 import { filter } from 'rxjs';
 
@@ -98,7 +98,7 @@ export const GlobalBottomLayer = () => {
                             <Route
                                 path={`/bottom/start-painting-menu`}
                                 element={
-                                    <PaintingAddContainer></PaintingAddContainer>
+                                    <PaintingListContainer></PaintingListContainer>
                                 }
                             ></Route>
                         </Routes>

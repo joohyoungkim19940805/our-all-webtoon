@@ -2,10 +2,35 @@
     display: flex;
     flex-direction: column;
     gap: 5dvh;
+    width: 100%;
+    height: 100%;
     & .painting-webtoon-content {
         display: flex;
+        width: 100%;
+        height: 100%;
         & .webtoon-detail {
-            flex: 0.5 0 0;
+            display: flex;
+            flex: 0.5 0;
+            flex-direction: column;
+            gap: 3dvh;
+            & > div {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                &:not(&.synopsis-container) {
+                    gap: 1dvh;
+                }
+                &.synopsis-container {
+                    height: 100%;
+                    min-height: 30dvh;
+                }
+                & .thumbnail {
+                    max-width: 100%;
+                    height: auto;
+                    aspect-ratio: attr(width) / attr(height);
+                    image-rendering: auto;
+                }
+            }
         }
         & .thumbnail-container {
             flex: 0.2 0 0;

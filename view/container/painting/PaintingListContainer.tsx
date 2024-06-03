@@ -1,6 +1,6 @@
-import styles from './PaintingAddContainer.module.css';
+import styles from './PaintingListContainer.module.css';
 
-export const PaintingAddContainer = () => {
+export const PaintingListContainer = () => {
     return (
         <div className={`${styles['painting-container']}`}>
             <ul>

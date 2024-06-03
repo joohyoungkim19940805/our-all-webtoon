@@ -116,6 +116,7 @@ export const PaintingWebtoonContainer = () => {
                             name="thumbnail"
                             type="file"
                             accept="image/*"
+                            className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                             onInput={(ev) => {
                                 console.log('ev', ev);
                                 if (
@@ -139,6 +140,12 @@ export const PaintingWebtoonContainer = () => {
                                 //URL.createObjectURL(ev.target);
                             }}
                         ></input>
+                        {tempThumbnailUrl && (
+                            <img
+                                className={`${styles.thumbnail}`}
+                                src={tempThumbnailUrl}
+                            ></img>
+                        )}
                     </div>
                     <div data-info="작품 한 줄 요약 (gpt 사용)">
                         <label htmlFor="webtoon_summary">한 줄 요약</label>
@@ -148,9 +155,13 @@ export const PaintingWebtoonContainer = () => {
                             name="summary"
                             placeholder="자동으로 채워집니다."
                             readOnly
+                            className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                         ></input>
                     </div>
-                    <div data-info="줄거리">
+                    <div
+                        data-info="줄거리"
+                        className={`${styles['synopsis-container']}`}
+                    >
                         <div
                             className={`${toolBarStyles.toolbar}`}
                             ref={toolbarRef}
@@ -159,17 +170,6 @@ export const PaintingWebtoonContainer = () => {
                             ref={synopsisEditorRef}
                         ></synopsis-editor>
                     </div>
-                </div>
-                <div
-                    data-info="썸네일"
-                    className={`${styles['thumbnail-container']}`}
-                >
-                    {tempThumbnailUrl && (
-                        <img
-                            className={`${styles.thumbnail}`}
-                            src={tempThumbnailUrl}
-                        ></img>
-                    )}
                 </div>
             </div>
         </div>
