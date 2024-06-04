@@ -84,7 +84,11 @@ export const PaintingWebtoonContainer = () => {
                     </span>
                 </div>
                 <div>
-                    <input id="agree_promise" type="checkbox"></input>
+                    <input
+                        id="agree_promise"
+                        name="agree"
+                        type="checkbox"
+                    ></input>
                     <label htmlFor="agree_promise">동의합니다.</label>
                 </div>
             </div>

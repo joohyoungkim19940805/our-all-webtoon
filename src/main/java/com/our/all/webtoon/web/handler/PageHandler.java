@@ -11,12 +11,12 @@ import reactor.core.publisher.Mono;
 public class PageHandler {
 
     public Mono<ServerResponse> main(ServerRequest request) {
-        return ok().contentType(MediaType.TEXT_HTML).render("/index.html");
+        return ok().contentType(MediaType.TEXT_HTML).render("index.html");
 
     }
 
     public Mono<ServerResponse> dashboard(ServerRequest request) {
-        return ok().contentType(MediaType.TEXT_HTML).render("/dashboard.html");
+        return ok().contentType(MediaType.TEXT_HTML).render("dashboard.html");
 
     }
 }

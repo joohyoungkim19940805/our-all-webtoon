@@ -56,6 +56,25 @@ public class MainRouter {
     }
 
     @Bean
+    public RouterFunction<ServerResponse> webtoon(AccountHandler accountHandler) {
+
+        return route().nest(path("/api/webtoon"),
+                builder -> builder
+                        .nest(path("search"),
+                                searchPathBuilder -> searchPathBuilder
+                                        .GET("/genre", accept(MediaType.APPLICATION_JSON),
+                                                accountHandler::isLogin)
+                                        .build())
+                        /*
+                         * .nest(path("/create"), createPathBuilder -> createPathBuilder .build())
+                         */
+                        .nest(path("update"),
+                                updatePathBuilder -> updatePathBuilder.PUT("/change-info",
+                                        accept(MediaType.APPLICATION_JSON), accountHandler::isLogin)
+                                        .build()))
+                .build();
+    }
+    @Bean
     public RouterFunction<ServerResponse> index(IndexHandler indexHandler) {
 
         return route(GET("/"),
