@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.web.handler.AccountHandler;
 import com.our.all.webtoon.web.handler.IndexHandler;
 import com.our.all.webtoon.web.handler.PageHandler;
+import com.our.all.webtoon.web.handler.WebtoonHandler;
 
 
 @Configuration
@@ -38,41 +39,63 @@ public class MainRouter {
 
         return route().nest(path("/api/account"),
                 builder -> builder
-                        .nest(path("search"),
-                                searchPathBuilder -> searchPathBuilder
-                                        .GET("/is-login", accept(MediaType.APPLICATION_JSON),
-                                                accountHandler::isLogin)
-                                        .GET("/get-info", accept(MediaType.APPLICATION_JSON),
-                                                accountHandler::getAccountInfo)
-                                        .build())
-                        /*
-                         * .nest(path("/create"), createPathBuilder -> createPathBuilder .build())
-                         */
-                        .nest(path("update"),
-                                updatePathBuilder -> updatePathBuilder.PUT("/change-info",
-                                        accept(MediaType.APPLICATION_JSON), accountHandler::isLogin)
-                                        .build()))
+				.nest(
+					path( "search" ),
+					searchPathBuilder -> searchPathBuilder
+						.GET(
+							"/is-login",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::isLogin
+						)
+						.GET(
+							"/get-info",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::getAccountInfo
+						)
+						.build()
+				)
+				/* .nest(path("/create"), createPathBuilder -> createPathBuilder .build()) */
+				.nest(
+					path( "update" ),
+					updatePathBuilder -> updatePathBuilder
+						.PUT(
+							"/change-info",
+							accept( MediaType.APPLICATION_JSON ),
+							accountHandler::isLogin
+						)
+						.build()
+				)//
+
+		)
                 .build();
     }
 
     @Bean
-    public RouterFunction<ServerResponse> webtoon(AccountHandler accountHandler) {
+    public RouterFunction<ServerResponse> webtoon(WebtoonHandler webtoonHandler) {
 
         return route().nest(path("/api/webtoon"),
                 builder -> builder
-                        .nest(path("search"),
-                                searchPathBuilder -> searchPathBuilder
-                                        .GET("/genre", accept(MediaType.APPLICATION_JSON),
-                                                accountHandler::isLogin)
-                                        .build())
-                        /*
-                         * .nest(path("/create"), createPathBuilder -> createPathBuilder .build())
-                         */
-                        .nest(path("update"),
-                                updatePathBuilder -> updatePathBuilder.PUT("/change-info",
-                                        accept(MediaType.APPLICATION_JSON), accountHandler::isLogin)
-                                        .build()))
-                .build();
+				.nest(
+					path( "search" ),
+					searchPathBuilder -> searchPathBuilder
+						.GET( "/genre", accept( MediaType.APPLICATION_JSON ), webtoonHandler::genreList )
+						.build()
+				)
+				/* .nest(path("/create"), createPathBuilder -> createPathBuilder .build()) */
+				.nest(
+					path( "update" ),
+					updatePathBuilder -> updatePathBuilder
+						.PUT( "/change-info", accept( MediaType.APPLICATION_JSON ), webtoonHandler::genreList )
+						.build()
+				)
+				.nest(
+					path( "regist" ),
+					registPathBuilder -> registPathBuilder
+						.POST( "/webtoon", accept( MediaType.APPLICATION_JSON ), webtoonHandler::genreList )
+						.build()
+				)
+		)
+			.build();
     }
     @Bean
     public RouterFunction<ServerResponse> index(IndexHandler indexHandler) {

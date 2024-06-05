@@ -147,20 +147,26 @@ export default class FreeWillEditor extends FreeWiilHandler {
                         let editorTarget = window.customElements.get(
                             jsonNode.tagName,
                         );
+
+                        let jsonData = jsonNode.data;
+                        if (typeof jsonNode.data == 'string') {
+                            jsonData = JSON.parse(jsonNode.data);
+                        }
+
                         if (editorTarget && editorTarget.toolHandler) {
                             node = new editorTarget.prototype.constructor(
-                                jsonNode.data,
+                                jsonData,
                             );
-                        } else if (jsonNode.data.hasOwnProperty('is_line')) {
+                        } else if (jsonData.hasOwnProperty('is_line')) {
                             let line = new Line(
                                 document.createElement(jsonNode.tagName),
                             );
                             node = line.lineElement;
-                            Object.assign(node.dataset, jsonNode.data);
+                            Object.assign(node.dataset, jsonData);
                         } else {
                             //node = document.createElement(jsonNode.name.replaceAll(/HTML|Element/g, '').toLowerCase());
                             node = document.createElement(jsonNode.tagName);
-                            Object.assign(node.dataset, jsonNode.data);
+                            Object.assign(node.dataset, jsonData);
                         }
                         afterCallback(node);
                         if (jsonNode.childs.length != 0) {
@@ -356,10 +362,10 @@ export default class FreeWillEditor extends FreeWiilHandler {
                                 }
                                 if (element.innerText.length == 0) {
                                     element.innerText = '\n';
-                                    window
-                                        .getSelection()
-                                        .setPosition(element, 1);
-                                    element.focus();
+                                    // window
+                                    //     .getSelection()
+                                    //     .setPosition(element, 1);
+                                    // element.focus();
                                 }
                             }
                             resolve();
@@ -486,7 +492,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
             ) {
                 this.contentEditable = true;
                 this.tabIndex = 1;
-                this.focus();
+                //this.focus();
                 if (this.isEmpty) {
                     this.startFirstLine();
                 }

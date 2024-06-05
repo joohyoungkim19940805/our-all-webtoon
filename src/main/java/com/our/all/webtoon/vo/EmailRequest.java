@@ -1,4 +1,4 @@
-package com.our.all.webtoon.entity.email.vo;
+package com.our.all.webtoon.vo;
 
 import java.util.List;
 import java.util.Map;

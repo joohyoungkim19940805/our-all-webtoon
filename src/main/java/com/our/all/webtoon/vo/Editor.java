@@ -1,8 +1,7 @@
-package com.our.all.webtoon.entity.webtoon;
+package com.our.all.webtoon.vo;
 
-import java.time.LocalDateTime;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
 
+
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -22,12 +22,27 @@ import lombok.With;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection = "genre")
-public class GenreEntity {
+public class Editor {
 
-	@Id
-	private String id;
+	private List<Editor> childs;
+
+	private Integer type;
+
 	private String name;
-	private LocalDateTime createdAt;
-	
+
+	private String tagName;
+
+	private String data;
+
+	private String text;
+
+	private String cursor_offset;
+
+	private String cursor_type;
+
+	private String cursor_index;
+
+	private String cursor_scroll_x;
+
+	private String cursor_scroll_y;
 }

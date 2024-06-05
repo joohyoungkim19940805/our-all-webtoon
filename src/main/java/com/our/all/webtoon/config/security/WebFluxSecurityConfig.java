@@ -24,7 +24,6 @@ import org.springframework.security.web.server.header.XFrameOptionsServerHttpHea
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.stereotype.Component;
 import com.our.all.webtoon.config.security.google.OAuth2GoogleLoginSuccessHandler;
-import com.our.all.webtoon.util.KeyPairUtil;
 import reactor.core.publisher.Mono;
 
 
@@ -49,8 +48,6 @@ public class WebFluxSecurityConfig {
     @Autowired
     private AuthenticationManager authManager;
 
-	@Autowired
-	private KeyPairUtil keyPair;
     /*
      * @Bean public MapReactiveUserDetailsService userDetailsService() {
      * 

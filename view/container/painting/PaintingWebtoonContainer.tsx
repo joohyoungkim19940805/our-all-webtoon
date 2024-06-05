@@ -15,6 +15,10 @@ import toolBarStyles from '@components/editor/toolBar.module.css';
 import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
 import styles from './PaintingWebtoonContainer.module.css';
+import { getGenreService } from '@handler/service/WebtoonService';
+import { Genre } from '@type/GenreType';
+import genreStyles from '@components/genre/genre.module.css';
+
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
 declare global {
@@ -57,16 +61,39 @@ class SynopsisEditor extends FreeWillEditor {
 export const PaintingWebtoonContainer = () => {
     const synopsisEditorRef = useRef<SynopsisEditor>(null);
     const toolbarRef = useRef<HTMLDivElement>(null);
+    const [genre, setGenre] = useState<Genre[]>([]);
+    const [genreSelectCount, setGenreSelectCount] = useState<number>(0);
     useEffect(() => {
         if (!synopsisEditorRef.current || !toolbarRef.current) return;
-        console.log(SynopsisEditor.tools);
         toolbarRef.current.append(
             ...SynopsisEditor.tools.map((e) => e.toolHandler.toolButton),
         );
     }, [synopsisEditorRef, toolbarRef]);
+    useEffect(() => {
+        const subscribe = getGenreService().subscribe({
+            next: (genre) => {
+                if (genre) setGenre(genre);
+            },
+        });
+        return () => {
+            subscribe.unsubscribe();
+        };
+    }, []);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
     return (
         <div className={`${styles['painting-webtoon-container']}`}>
+            <button
+                onClick={() => {
+                    if (!synopsisEditorRef.current) return;
+                    console.log(
+                        FreeWillEditor.getLowDoseJSON(
+                            synopsisEditorRef.current,
+                        ),
+                    );
+                }}
+            >
+                ddddd
+            </button>
             <div data-info="운영원칙">
                 <div>
                     <h2>운영원칙</h2>
@@ -108,9 +135,30 @@ export const PaintingWebtoonContainer = () => {
                         ></input>
                     </div>
                     <div data-info="장르">
-                        <label></label>
-                        <ul data-info="wrap overflow 사용">
-                            <li></li>
+                        <label>최대 3개까지 선택 가능합니다.</label>
+                        <ul
+                            className={`${styles['genre-list']}`}
+                            data-info="wrap overflow 사용"
+                        >
+                            {genre &&
+                                genre.map((e, i) => (
+                                    <li key={i}>
+                                        <input
+                                            type="checkbox"
+                                            id={`genre_${i}`}
+                                            onChange={(ev) => {
+                                                setGenreSelectCount(
+                                                    ev.target.checked
+                                                        ? genreSelectCount + 1
+                                                        : genreSelectCount - 1,
+                                                );
+                                            }}
+                                        ></input>
+                                        <label htmlFor={`genre_${i}`}>
+                                            {e.name}
+                                        </label>
+                                    </li>
+                                ))}
                         </ul>
                     </div>
                     <div data-info="썸네일">
@@ -122,17 +170,13 @@ export const PaintingWebtoonContainer = () => {
                             accept="image/*"
                             className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                             onInput={(ev) => {
-                                console.log('ev', ev);
                                 if (
                                     !(ev.target instanceof HTMLInputElement) ||
                                     !ev.target.files ||
                                     ev.target.files.length == 0
                                 )
                                     return;
-                                console.log(
-                                    'ev.target.files[0]',
-                                    ev.target.files[0],
-                                );
+
                                 const url = URL.createObjectURL(
                                     ev.target.files[0],
                                 );
@@ -159,6 +203,7 @@ export const PaintingWebtoonContainer = () => {
                             name="summary"
                             placeholder="자동으로 채워집니다."
                             readOnly
+                            tabIndex={-1}
                             className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                         ></input>
                     </div>

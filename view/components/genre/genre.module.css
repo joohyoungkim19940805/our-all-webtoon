@@ -1,0 +1,14 @@
+.genre-list-item {
+    & input {
+        &:checked + label {
+            color: #b9b9b9;
+            font-weight: 700;
+            text-shadow: 0 0 20px #ff8b35;
+        }
+    }
+
+    & label {
+        color: #b9b9b9;
+        font-size: 1.2rem;
+    }
+}

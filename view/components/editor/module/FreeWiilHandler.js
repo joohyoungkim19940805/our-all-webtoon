@@ -34,7 +34,6 @@ export default class FreeWiilHandler extends HTMLElement {
 
             .${this.#defaultClass} > :nth-child(1)::before{
                 content: attr(data-placeholder);
-                position: absolute;
                 color: #d1d1d1;
                 font-weight: 600;
                 font-family: revert;

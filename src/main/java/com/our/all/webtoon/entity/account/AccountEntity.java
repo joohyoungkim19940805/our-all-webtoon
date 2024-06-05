@@ -80,6 +80,8 @@ public class AccountEntity implements TokenTemplate {
 
     private GoogleProviderInfo googleProviderInfo;
 
+	private String termsId;
+
     @Override
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getIssuer() {
