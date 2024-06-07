@@ -3,56 +3,40 @@ package com.our.all.webtoon.web.handler;
 
 import static com.our.all.webtoon.util.ResponseWrapper.response;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import com.our.all.webtoon.repository.webtoon.GenreRepository;
-import com.our.all.webtoon.service.AccountService;
+import com.our.all.webtoon.dto.Editor;
+import com.our.all.webtoon.repository.terms.TermsRepository;
 import com.our.all.webtoon.util.ResponseWrapper;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
 @Component
-public class WebtoonHandler {
+public class TermsHandler {
 
 	@Autowired
-	private GenreRepository genreRepository;
+	private TermsRepository termsRepository;
 
-	@Autowired
-	private AccountService accountService;
-
-	private static record GenreListResponse(
+	private static record TermsResponse(
 		String name,
-		LocalDateTime createAt
+		List<Editor> content
 	) {}
-
-	public Mono<ServerResponse> getGenreList(
+	public Mono<ServerResponse> getWebtoonTerms(
 		ServerRequest request
 	) {
 
-		Flux<GenreListResponse> result = genreRepository
-			.findAll( Sort.by( "name" ).descending() )
-			.map( e -> new GenreListResponse( e.getName(), e.getCreatedAt() ) );
+		Mono<TermsResponse> result = termsRepository
+			.findByName( "웹툰 운영원칙" )
+			.map( e -> new TermsResponse( e.getName(), e.getContent() ) );
 
 		return ok()
 			.contentType( MediaType.APPLICATION_JSON )
 			.body( response( Result._0, result ), ResponseWrapper.class );
-
 	}
 
-	private static record WebtoonRequest(
-		Boolean agree
-	) {}
-	public Mono<ServerResponse> registWebtoon(
-		ServerRequest request
-	) {
-
-		return null;
-	}
 }

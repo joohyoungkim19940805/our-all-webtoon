@@ -1,6 +1,6 @@
 import { Input } from '@components/input/Input';
 import { Observable, from, map, mergeMap, toArray, zip } from 'rxjs';
-import { Genre } from '@type/GenreType';
+import { Genre } from '@type/service/WebtoonType';
 import styles from './GenreListContainer.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import { useEffect, useRef, useState } from 'react';

@@ -3,7 +3,7 @@ import { AjaxError, ajax } from 'rxjs/ajax';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Account } from '@type/service/AccountType';
-import { ResponseWrapper } from '@type/service/ReesponseWrapper';
+import { ResponseWrapper } from '@type/ReesponseWrapper';
 
 export const useIsLoignService = (moveUrl?: string) => {
     const navigate = useNavigate();

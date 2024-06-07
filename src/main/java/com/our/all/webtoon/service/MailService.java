@@ -21,12 +21,12 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.ISpringWebFluxTemplateEngine;
 
 import com.our.all.webtoon.config.security.JwtIssuerType;
+import com.our.all.webtoon.dto.EmailRequest;
 import com.our.all.webtoon.entity.account.AccountEntity;
 import com.our.all.webtoon.util.properties.EmailProperties;
 import com.our.all.webtoon.util.properties.EmailProperties.AccountVerifyProperties;
 import com.our.all.webtoon.util.properties.EmailProperties.EmailPropertiesTemplate;
 import com.our.all.webtoon.util.properties.EmailProperties.ForgotPasswordProperties;
-import com.our.all.webtoon.vo.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 

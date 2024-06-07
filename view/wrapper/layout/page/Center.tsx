@@ -3,7 +3,7 @@ import { FlexContainer, FlexLayout } from '@wrapper/FlexLayout';
 import styles from './Center.module.css';
 import { AdsContainer } from '@container/ads/AdsContainer';
 import { GenreListContainer } from '@container/genre/GenreListContainer';
-import { Genre } from '@type/GenreType';
+import { Genre } from '@type/service/WebtoonType';
 import { LatestWebttonContainer } from '@container/webtoon/LatestWebtoonContainer';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 

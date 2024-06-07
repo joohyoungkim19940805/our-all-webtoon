@@ -1,5 +1,5 @@
-import { Genre } from '@type/GenreType';
-import { ResponseWrapper } from '@type/service/ReesponseWrapper';
+import { Genre } from '@type/service/WebtoonType';
+import { ResponseWrapper } from '@type/ReesponseWrapper';
 import { catchError, map, of } from 'rxjs';
 import { AjaxError, ajax } from 'rxjs/ajax';
 

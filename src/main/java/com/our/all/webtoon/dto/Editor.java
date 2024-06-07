@@ -1,4 +1,4 @@
-package com.our.all.webtoon.vo;
+package com.our.all.webtoon.dto;
 
 
 import java.util.List;

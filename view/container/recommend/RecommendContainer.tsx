@@ -2,7 +2,7 @@ import { from, map, mergeMap, of, toArray, zip } from 'rxjs';
 import styles from './RecommendContainer.module.css';
 import { SearchAndMenuContainer } from '@container/search/SearchAndMenuContainer';
 import { GenreListContainer } from '@container/genre/GenreListContainer';
-import { Genre } from '@type/GenreType';
+import { Genre } from '@type/service/WebtoonType';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { windowResize } from '@handler/globalEvents';
 import { GenreRankContainer } from '@container/genre/GenreRankContent';

@@ -2,10 +2,11 @@ package com.our.all.webtoon.entity.terms;
 
 
 import java.util.List;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.our.all.webtoon.vo.Editor;
+import com.our.all.webtoon.dto.Editor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,9 @@ import lombok.With;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "terms_of_service")
 public class TermsEntity {
+
+	@Id
+	private String id;
 
 	private String name;
 

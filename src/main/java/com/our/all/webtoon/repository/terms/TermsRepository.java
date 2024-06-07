@@ -11,4 +11,8 @@ public interface TermsRepository extends ReactiveMongoRepository<TermsEntity, St
 	Mono<Boolean> existsByName(
 		String name
 	);
+
+	Mono<TermsEntity> findByName(
+		String name
+	);
 }

@@ -1,4 +1,4 @@
-import { WebtoonEpisodeType } from '@type/WebtoonEpisodeType';
+import { WebtoonEpisodeType } from '@type/service/WebtoonEpisodeType';
 import styles from './WebtoonEpisodeList.module.css';
 import scrollStyles from '@root/listScroll.module.css';
 import { EyeSvg } from '@svg/EyeSvg';

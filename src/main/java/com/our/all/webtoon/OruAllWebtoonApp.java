@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.terms.TermsEntity;
 import com.our.all.webtoon.repository.terms.TermsRepository;
 import com.our.all.webtoon.util.properties.S3Properties;
-import com.our.all.webtoon.vo.Editor;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -58,12 +58,11 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
     }
 
 	private void createPaintingWebtoonTerms() {
-		String name = "운영원칙";
+
+		String name = "웹툰 운영원칙";
 		Mono
 			.just( "" )
-			.filterWhen( e ->
-			termsRepository.existsByName( name )
-			)
+			.filterWhen( e -> termsRepository.existsByName( name ) )
 			.switchIfEmpty( Mono.fromRunnable( () -> {
 				List<Editor> termsContent = List
 					.of(
@@ -116,10 +115,11 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 					.save(
 						TermsEntity
 							.builder()
-					.name("운영원칙")
-					.content(termsContent)
+							.name( name )
+							.content( termsContent )
 							.build()
-				);
+					)
+					.subscribe();
 
 			} ) )
 			.subscribe();

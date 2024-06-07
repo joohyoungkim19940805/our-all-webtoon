@@ -16,8 +16,9 @@ import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
 import styles from './PaintingWebtoonContainer.module.css';
 import { getGenreService } from '@handler/service/WebtoonService';
-import { Genre } from '@type/GenreType';
+import { Genre } from '@type/service/WebtoonType';
 import genreStyles from '@components/genre/genre.module.css';
+import { WebtoonTermsOfService } from '@components/terms/WebtoonTermsOfService';
 
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
@@ -81,35 +82,9 @@ export const PaintingWebtoonContainer = () => {
     }, []);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
     return (
-        <div className={`${styles['painting-webtoon-container']}`}>
-            <button
-                onClick={() => {
-                    if (!synopsisEditorRef.current) return;
-                    console.log(
-                        FreeWillEditor.getLowDoseJSON(
-                            synopsisEditorRef.current,
-                        ),
-                    );
-                }}
-            >
-                ddddd
-            </button>
-            <div data-info="운영원칙">
-                <div>
-                    <h2>운영원칙</h2>
-                </div>
-                <div>
-                    <span>
-                        다른 사람의 저작권을 침해하거나 명예를 훼손하는 경우
-                        관렬 법률에 의거 제재받을 수 있습니다.
-                    </span>
-                </div>
-                <div>
-                    <span>
-                        성인물, 폭력물 등의 게시물은 별도의 통보 없이 삭제될 수
-                        있습니다.
-                    </span>
-                </div>
+        <form className={`${styles['painting-webtoon-container']}`}>
+            <div>
+                <WebtoonTermsOfService></WebtoonTermsOfService>
                 <div>
                     <input
                         id="agree_promise"
@@ -221,6 +196,6 @@ export const PaintingWebtoonContainer = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     );
 };
