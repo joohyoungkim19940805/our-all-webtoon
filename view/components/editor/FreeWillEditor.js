@@ -191,10 +191,11 @@ export default class FreeWillEditor extends FreeWiilHandler {
     #placeholder;
     #undoManager;
     isDefaultStyle = true;
+    #isWrite = true;
     #toolButtonObserver = new MutationObserver((mutationList, observer) => {
         mutationList.forEach((mutation) => {
             if (
-                this.contentEditable == 'false' ||
+                !this.#isWrite ||
                 (mutation.target.dataset.tool_status == 'connected' &&
                     (mutation.oldValue ==
                         mutation.target.dataset.tool_status) ==
@@ -486,10 +487,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
         this.classList.add('free-will-editor');
         if (!this.#isLoaded) {
             this.#isLoaded = true;
-            if (
-                this.contentEditable == 'inherit' ||
-                this.contentEditable == true
-            ) {
+            if (this.contentEditable == 'inherit' || this.#isWrite) {
                 this.contentEditable = true;
                 this.tabIndex = 1;
                 //this.focus();
@@ -716,7 +714,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
 
     set placeholder(placeholder) {
         this.#placeholder = placeholder;
-        if (this.firstElementChild && this.contentEditable != false) {
+        if (this.firstElementChild && this.#isWrite) {
             this.firstElementChild.setAttribute(
                 'data-placeholder',
                 this.#placeholder,
@@ -746,5 +744,12 @@ export default class FreeWillEditor extends FreeWiilHandler {
     }
     get keydownEventCallback() {
         return this.#keydownEventCallback;
+    }
+
+    set isWrite(isWrite) {
+        this.#isWrite = isWrite;
+    }
+    get isWrite() {
+        return this.#isWrite;
     }
 }

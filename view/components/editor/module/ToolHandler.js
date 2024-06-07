@@ -98,6 +98,7 @@ export default class ToolHandler {
             throw new Error('toolButton is not element');
         }
         toolButton.tabIndex = -1;
+        toolButton.type = 'button';
         this.#toolButton = toolButton;
     }
 
