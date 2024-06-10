@@ -4,12 +4,14 @@ package com.our.all.webtoon.web.handler;
 import static com.our.all.webtoon.util.ResponseWrapper.response;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.service.AccountService;
 import com.our.all.webtoon.util.ResponseWrapper;
@@ -47,12 +49,27 @@ public class WebtoonHandler {
 	}
 
 	private static record WebtoonRequest(
-		Boolean agree
+		Boolean agree,
+		String title,
+		List<String> genre,
+		String thumbnail,
+		String summary,
+		List<Editor> synopsisEditor
 	) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
+		return null;
+	}
+
+	// private static record WebtoonSynopsisOneLineSummaryRequest(String synopsis){}
+	private static record WebtoonSynopsisOneLineSummaryResponse(String oneLineSummary) {}
+
+	public Mono<ServerResponse> getWebtoonSynopsisOneLineSummary(
+		ServerRequest request
+	) {
 
 		return null;
+
 	}
 }

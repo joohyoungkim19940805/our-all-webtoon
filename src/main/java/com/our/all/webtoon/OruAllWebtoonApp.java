@@ -10,11 +10,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.terms.TermsEntity;
+import com.our.all.webtoon.entity.webtoon.GenreEntity;
 import com.our.all.webtoon.repository.terms.TermsRepository;
+import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.util.properties.S3Properties;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -28,7 +32,8 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 		"com.our.all.webtoon.*"
 })
 @SpringBootApplication(exclude = R2dbcAutoConfiguration.class)
-@EnableMongoAuditing
+@EnableReactiveMongoAuditing
+@EnableReactiveMongoRepositories
 public class OruAllWebtoonApp implements ApplicationRunner  {
     
 	public static void main(String[] args) {
@@ -51,19 +56,26 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 	@Autowired
 	private TermsRepository termsRepository;
 
+	@Autowired
+	private GenreRepository genreRepository;
+
     @Override
 	public void run(ApplicationArguments args) throws Exception {
 
-		createPaintingWebtoonTerms();
+
+		createDefaultPaintingWebtoonTerms().subscribe();
+		createDefaultGenre().subscribe();
+
     }
 
-	private void createPaintingWebtoonTerms() {
+	private Mono<Boolean> createDefaultPaintingWebtoonTerms() {
 
 		String name = "웹툰 운영원칙";
-		Mono
-			.just( "" )
-			.filterWhen( e -> termsRepository.existsByName( name ) )
-			.switchIfEmpty( Mono.fromRunnable( () -> {
+
+		return termsRepository
+			.existsByName( name )
+			.filter( e -> ! e )
+			.flatMap( exists -> {
 				List<Editor> termsContent = List
 					.of(
 						Editor
@@ -111,7 +123,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 							)
 							.build()
 					);
-				termsRepository
+				return (Mono<Boolean>) termsRepository
 					.save(
 						TermsEntity
 							.builder()
@@ -119,10 +131,28 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 							.content( termsContent )
 							.build()
 					)
-					.subscribe();
+					.defaultIfEmpty( TermsEntity.builder().build() )
+					.map( e -> e.getId() != null );
 
-			} ) )
-			.subscribe();
+			} );
+    }
+
+	private Mono<Boolean> createDefaultGenre() {
+
+		return Flux.just( "추리", "다큐멘터리", "무협",
+			"일상", "BL", "판타지",
+			"사극", "러브코미디", "음악",
+			"19", "이세계", "드라마",
+			"학원", "먹방", "호러",
+			"로맨스", "전생", "액션",
+			"시대", "전기", "중세",
+			"스릴러", "스포츠", "개그",
+			"SF", "백합", "공포" )
+			.filterWhen( name -> genreRepository.existsByName( name ).map( e -> ! e ) )
+			.flatMap( name -> genreRepository.save( GenreEntity.builder().name( name ).build() ) )
+			.all( e -> e.getId() != null );
+
 	}
+
 
 }
