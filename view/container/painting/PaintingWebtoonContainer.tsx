@@ -122,6 +122,8 @@ export const PaintingWebtoonContainer = () => {
                                         <input
                                             type="checkbox"
                                             id={`genre_${i}`}
+                                            name="genre"
+                                            value={e.name}
                                             onChange={(ev) => {
                                                 setGenreSelectCount(
                                                     ev.target.checked
