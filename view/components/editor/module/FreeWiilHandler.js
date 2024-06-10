@@ -108,18 +108,15 @@ export default class FreeWiilHandler extends HTMLElement {
                 );
                 selection.addRange(range);
             } else {
-                console.log(222);
                 let anchorNodeLine = Line.getLine(anchorNode);
                 let focusNodeLine = Line.getLine(focusNode);
                 if (anchorNodeLine == focusNodeLine) {
-                    //console.log(333)
                     resolve({
                         startLine: anchorNodeLine,
                         endLine: focusNodeLine,
                     });
                     return;
                 }
-                //console.log(4444, anchorNodeLine , focusNodeLine);
                 startAndEndLineObject = {
                     startLine: anchorNodeLine,
                     endLine: focusNodeLine,

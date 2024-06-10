@@ -55,7 +55,8 @@ class SynopsisEditor extends FreeWillEditor {
     };
     constructor() {
         super(SynopsisEditor.tools, SynopsisEditor.option);
-        super.placeholder = '스토리를 입력하세요.';
+        this.placeholder = '스토리를 입력하세요.';
+        this.isWrite = true;
     }
 }
 

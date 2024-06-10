@@ -209,6 +209,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
             if (
                 mutation.target.dataset.tool_status == 'active' &&
                 mutation.oldValue != 'active' &&
+                focusNode?.parentElement &&
                 Tool.prototype.isPrototypeOf(focusNode.parentElement) == false
             ) {
                 this.#renderingTools(Tool);
@@ -289,7 +290,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
 
             this.tools.forEach((Tool) => {
                 if (FreeWillEditor.toolsMap[Tool.name]) {
-                    return;
+                    //return;
                 }
                 if (Tool.isDefaultStyle) {
                     Tool.createDefaultStyle();
@@ -613,11 +614,11 @@ export default class FreeWillEditor extends FreeWiilHandler {
                 } else {
                     scrollTarget = range.endContainer;
                 }
-                scrollTarget.scrollIntoView({
-                    behavior: 'instant',
-                    block: 'end',
-                    inline: 'nearest',
-                });
+                // scrollTarget.scrollIntoView({
+                //     behavior: 'instant',
+                //     block: 'end',
+                //     inline: 'nearest',
+                // });
                 applyToolAfterSelection.setPosition(
                     scrollTarget,
                     scrollTarget.childNodes.length - 1,

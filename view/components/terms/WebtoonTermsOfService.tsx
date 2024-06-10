@@ -51,9 +51,12 @@ class WebtoonTermsOfServiceEditor extends FreeWillEditor {
         isDefaultStyle: true,
     };
     constructor() {
-        super();
-        super.placeholder = '';
-        super.isWrite = false;
+        super(
+            WebtoonTermsOfServiceEditor.tools,
+            WebtoonTermsOfServiceEditor.option,
+        );
+        this.placeholder = '';
+        this.isWrite = false;
     }
 }
 
