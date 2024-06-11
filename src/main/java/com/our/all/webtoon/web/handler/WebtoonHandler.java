@@ -29,7 +29,7 @@ public class WebtoonHandler {
 	@Autowired
 	private AccountService accountService;
 
-	private static record GenreListResponse(
+	protected static record GenreListResponse(
 		String name,
 		LocalDateTime createAt
 	) {}
@@ -48,22 +48,31 @@ public class WebtoonHandler {
 
 	}
 
-	private static record WebtoonRequest(
+	protected static record WebtoonRegistRequest(
 		Boolean agree,
-		String title,
+		String webtoonTitle,
 		List<String> genre,
-		String thumbnail,
 		String summary,
 		List<Editor> synopsisEditor
 	) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
+
+		// request.bodyToMono( WebtoonRequest. )
 		return null;
 	}
 
+	public Mono<ServerResponse> registWebtoonThumbnail(
+		ServerRequest request
+	) {
+
+		return null;
+
+	}
+
 	// private static record WebtoonSynopsisOneLineSummaryRequest(String synopsis){}
-	private static record WebtoonSynopsisOneLineSummaryResponse(String oneLineSummary) {}
+	protected static record WebtoonSynopsisOneLineSummaryResponse(String oneLineSummary) {}
 
 	public Mono<ServerResponse> getWebtoonSynopsisOneLineSummary(
 		ServerRequest request

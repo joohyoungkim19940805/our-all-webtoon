@@ -2,6 +2,7 @@ package com.our.all.webtoon.entity.webtoon;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -37,7 +38,7 @@ public class WebtoonEntity {
 
 	private String authorId;
 
-	private String genre;
+	private List<String> genre;
 
 	private String thumbnail;
 

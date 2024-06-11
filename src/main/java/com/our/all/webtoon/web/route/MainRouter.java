@@ -118,7 +118,7 @@ public class MainRouter {
 					.nest(
 						path( "regist" ),
 						registPathBuilder -> registPathBuilder
-							.POST( "/webtoon", accept( MediaType.APPLICATION_JSON ), webtoonHandler::getGenreList )
+							.POST( "/", accept( MediaType.APPLICATION_JSON ), webtoonHandler::registWebtoon )
 							.build()
 					)
 			)

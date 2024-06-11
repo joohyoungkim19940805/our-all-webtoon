@@ -60,6 +60,14 @@ class SynopsisEditor extends FreeWillEditor {
     }
 }
 
+type PaintingWebtoonFormData = {
+    agree: HTMLInputElement;
+    webtoonTitle: HTMLInputElement;
+    genre: Array<HTMLInputElement>;
+    thumbnail: HTMLInputElement;
+    summary: HTMLInputElement;
+};
+
 export const PaintingWebtoonContainer = () => {
     const synopsisEditorRef = useRef<SynopsisEditor>(null);
     const toolbarRef = useRef<HTMLDivElement>(null);
@@ -72,8 +80,9 @@ export const PaintingWebtoonContainer = () => {
         );
     }, [synopsisEditorRef, toolbarRef]);
     useEffect(() => {
-        const subscribe = getGenreService().subscribe({
+        const subscribe = getGenreService.subscribe({
             next: (genre) => {
+                console.log(1, genre);
                 if (genre) setGenre(genre);
             },
         });
@@ -82,8 +91,52 @@ export const PaintingWebtoonContainer = () => {
         };
     }, []);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
+    const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+        ev.preventDefault();
+        const { agree, webtoonTitle, genre, thumbnail, summary } = (() => {
+            const { agree, webtoonTitle, genre, thumbnail, summary } =
+                ev.currentTarget;
+            return {
+                agree,
+                webtoonTitle,
+                genre,
+                thumbnail,
+                summary,
+            } as PaintingWebtoonFormData;
+        })();
+        console.log();
+        if (!agree.checked) {
+            alert('이용 약관에 동의해주세요.');
+            agree.focus();
+            return;
+        } else if (!webtoonTitle.value || webtoonTitle.value.trim() == '') {
+            alert('웹툰 제목을 입력해주세요.');
+            webtoonTitle.focus();
+            return;
+        } else if ([...genre].filter((e) => e.checked).length == 0) {
+            alert('장르는 최소 1개 최대 3개 선택해주십시오.');
+            genre[0].focus();
+            return;
+        } else if (!thumbnail.files || thumbnail.files?.length == 0) {
+            alert('웹툰의 대표 이미지를 선택해주십시오.');
+            return;
+        } else if (
+            !synopsisEditorRef.current?.textContent ||
+            synopsisEditorRef.current?.textContent?.trim() == ''
+        ) {
+            synopsisEditorRef?.current?.focus();
+            alert('시눕시스를 작성해주십시오.');
+            return;
+        }
+        // 썸네일 먼저 업로드하고 pipe. mergeMap or concat or concatMap
+    };
+
     return (
-        <form className={`${styles['painting-webtoon-container']}`}>
+        <form
+            id="painting-webtoon-container"
+            className={`${styles['painting-webtoon-container']}`}
+            onSubmit={handleSubmit}
+        >
             <div>
                 <WebtoonTermsOfService></WebtoonTermsOfService>
                 <div>
@@ -100,13 +153,19 @@ export const PaintingWebtoonContainer = () => {
                 className={`${styles['painting-webtoon-content']}`}
             >
                 <div className={`${styles['webtoon-detail']}`}>
+                    <div
+                        data-info="등록 버튼"
+                        className={`${styles['submit-container']}`}
+                    >
+                        <button type="submit">등록</button>
+                    </div>
                     <div data-info="작품명">
                         <label>작품 이름</label>
                         <input
                             type="text"
                             placeholder="작품 이름"
                             id="webtoon_title"
-                            name="title"
+                            name="webtoonTitle"
                             className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                         ></input>
                     </div>
@@ -125,6 +184,15 @@ export const PaintingWebtoonContainer = () => {
                                             name="genre"
                                             value={e.name}
                                             onChange={(ev) => {
+                                                console.log(genreSelectCount);
+                                                if (genreSelectCount >= 3) {
+                                                    ev.currentTarget.checked =
+                                                        false;
+                                                    alert(
+                                                        '장르는 최대 3개까지 선택 가능합니다.',
+                                                    );
+                                                    return;
+                                                }
                                                 setGenreSelectCount(
                                                     ev.target.checked
                                                         ? genreSelectCount + 1

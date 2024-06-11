@@ -67,7 +67,7 @@ export const WebtoonTermsOfService = () => {
     useEffect(() => {
         if (!webtoonTermsOfServiceEditorRef.current) return;
         webtoonTermsOfServiceEditorRef.current.contentEditable = 'false';
-        const subscribe = getWebtoonTermsOfService().subscribe({
+        const subscribe = getWebtoonTermsOfService.subscribe({
             next: (terms) => {
                 if (!webtoonTermsOfServiceEditorRef.current) return;
                 if (terms) {

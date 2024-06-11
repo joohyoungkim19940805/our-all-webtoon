@@ -8,6 +8,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -24,9 +25,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
@@ -195,8 +198,10 @@ public class KeyPairUtil {
                 s3Client.close();
             return;
         }
+
         publicKeyFuture.get();
         privateKeyFuture.get();
+
         if (publicKeyFuture.isCompletedExceptionally() || publicKeyFuture.isCancelled())
             s3Client.close();
     }
@@ -236,7 +241,7 @@ public class KeyPairUtil {
         DataBufferUtils.write(//
                 Mono.fromFuture(privateKeyFuture).flatMapMany(response -> Flux.from(response))
                         .map(e -> new DefaultDataBufferFactory().wrap(e)),
-                this.publicPath, StandardOpenOption.CREATE//
+                this.privatePath, StandardOpenOption.CREATE//
         ).share().block();
 
         if (publicKeyFuture.isCompletedExceptionally() || publicKeyFuture.isCancelled())
@@ -319,6 +324,128 @@ public class KeyPairUtil {
         byte b[] = encryptCipher.doFinal(message.getBytes());
         return BaseEncoding.base64().encode(b);
     }
+
+	public static String decryptMessage(
+		Cipher decryptCipher, String base64
+	)
+		throws IllegalBlockSizeException, BadPaddingException {
+
+		byte b[] = decryptCipher
+			.doFinal(
+				BaseEncoding
+					.base64()
+					.decode( base64 )
+			);
+		return new String( b, StandardCharsets.UTF_8 );
+
+	}
+
+	public static boolean verify(
+		PublicKey publicKey, String data, String sign
+	) {
+
+		try {
+			Signature signature = Signature.getInstance( "SHA256withRSA" );
+			signature.initVerify( publicKey );
+			signature.update( data.getBytes( StandardCharsets.UTF_8 ) );
+			return signature
+				.verify(
+					BaseEncoding
+						.base64()
+						.decode( sign )
+				);
+
+		} catch (SignatureException | NoSuchAlgorithmException | InvalidKeyException e) {
+			return false;
+
+		}
+
+	}
+
+	public static String sign(
+		PrivateKey privateKey, String data
+	) {
+
+		try {
+			Signature signature = Signature.getInstance( "SHA256withRSA" );
+			signature.initSign( privateKey );
+			signature.update( data.getBytes( StandardCharsets.UTF_8 ) );
+			return BaseEncoding
+				.base64()
+				.encode( signature.sign() );
+
+			// return signature.verify(BaseEncoding.base64()
+			// .decode(sign));
+		} catch (SignatureException | NoSuchAlgorithmException | InvalidKeyException e) {
+			return null;
+
+		}
+
+	}
+
+	public static void createEncryptCipher(
+		PublicKey publicKey, Consumer<Cipher> resultHandler
+	) {
+
+		Cipher encryptCipher;
+
+		try {
+			encryptCipher = Cipher.getInstance( "RSA/ECB/OAEPPadding" );
+			encryptCipher
+				.init(
+					Cipher.ENCRYPT_MODE,
+					publicKey,
+					RSA.oaepParams
+				);
+			resultHandler.accept( encryptCipher );
+
+			// return encryptCipher;
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+			resultHandler.accept( null );
+
+			// return null;
+			// return Mono.error(new S3ApiException(Result._504));
+		} catch (InvalidKeyException e) {
+			resultHandler.accept( null );
+
+			// return null;
+			// return Mono.error(new S3ApiException(Result._505));
+		}
+
+	}
+
+
+	public static void createDecryptCipher(
+		PrivateKey privateKey, Consumer<Cipher> resultHandler
+	) {
+
+		Cipher decryptCipher;
+
+		try {
+			decryptCipher = Cipher.getInstance( "RSA/ECB/OAEPPadding" );
+			decryptCipher
+				.init(
+					Cipher.DECRYPT_MODE,
+					privateKey,
+					RSA.oaepParams
+				);
+			resultHandler.accept( decryptCipher );
+
+			// return encryptCipher;
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+			resultHandler.accept( null );
+
+			// return null;
+			// return Mono.error(new S3ApiException(Result._504));
+		} catch (InvalidKeyException e) {
+			resultHandler.accept( null );
+
+			// return null;
+			// return Mono.error(new S3ApiException(Result._505));
+		}
+
+	}
+
 
     public static KeyPairUtilBuilder builder() {
         return new KeyPairUtilBuilder();
