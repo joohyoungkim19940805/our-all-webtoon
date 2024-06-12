@@ -2,12 +2,13 @@
     "name": "our-all-webtoon",
     "version": "1.0.0",
     "description": "our all webtoon",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev-server": "tsc && tsc-alias && webpack serve --config webpack.config.dev.js",
+        "dev-server": "tsc && tsc-alias && webpack serve --config webpack.config.dev.mjs",
         "postcss:watch": "postcss src/style.css --dir public --watch",
-        "dev-watch": "tsc && tsc-alias && webpack --config webpack.config.dev.js --watch ",
-        "build": "tsc && tsc-alias && webpack --config webpack.config.prd.js",
+        "dev-watch": "tsc && tsc-alias && webpack --config webpack.config.dev.mjs --watch ",
+        "build": "tsc && tsc-alias && webpack --config webpack.config.prd.mjs",
         "tsc-build": "tsc --build && tsc-alias"
     },
     "repository": {
@@ -80,7 +81,9 @@
         "typings-for-css-modules-loader": "^0.1.1",
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4",
-        "webpack-dev-server": "^4.2.1"
+        "webpack-dev-server": "^4.2.1",
+        "axios": "^1.6.2",
+        "js-yaml": "^4.1.0"
     },
     "dependencies": {
         "rxjs": "^7.8.1"

@@ -1,15 +1,14 @@
-import FreedomInterface from "../module/FreedomInterface"
+import FreedomInterface from '../module/FreedomInterface.js';
 
 export default class VideoBox {
-    
     #style = Object.assign(document.createElement('style'), {
-		id: 'free-will-editor-video-box'
-	});
+        id: 'free-will-editor-video-box',
+    });
 
     #videoBox = Object.assign(document.createElement('div'), {
         className: 'video-box-wrap',
-        
-        innerHTML:`
+
+        innerHTML: `
             <div class="video-resize-container">
                 <div>
                     <label class="video-box-resize-label" for="video-box-resize-width">width : </label>
@@ -57,7 +56,7 @@ export default class VideoBox {
                     </svg>
                 </a>
             </div>
-        `
+        `,
         /* 리사이즈 있는 버전 주석처리 20230821 <i class="download-css-gg-push-down"></i>
         innerHTML: `
             <div class="video-resize-container">
@@ -86,133 +85,189 @@ export default class VideoBox {
     #video;
     #resizeRememberTarget;
 
-    constructor(){
+    constructor() {
         let style = document.querySelector(`#${this.#style.id}`);
-        if(! style){
+        if (!style) {
             document.head.append(this.createStyle());
-        }else{
+        } else {
             this.#style = style;
         }
-        document.addEventListener('keydown',(event)=>{
-            if(this.#videoBox.hasAttribute('data-is_shft')){
+        document.addEventListener('keydown', (event) => {
+            if (this.#videoBox.hasAttribute('data-is_shft')) {
                 return;
             }
-            let {key} = event;
-            if(key === 'Shift'){
+            let { key } = event;
+            if (key === 'Shift') {
                 this.#videoBox.dataset.is_shft = '';
             }
-        })
+        });
 
-        document.addEventListener('keyup', (event)=>{
-            if( ! this.#videoBox.hasAttribute('data-is_shft')){
+        document.addEventListener('keyup', (event) => {
+            if (!this.#videoBox.hasAttribute('data-is_shft')) {
                 return;
-            }    
-            let {key} = event;
-            if(key === 'Shift'){
+            }
+            let { key } = event;
+            if (key === 'Shift') {
                 this.#videoBox.removeAttribute('data-is_shft');
             }
-        })
-        
-        this.#videoBox.addEventListener('wheel', (event) => {
-            if(this.#videoBox.hasAttribute('data-is_shft')){
-                return;
-            }
-            //event.preventDefault();
-            let {deltaY} = event;
-            
-            this.#videoBox.scrollTo(
-                this.#videoBox.scrollLeft + deltaY, undefined
-            );
-        }, {passive: true});
-        let [width, height] = this.#videoBox.querySelectorAll('#video-box-resize-width, #video-box-resize-height');
-        
+        });
+
+        this.#videoBox.addEventListener(
+            'wheel',
+            (event) => {
+                if (this.#videoBox.hasAttribute('data-is_shft')) {
+                    return;
+                }
+                //event.preventDefault();
+                let { deltaY } = event;
+
+                this.#videoBox.scrollTo(
+                    this.#videoBox.scrollLeft + deltaY,
+                    undefined,
+                );
+            },
+            { passive: true },
+        );
+        let [width, height] = this.#videoBox.querySelectorAll(
+            '#video-box-resize-width, #video-box-resize-height',
+        );
+
         window.addEventListener('keyup', (event) => {
-            if( ! this.video || ! this.resizeRememberTarget || ! width.hasAttribute('data-is_ctrl') || ! this.video.parentElement.matches(':hover')){//|| this.video.getRootNode()?.activeElement != width){
+            if (
+                !this.video ||
+                !this.resizeRememberTarget ||
+                !width.hasAttribute('data-is_ctrl') ||
+                !this.video.parentElement.matches(':hover')
+            ) {
+                //|| this.video.getRootNode()?.activeElement != width){
                 return;
             }
             width.removeAttribute('data-is_ctrl');
-        })
+        });
 
         window.addEventListener('keydown', (event) => {
-            
-            let eventPath = event.composedPath()
+            let eventPath = event.composedPath();
 
-            if( ! this.video || ! this.resizeRememberTarget || eventPath[0] == width || ! this.video.parentElement.matches(':hover')){//|| this.video.getRootNode()?.activeElement != width){
+            if (
+                !this.video ||
+                !this.resizeRememberTarget ||
+                eventPath[0] == width ||
+                !this.video.parentElement.matches(':hover')
+            ) {
+                //|| this.video.getRootNode()?.activeElement != width){
                 return;
             }
-            if(event.ctrlKey){
+            if (event.ctrlKey) {
                 width.dataset.is_ctrl = '';
-            }else{
+            } else {
                 width.removeAttribute('data-is_ctrl');
             }
-        })
-        
+        });
+
         /**
          * @see https://www.chromestatus.com/feature/6662647093133312
          */
         window.addEventListener('wheel', (event) => {
-
-            if( ! this.video || ! this.resizeRememberTarget || ! this.video.parentElement.hasAttribute('data-is_resize_click') || event.composedPath()[0] == width || ! this.video.parentElement.matches(':hover')){// || this.video.getRootNode()?.activeElement != width){
+            if (
+                !this.video ||
+                !this.resizeRememberTarget ||
+                !this.video.parentElement.hasAttribute(
+                    'data-is_resize_click',
+                ) ||
+                event.composedPath()[0] == width ||
+                !this.video.parentElement.matches(':hover')
+            ) {
+                // || this.video.getRootNode()?.activeElement != width){
                 return;
             }
-            if(width.hasAttribute('data-is_ctrl')){
-                width.value = Number(width.value) + (event.deltaY * -1)
-            }else{
-                width.value = Number(width.value) + ((event.deltaY * -1) / 100)
+            if (width.hasAttribute('data-is_ctrl')) {
+                width.value = Number(width.value) + event.deltaY * -1;
+            } else {
+                width.value = Number(width.value) + (event.deltaY * -1) / 100;
             }
-            this.oninputEvent(this.video, width, height, this.resizeRememberTarget);
-            
-        })
+            this.oninputEvent(
+                this.video,
+                width,
+                height,
+                this.resizeRememberTarget,
+            );
+        });
     }
 
     /**
-     * 
-     * @param {HTMLVideoElement} video 
+     *
+     * @param {HTMLVideoElement} video
      */
-    addVideoHoverEvent(video, resizeRememberTarget){
+    addVideoHoverEvent(video, resizeRememberTarget) {
         //video.parentElement.onmouseover = () => {
-        let keyDescription = this.#videoBox.querySelector('.video-key-description-container')
+        let keyDescription = this.#videoBox.querySelector(
+            '.video-key-description-container',
+        );
         video.parentElement.onmouseenter = () => {
-            if(! video.src || video.src == '' || video.hasAttribute('data-error')){
+            if (
+                !video.src ||
+                video.src == '' ||
+                video.hasAttribute('data-error')
+            ) {
                 return;
             }
             let root = video.getRootNode();
-            if(root != document){
+            if (root != document) {
                 root.append(this.#style);
-            }else{
+            } else {
                 document.head.append(this.#style);
             }
 
-            if(video.parentElement && (video.parentElement !== this.#videoBox.parentElement || ! this.#videoBox.classList.contains('start'))){
+            if (
+                video.parentElement &&
+                (video.parentElement !== this.#videoBox.parentElement ||
+                    !this.#videoBox.classList.contains('start'))
+            ) {
                 video.parentElement.append(this.#videoBox);
 
-                this.#addRresizeEvent(video, resizeRememberTarget)
-                this.#addButtonIconEvent(video)
-                let appendAwait = setInterval(()=>{
-                    if(this.#videoBox.isConnected && video.readyState == 4 && video.parentElement === this.#videoBox.parentElement && ! this.#videoBox.classList.contains('start')){
+                this.#addRresizeEvent(video, resizeRememberTarget);
+                this.#addButtonIconEvent(video);
+                let appendAwait = setInterval(() => {
+                    if (
+                        this.#videoBox.isConnected &&
+                        video.readyState == 4 &&
+                        video.parentElement === this.#videoBox.parentElement &&
+                        !this.#videoBox.classList.contains('start')
+                    ) {
                         this.#videoBox.classList.add('start');
                         this.video = video;
                         this.resizeRememberTarget = resizeRememberTarget;
                         video.parentElement.onclick = (event) => {
-                            if(! video.src || video.src == '' || event.composedPath()[0] != video || video.hasAttribute('data-error')){
+                            if (
+                                !video.src ||
+                                video.src == '' ||
+                                event.composedPath()[0] != video ||
+                                video.hasAttribute('data-error')
+                            ) {
                                 return;
                             }
-                            video.parentElement.toggleAttribute('data-is_resize_click');
+                            video.parentElement.toggleAttribute(
+                                'data-is_resize_click',
+                            );
                             this.falsh(video.parentElement);
-                            if(video.parentElement.hasAttribute('data-is_resize_click')){
+                            if (
+                                video.parentElement.hasAttribute(
+                                    'data-is_resize_click',
+                                )
+                            ) {
                                 keyDescription.style.display = '';
-                            }else {
+                            } else {
                                 keyDescription.style.display = 'none';
                             }
-                        }
+                        };
                         clearInterval(appendAwait);
                     }
-                }, 50)
+                }, 50);
             }
-        }
+        };
         video.parentElement.onmouseleave = () => {
             this.#videoBox.classList.remove('start');
-            if(video.parentElement.hasAttribute('data-is_resize_click')){
+            if (video.parentElement.hasAttribute('data-is_resize_click')) {
                 keyDescription.style.display = 'none';
                 this.falsh(video.parentElement);
             }
@@ -227,21 +282,26 @@ export default class VideoBox {
                 }
                 
             }*/
-        }
+        };
     }
 
-    falsh(target){
-        return new Promise(resolve => {
+    falsh(target) {
+        return new Promise((resolve) => {
             let flash = document.createElement('div');
             Object.assign(flash.style, {
-                position: 'absolute',top: '0px',left: '0px',
-                width: '100%',height: '100%', background: 'rgba(255, 255, 255, 0.4)',
-                transition: 'opacity 0.2s ease 0s', opacity: 0
-            })
+                position: 'absolute',
+                top: '0px',
+                left: '0px',
+                width: '100%',
+                height: '100%',
+                background: 'rgba(255, 255, 255, 0.4)',
+                transition: 'opacity 0.2s ease 0s',
+                opacity: 0,
+            });
             target.append(flash);
-            let flashAwait = setInterval(()=>{
-                if( ! flash.isConnected){
-                    return; 
+            let flashAwait = setInterval(() => {
+                if (!flash.isConnected) {
+                    return;
                 }
                 clearInterval(flashAwait);
                 flash.style.opacity = 1;
@@ -250,121 +310,132 @@ export default class VideoBox {
                     flash.ontransitionend = () => {
                         flash.remove();
                         resolve();
-                    }
-                }
-            }, 50)
+                    };
+                };
+            }, 50);
         });
     }
 
     /**
-     * 
-     * @param {HTMLVideoElement} video 
+     *
+     * @param {HTMLVideoElement} video
      */
     //리사이즈 있는 버전 주석 처리 20230821
-    #addRresizeEvent(video, resizeRememberTarget){
-        return new Promise(resolve => {
-            let [width, height] = this.#videoBox.querySelectorAll('#video-box-resize-width, #video-box-resize-height');
+    #addRresizeEvent(video, resizeRememberTarget) {
+        return new Promise((resolve) => {
+            let [width, height] = this.#videoBox.querySelectorAll(
+                '#video-box-resize-width, #video-box-resize-height',
+            );
             let rect = video.getBoundingClientRect();
-            width.value = parseInt(rect.width), height.value = parseInt(rect.height);
-            
+            (width.value = parseInt(rect.width)),
+                (height.value = parseInt(rect.height));
+
             width.labels[0].textContent = 'width : ';
             width.labels[1].textContent = '';
 
             this.prevValue = undefined;
 
-            width.oninput = (event) => this.oninputEvent(video, width, height, resizeRememberTarget);
+            width.oninput = (event) =>
+                this.oninputEvent(video, width, height, resizeRememberTarget);
             width.onkeydown = (event) => {
-                if(event.ctrlKey){
+                if (event.ctrlKey) {
                     width.dataset.is_ctrl = '';
-                }else{
+                } else {
                     width.removeAttribute('data-is_ctrl');
                 }
-            }
+            };
             width.onkeyup = (event) => {
                 width.removeAttribute('data-is_ctrl');
-            }
+            };
             width.onblur = () => {
                 width.removeAttribute('data-is_ctrl');
-            }
+            };
             width.onwheel = (event) => {
                 event.preventDefault();
-                if(width.hasAttribute('data-is_ctrl')){
-                    width.value = Number(width.value) + (event.deltaY * -1)
-                }else{
-                    width.value = Number(width.value) + ((event.deltaY * -1) / 100)
+                if (width.hasAttribute('data-is_ctrl')) {
+                    width.value = Number(width.value) + event.deltaY * -1;
+                } else {
+                    width.value =
+                        Number(width.value) + (event.deltaY * -1) / 100;
                 }
 
                 this.oninputEvent(video, width, height, resizeRememberTarget);
-            }
+            };
             //height.oninput = (event) => oninputEvent(event);
-            resolve({width, height});
+            resolve({ width, height });
         });
     }
     oninputEvent(video, width, height, resizeRememberTarget) {
-        if(isNaN(Number(width.value))){
+        if (isNaN(Number(width.value))) {
             width.value = width.value.replace(/\D/g, '');
             return;
-        }else if(Number(width.value) < 50){
+        } else if (Number(width.value) < 50) {
             width.labels[1].textContent = '(min 50)';
             width.value = 50;
-        }else{
+        } else {
             width.labels[1].textContent = '';
         }
-        let sizeName = width.id.includes('width') ? 'width': 'height';
+        let sizeName = width.id.includes('width') ? 'width' : 'height';
         video[sizeName] = width.value;
 
         let videoRect = video.getBoundingClientRect();
 
-        if(this.prevValue && parseInt(this.prevValue) == parseInt(videoRect.width)){
+        if (
+            this.prevValue &&
+            parseInt(this.prevValue) == parseInt(videoRect.width)
+        ) {
             width.value = parseInt(this.prevValue);
-            width.labels[1].textContent = `(max ${parseInt(this.prevValue)}) : `
+            width.labels[1].textContent = `(max ${parseInt(this.prevValue)}) : `;
         }
-        this.prevValue = videoRect.width
+        this.prevValue = videoRect.width;
 
         resizeRememberTarget.dataset.width = width.value;
     }
-    #addButtonIconEvent(video){
-        return new Promise(resolve => {
-            let [download, newWindow] = [...this.#videoBox.querySelectorAll('.download-css-gg-push-down, .new-window-css-gg-expand')]
-                .map(e=>e.parentElement)
-            download.href = video.src, newWindow.href = video.src;
+    #addButtonIconEvent(video) {
+        return new Promise((resolve) => {
+            let [download, newWindow] = [
+                ...this.#videoBox.querySelectorAll(
+                    '.download-css-gg-push-down, .new-window-css-gg-expand',
+                ),
+            ].map((e) => e.parentElement);
+            (download.href = video.src), (newWindow.href = video.src);
             download.download = video.dataset.video_name;
             newWindow.target = '_blank';
-            resolve({download, newWindow});
-        })
+            resolve({ download, newWindow });
+        });
     }
 
-    get videoBox(){
+    get videoBox() {
         return this.#videoBox;
     }
 
-	get style(){
-		return this.#style;
-	}
+    get style() {
+        return this.#style;
+    }
 
-	set style(style){
+    set style(style) {
         this.#style.textContent = style;
     }
 
-	set insertStyle(style){
-		this.#style.sheet.insertRule(style);
-	}
-    
-    set video(video){
-        this.#video = video; 
+    set insertStyle(style) {
+        this.#style.sheet.insertRule(style);
     }
 
-    get video(){
+    set video(video) {
+        this.#video = video;
+    }
+
+    get video() {
         return this.#video;
     }
-    set resizeRememberTarget(resizeRememberTarget){
+    set resizeRememberTarget(resizeRememberTarget) {
         this.#resizeRememberTarget = resizeRememberTarget;
     }
-    get resizeRememberTarget(){
+    get resizeRememberTarget() {
         return this.#resizeRememberTarget;
     }
 
-    createStyle(){
+    createStyle() {
         this.#style.textContent = `
             .video-box-wrap{
                 position: absolute;
@@ -459,8 +530,7 @@ export default class VideoBox {
                 white-space: nowrap;
                 height: fit-content;
             }
-        `
+        `;
         return this.#style;
     }
-
 }

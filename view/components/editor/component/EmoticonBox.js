@@ -1,10 +1,14 @@
-import { emoticon, groupKind, subgroupKind, defaultEmoticon } from "../module/emoticon";
+import {
+    emoticon,
+    groupKind,
+    subgroupKind,
+    defaultEmoticon,
+} from '../module/emoticon.js';
 
-export default class EmoticonBox{
-
+export default class EmoticonBox {
     #style = Object.assign(document.createElement('style'), {
-        id: 'free-will-editor-emoticon-box'
-    })
+        id: 'free-will-editor-emoticon-box',
+    });
 
     #emoticonBox = Object.assign(document.createElement('div'), {
         className: 'emoticon-box-wrap',
@@ -27,158 +31,199 @@ export default class EmoticonBox{
                 <ul class="emoticon-box-emoticon-list" data-bind_name="emoticonList">
                 </ul>
             </div>
-        `
-    })
-    
-    #elementMap = (()=>{
-		return 	[...this.#emoticonBox.querySelectorAll('[data-bind_name]')].reduce((total, element) => {
+        `,
+    });
+
+    #elementMap = (() => {
+        return [
+            ...this.#emoticonBox.querySelectorAll('[data-bind_name]'),
+        ].reduce((total, element) => {
             total[element.dataset.bind_name] = element;
-			return total;
-		}, {})
-	})();
+            return total;
+        }, {});
+    })();
 
-    #applyCallback = () => {}
+    #applyCallback = () => {};
 
-    constructor(){
+    constructor() {
         let style = document.querySelector(`#${this.#style.id}`);
-        if(! style){
+        if (!style) {
             document.head.append(this.createStyle());
-        }else{
+        } else {
             this.#style = style;
         }
-        new Promise(resolve => {
-
+        new Promise((resolve) => {
             resolve();
-        })
+        });
     }
 
-    createGroupList(){
-        return new Promise(resolve => {
-            let liList = ['All',...groupKind].map((e, i)=>{
-                let li = Object.assign(document.createElement('li'),{
-                    className: 'emoticon-group-item'
+    createGroupList() {
+        return new Promise((resolve) => {
+            let liList = ['All', ...groupKind].map((e, i) => {
+                let li = Object.assign(document.createElement('li'), {
+                    className: 'emoticon-group-item',
                 });
                 let isAll = e == 'All';
                 let input = Object.assign(document.createElement('input'), {
                     className: 'emoticon-group-input',
-                    name : 'emoticon-group-input',
+                    name: 'emoticon-group-input',
                     id: `emoticon-group-${i}`,
                     type: 'radio',
                     checked: isAll,
-                    onchange : (event) => {
-                        let isPrevChecked = this.#elementMap.emoticonSubgroupList.querySelector(`[data-subgroup_name]:not([data-subgroup_name="All"]) .emoticon-subgroup-input:checked`)
-                        let subgroupTitle = isPrevChecked?.closest('[data-subgroup_name]').dataset.subgroup_name;
+                    onchange: (event) => {
+                        let isPrevChecked =
+                            this.#elementMap.emoticonSubgroupList.querySelector(
+                                `[data-subgroup_name]:not([data-subgroup_name="All"]) .emoticon-subgroup-input:checked`,
+                            );
+                        let subgroupTitle = isPrevChecked?.closest(
+                            '[data-subgroup_name]',
+                        ).dataset.subgroup_name;
                         this.createSubGroupList(isAll ? undefined : e);
-                        if( ! subgroupTitle){
-                            this.createEmoticonList(isAll ? undefined : e, undefined);
-                        }else{
-                            let [groupTitle] = Object.entries(subgroupKind).find(( [k,v] ) => v.some(e=>e==subgroupTitle))
+                        if (!subgroupTitle) {
+                            this.createEmoticonList(
+                                isAll ? undefined : e,
+                                undefined,
+                            );
+                        } else {
+                            let [groupTitle] = Object.entries(
+                                subgroupKind,
+                            ).find(([k, v]) =>
+                                v.some((e) => e == subgroupTitle),
+                            );
                             this.createEmoticonList(groupTitle, subgroupTitle);
                         }
-                        
-                    }
+                    },
                 });
                 let label = Object.assign(document.createElement('label'), {
                     for: `emoticon-group-${i}`,
-                    textContent: e
-                })
-                label.prepend(input)
+                    textContent: e,
+                });
+                label.prepend(input);
                 li.append(label);
                 return li;
             });
             this.#elementMap.emoticonGroupList.replaceChildren(...liList);
             resolve(liList);
-        })
+        });
     }
 
-    createSubGroupList(groupTitle){
-        return new Promise(resolve=>{
-            let targetGroup = subgroupKind[groupTitle] || Object.values(subgroupKind).flatMap(e=>e)
-            let liList = ['All', ...targetGroup].map((e, i)=>{
+    createSubGroupList(groupTitle) {
+        return new Promise((resolve) => {
+            let targetGroup =
+                subgroupKind[groupTitle] ||
+                Object.values(subgroupKind).flatMap((e) => e);
+            let liList = ['All', ...targetGroup].map((e, i) => {
                 let isAll = e == 'All';
-                let isPrevChecked = this.#elementMap.emoticonSubgroupList.querySelector(`[data-subgroup_name="${e}"] .emoticon-subgroup-input:checked`) != undefined;
-                
-                let li = Object.assign(document.createElement('li'),{
-                    className: 'emoticon-subgroup-item'
+                let isPrevChecked =
+                    this.#elementMap.emoticonSubgroupList.querySelector(
+                        `[data-subgroup_name="${e}"] .emoticon-subgroup-input:checked`,
+                    ) != undefined;
+
+                let li = Object.assign(document.createElement('li'), {
+                    className: 'emoticon-subgroup-item',
                 });
                 let input = Object.assign(document.createElement('input'), {
                     className: 'emoticon-subgroup-input',
-                    name : 'emoticon-subgroup-input',
+                    name: 'emoticon-subgroup-input',
                     id: `emoticon-subgroup-${i}`,
                     type: 'radio',
                     checked: isAll || isPrevChecked,
-                    onchange : (event) => this.createEmoticonList(groupTitle, isAll ? undefined : e)
+                    onchange: (event) =>
+                        this.createEmoticonList(
+                            groupTitle,
+                            isAll ? undefined : e,
+                        ),
                 });
                 let label = Object.assign(document.createElement('label'), {
                     for: `emoticon-subgroup-${i}`,
-                    textContent: e
-                })
+                    textContent: e,
+                });
                 label.prepend(input);
                 li.append(label);
                 li.dataset.subgroup_name = e;
-                if(isAll || isPrevChecked){
-                    let appendAwait = setInterval(()=>{
-                        if( ! li.isConnected){
+                if (isAll || isPrevChecked) {
+                    let appendAwait = setInterval(() => {
+                        if (!li.isConnected) {
                             return;
                         }
                         clearInterval(appendAwait);
-                        li.scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
-                        this.createEmoticonList(groupTitle, isAll ? undefined : e)
-                    },50)
-                    
+                        li.scrollIntoView({
+                            behavior: 'instant',
+                            block: 'start',
+                            inline: 'nearest',
+                        });
+                        this.createEmoticonList(
+                            groupTitle,
+                            isAll ? undefined : e,
+                        );
+                    }, 50);
                 }
                 return li;
             });
             this.#elementMap.emoticonSubgroupList.replaceChildren(...liList);
             resolve(liList);
-        })
+        });
     }
 
-    createEmoticonList(groupTitle, subgroupTitle, toneType){
-        return new Promise(resolve => {
+    createEmoticonList(groupTitle, subgroupTitle, toneType) {
+        return new Promise((resolve) => {
             let targetGroup;
-            if( ! groupTitle && subgroupTitle){
-                targetGroup = Object.values(emoticon).find(e=> e[subgroupTitle])?.[subgroupTitle] || [];
-            }else if( groupTitle && ! subgroupTitle){
-                targetGroup = Object.values(emoticon[groupTitle]).flatMap(e=>e)
-            }else if( ! groupTitle && ! subgroupTitle){
-                targetGroup = Object.values(emoticon).flatMap(e=> Object.values(e).flatMap(ee=>ee));
-            }else{
+            if (!groupTitle && subgroupTitle) {
+                targetGroup =
+                    Object.values(emoticon).find((e) => e[subgroupTitle])?.[
+                        subgroupTitle
+                    ] || [];
+            } else if (groupTitle && !subgroupTitle) {
+                targetGroup = Object.values(emoticon[groupTitle]).flatMap(
+                    (e) => e,
+                );
+            } else if (!groupTitle && !subgroupTitle) {
+                targetGroup = Object.values(emoticon).flatMap((e) =>
+                    Object.values(e).flatMap((ee) => ee),
+                );
+            } else {
                 targetGroup = emoticon[groupTitle][subgroupTitle];
             }
             let datalistOptions = [];
-            let liList = targetGroup.map(e=>{
-                if( ! toneType && e.toneType.length != 0){
-                    return;
-                }
-                let li = Object.assign(document.createElement('li'),{
-                    className: 'emoticon-item'
-                });
-                let button = Object.assign(document.createElement('li'), {
-                    textContent: e.emoticon,
-                    onclick: (event) => {
-                        this.#applyCallback(e);
-                    },
-                    title: e.description
+            let liList = targetGroup
+                .map((e) => {
+                    if (!toneType && e.toneType.length != 0) {
+                        return;
+                    }
+                    let li = Object.assign(document.createElement('li'), {
+                        className: 'emoticon-item',
+                    });
+                    let button = Object.assign(document.createElement('li'), {
+                        textContent: e.emoticon,
+                        onclick: (event) => {
+                            this.#applyCallback(e);
+                        },
+                        title: e.description,
+                    });
+                    li.append(button);
+                    let option = Object.assign(
+                        document.createElement('option'),
+                        {
+                            value: e.emoticon,
+                            textContent: e.description,
+                        },
+                    );
+                    datalistOptions.push(option);
+                    return li;
                 })
-                li.append(button);
-                let option = Object.assign(document.createElement('option'),{
-                    value: e.emoticon,
-                    textContent: e.description
-                })
-                datalistOptions.push(option);
-                return li;
-            }).filter(e=>e);
+                .filter((e) => e);
             this.#elementMap.emoticonList.replaceChildren(...liList);
-            this.#elementMap.emoticonSearchList.replaceChildren(...datalistOptions);
+            this.#elementMap.emoticonSearchList.replaceChildren(
+                ...datalistOptions,
+            );
             resolve(liList);
         });
     }
 
-    open(openTarget){
-		if(openTarget){
+    open(openTarget) {
+        if (openTarget) {
             openTarget.append(this.#emoticonBox);
-        }else{
+        } else {
             document.body.append(this.#emoticonBox);
         }
         this.#elementMap.emoticonGroupList.replaceChildren();
@@ -189,23 +234,23 @@ export default class EmoticonBox{
         this.#elementMap.emoticonSearch.value = '';
     }
 
-    close(){
+    close() {
         this.#emoticonBox.remove();
     }
 
-    set applyCallback(applyCallback){
+    set applyCallback(applyCallback) {
         this.#applyCallback = applyCallback;
     }
 
-    get applyCallback(){
+    get applyCallback() {
         return this.#applyCallback;
     }
 
-    get emoticonBox(){
+    get emoticonBox() {
         return this.#emoticonBox;
     }
 
-    createStyle(){
+    createStyle() {
         this.#style.textContent = `
             .emoticon-box-wrap{
                 position: fixed;
@@ -318,7 +363,7 @@ export default class EmoticonBox{
             .emoticon-box-wrap .emoticon-box-emoticon-container .emoticon-box-emoticon-list .emoticon-item:hover{
                 background-color: #6a6a6a;
             }
-        `
+        `;
         return this.#style;
     }
 }

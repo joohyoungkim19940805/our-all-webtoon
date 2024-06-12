@@ -1,7 +1,14 @@
-const path = require('path');
-const StylelintPlugin = require('stylelint-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+import path from 'node:path';
+import StylelintPlugin from 'stylelint-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+// const path = require('path');
+// const StylelintPlugin = require('stylelint-webpack-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 /**
  * development
@@ -10,7 +17,8 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
  * mdoe : production
  * devtool 제거
  */
-module.exports = {
+//module.exports = {
+export default {
     entry: {
         pageRenderer: './view/page/page.tsx',
         dashboardRenderer: './view/page/dashboard.tsx',

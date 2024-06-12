@@ -1,96 +1,111 @@
-import FreedomInterface from "../module/FreedomInterface"
-import ToolHandler from "../module/ToolHandler"
-import Palette from "../component/Palette"
+import FreedomInterface from '../module/FreedomInterface.js';
+import ToolHandler from '../module/ToolHandler.js';
+import Palette from '../component/Palette.js';
 
 export default class Background extends FreedomInterface {
-	static toolHandler = new ToolHandler(this);
+    static toolHandler = new ToolHandler(this);
 
-	static #defaultStyle = Object.assign(document.createElement('style'), {
-		id: 'free-will-editor-background-style'
-	});
+    static #defaultStyle = Object.assign(document.createElement('style'), {
+        id: 'free-will-editor-background-style',
+    });
 
-	static palette;
+    static palette;
 
-	static isDefaultStyle = true;
+    static isDefaultStyle = true;
 
-	static{
+    static {
+        this.toolHandler.extendsElement = '';
+        this.toolHandler.defaultClass = 'free-will-editor-background';
 
-		this.toolHandler.extendsElement = '';
-		this.toolHandler.defaultClass = 'free-will-editor-background';
-		
-		this.toolHandler.toolButton = Object.assign(document.createElement('button'), {
-            textContent: 'G',
-            className: `${this.#defaultStyle.id}-button`,
-			title: 'Background Color'
-        });
+        this.toolHandler.toolButton = Object.assign(
+            document.createElement('button'),
+            {
+                textContent: 'G',
+                className: `${this.#defaultStyle.id}-button`,
+                title: 'Background Color',
+            },
+        );
 
-		this.palette = new Palette({
-            openPositionMode: Palette.OpenPositionMode.BUTTON, 
+        this.palette = new Palette({
+            openPositionMode: Palette.OpenPositionMode.BUTTON,
             openPosition: this.toolHandler.toolButton,
-			exampleMode: Palette.ExampleMode.TEXT_BACKGROUND_COLOR
+            exampleMode: Palette.ExampleMode.TEXT_BACKGROUND_COLOR,
         });
 
-		this.toolHandler.toolButton.onclick = ()=>{
-			if(this.toolHandler.toolButton.dataset.tool_status == 'active' || this.toolHandler.toolButton.dataset.tool_status == 'connected'){
-				this.toolHandler.toolButton.dataset.tool_status = 'cancel';
-			}else if(this.palette.isConnected){
-				this.palette.close();
-			}else{
-				this.palette.open();
-			}
-		}
+        this.toolHandler.toolButton.onclick = () => {
+            if (
+                this.toolHandler.toolButton.dataset.tool_status == 'active' ||
+                this.toolHandler.toolButton.dataset.tool_status == 'connected'
+            ) {
+                this.toolHandler.toolButton.dataset.tool_status = 'cancel';
+            } else if (this.palette.isConnected) {
+                this.palette.close();
+            } else {
+                this.palette.open();
+            }
+        };
 
-		this.palette.applyCallback = (event) => {
-			this.toolHandler.toolButton.dataset.tool_status = 'active'
-			this.palette.close();
-		}
+        this.palette.applyCallback = (event) => {
+            this.toolHandler.toolButton.dataset.tool_status = 'active';
+            this.palette.close();
+        };
 
-		super.outClickElementListener(this.palette.palette, ({oldEvent, newEvent, isMouseOut})=>{
-			if(isMouseOut && this.palette.palette.isConnected && ! super.isMouseInnerElement(this.toolHandler.toolButton)){
-				this.palette.close();
-			}
-		})
+        super.outClickElementListener(
+            this.palette.palette,
+            ({ oldEvent, newEvent, isMouseOut }) => {
+                if (
+                    isMouseOut &&
+                    this.palette.palette.isConnected &&
+                    !super.isMouseInnerElement(this.toolHandler.toolButton)
+                ) {
+                    this.palette.close();
+                }
+            },
+        );
+    }
 
-	}
-
-	static createDefaultStyle(){
-		this.#defaultStyle.textContent = `
+    static createDefaultStyle() {
+        this.#defaultStyle.textContent = `
 			.${this.#defaultStyle.id}-button{
 				font-size: 0.8rem;
 			}
-		`
-		let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
-        if(! defaultStyle){
+		`;
+        let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
+        if (!defaultStyle) {
             document.head.append(this.#defaultStyle);
-        }else{
+        } else {
             this.#defaultStyle?.remove();
             this.#defaultStyle = defaultStyle;
             document.head.append(this.#defaultStyle);
         }
-		return this.#defaultStyle;
-	}
-
-	static get defaultStyle(){
         return this.#defaultStyle;
     }
 
-    static set defaultStyle(style){
+    static get defaultStyle() {
+        return this.#defaultStyle;
+    }
+
+    static set defaultStyle(style) {
         this.#defaultStyle.textContent = style;
     }
 
-	static set insertDefaultStyle(style){
-		this.#defaultStyle.sheet.insertRule(style);
-	}
+    static set insertDefaultStyle(style) {
+        this.#defaultStyle.sheet.insertRule(style);
+    }
 
-	constructor(dataset){
-		super(Background, dataset);
+    constructor(dataset) {
+        super(Background, dataset);
 
-		if( ! dataset && Object.entries(this.dataset).length == 0){
-			this.dataset.rgba = Background.palette.r + ',' + Background.palette.g + ',' + Background.palette.b + ',' + Background.palette.a;
-		}
-		this.style.backgroundColor = `rgba(${this.dataset.rgba})`;
-	}
-
-
-
+        if (!dataset && Object.entries(this.dataset).length == 0) {
+            this.dataset.rgba =
+                Background.palette.r +
+                ',' +
+                Background.palette.g +
+                ',' +
+                Background.palette.b +
+                ',' +
+                Background.palette.a;
+        }
+        this.style.backgroundColor = `rgba(${this.dataset.rgba})`;
+    }
 }

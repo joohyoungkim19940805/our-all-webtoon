@@ -1,5 +1,5 @@
-import ToolHandler from "../module/ToolHandler"
-import FreedomInterface from "../module/FreedomInterface"
+import ToolHandler from "../module/ToolHandler.js"
+import FreedomInterface from "../module/FreedomInterface.js"
 export default class Line {
 	#isLoaded = false;
 	#prevParent;

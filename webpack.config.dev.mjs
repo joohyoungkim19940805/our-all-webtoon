@@ -1,10 +1,17 @@
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
+import path from 'node:path';
+import TerserPlugin from 'terser-webpack-plugin';
+import { merge } from 'webpack-merge';
+import baseConfig from './webpack.config.base.mjs'; // Assuming base config is also ESM
+import { fileURLToPath } from 'url';
 
-const { merge } = require('webpack-merge');
-const baseConfig = require('./webpack.config.base');
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+// const path = require('path');
+// const TerserPlugin = require('terser-webpack-plugin');
+// const { merge } = require('webpack-merge');
+// const baseConfig = require('./webpack.config.base.mjs');
 
-module.exports = merge(baseConfig, {
+//module.exports = merge(baseConfig, {
+export default merge(baseConfig, {
     mode: 'development',
     devtool: 'source-map',
     devServer: {

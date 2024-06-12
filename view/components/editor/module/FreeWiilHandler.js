@@ -1,4 +1,4 @@
-import Line from '../component/Line';
+import Line from '../component/Line.js';
 
 export default class FreeWiilHandler extends HTMLElement {
     static #defaultStyle = Object.assign(document.createElement('style'), {

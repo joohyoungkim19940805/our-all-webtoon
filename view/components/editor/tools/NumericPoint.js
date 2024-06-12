@@ -1,37 +1,43 @@
-import FreedomInterface from "../module/FreedomInterface"
-import ToolHandler from "../module/ToolHandler"
+import FreedomInterface from '../module/FreedomInterface.js';
+import ToolHandler from '../module/ToolHandler.js';
 
 export default class NumericPoint extends FreedomInterface {
-	//static extendsElement = 'strong';
-	//static defaultClass = 'line';
-	static toolHandler = new ToolHandler(this);
-	
-	static #defaultStyle = Object.assign(document.createElement('style'), {
-		id: 'free-will-editor-numeric-point-style'
-	});
-	static isDefaultStyle = true;
-	static{
-		this.toolHandler.extendsElement = '';
-		this.toolHandler.defaultClass = 'free-will-numeric-point';
-		this.toolHandler.isInline = false;
+    //static extendsElement = 'strong';
+    //static defaultClass = 'line';
+    static toolHandler = new ToolHandler(this);
 
-		this.toolHandler.toolButton = Object.assign(document.createElement('button'), {
-            textContent: '1.',
-            className: `${this.#defaultStyle.id}-button`,
-			title: 'Numeric Point'
-        });
+    static #defaultStyle = Object.assign(document.createElement('style'), {
+        id: 'free-will-editor-numeric-point-style',
+    });
+    static isDefaultStyle = true;
+    static {
+        this.toolHandler.extendsElement = '';
+        this.toolHandler.defaultClass = 'free-will-numeric-point';
+        this.toolHandler.isInline = false;
 
-		this.toolHandler.toolButton.onclick = ()=>{
-			if(this.toolHandler.toolButton.dataset.tool_status == 'active' || this.toolHandler.toolButton.dataset.tool_status == 'connected'){
-				this.toolHandler.toolButton.dataset.tool_status = 'cancel';
-			}else{
-				this.toolHandler.toolButton.dataset.tool_status = 'active';
-			}
-		}
-	}
+        this.toolHandler.toolButton = Object.assign(
+            document.createElement('button'),
+            {
+                textContent: '1.',
+                className: `${this.#defaultStyle.id}-button`,
+                title: 'Numeric Point',
+            },
+        );
+
+        this.toolHandler.toolButton.onclick = () => {
+            if (
+                this.toolHandler.toolButton.dataset.tool_status == 'active' ||
+                this.toolHandler.toolButton.dataset.tool_status == 'connected'
+            ) {
+                this.toolHandler.toolButton.dataset.tool_status = 'cancel';
+            } else {
+                this.toolHandler.toolButton.dataset.tool_status = 'active';
+            }
+        };
+    }
     //list-style-type: disc;
-	static createDefaultStyle(){
-		this.#defaultStyle.textContent = `
+    static createDefaultStyle() {
+        this.#defaultStyle.textContent = `
 			.${this.#defaultStyle.id}-button{
 				font-size: 0.8rem;
 			}
@@ -45,60 +51,67 @@ export default class NumericPoint extends FreedomInterface {
 			.${this.toolHandler.defaultClass} > *:before{
 				content: attr(data-order)
 			}
-		`
-		let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
-        if(! defaultStyle){
+		`;
+        let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
+        if (!defaultStyle) {
             document.head.append(this.#defaultStyle);
-        }else{
+        } else {
             this.#defaultStyle?.remove();
             this.#defaultStyle = defaultStyle;
             document.head.append(this.#defaultStyle);
         }
-		return this.#defaultStyle;
-	}
-	
-	static get defaultStyle(){
         return this.#defaultStyle;
     }
 
-    static set defaultStyle(style){
+    static get defaultStyle() {
+        return this.#defaultStyle;
+    }
+
+    static set defaultStyle(style) {
         this.#defaultStyle.textContent = style;
     }
 
-	static set insertDefaultStyle(style){
-		this.#defaultStyle.sheet.insertRule(style);
-	}
+    static set insertDefaultStyle(style) {
+        this.#defaultStyle.sheet.insertRule(style);
+    }
 
-	parentLine;
-	
-	constructor(dataset){
-		super(NumericPoint, dataset, {deleteOption : FreedomInterface.DeleteOption.EMPTY_CONTENT_IS_NOT_DELETE});
-		super.connectedChildAfterCallback = (list) => {
-			new Promise(r=>{
-				[...this.children].forEach((e,i)=>{
-					e.dataset.order = (i + 1) + '. ';
-				});
-				r();
-			});
-			let lastItem = list.at(-1);
-			if(lastItem.nodeType == Node.ELEMENT_NODE){
-				let inter = setInterval(()=>{
-					if(lastItem.isConnected){
-						clearInterval(inter);
-						window.getSelection().setPosition(lastItem, lastItem.childNodes.length)
-					}
-				}, 50);
-			}else if(lastItem.nodeType == Node.TEXT_NODE){
-				let inter = setInterval(()=>{
-					if(lastItem.isConnected){
-						clearInterval(inter);
-						window.getSelection().setPosition(lastItem, lastItem.length)
-					}
-				}, 50);
-			}
-		}
+    parentLine;
 
-		/*
+    constructor(dataset) {
+        super(NumericPoint, dataset, {
+            deleteOption:
+                FreedomInterface.DeleteOption.EMPTY_CONTENT_IS_NOT_DELETE,
+        });
+        super.connectedChildAfterCallback = (list) => {
+            new Promise((r) => {
+                [...this.children].forEach((e, i) => {
+                    e.dataset.order = i + 1 + '. ';
+                });
+                r();
+            });
+            let lastItem = list.at(-1);
+            if (lastItem.nodeType == Node.ELEMENT_NODE) {
+                let inter = setInterval(() => {
+                    if (lastItem.isConnected) {
+                        clearInterval(inter);
+                        window
+                            .getSelection()
+                            .setPosition(lastItem, lastItem.childNodes.length);
+                    }
+                }, 50);
+            } else if (lastItem.nodeType == Node.TEXT_NODE) {
+                let inter = setInterval(() => {
+                    if (lastItem.isConnected) {
+                        clearInterval(inter);
+                        window
+                            .getSelection()
+                            .setPosition(lastItem, lastItem.length);
+                    }
+                }, 50);
+            }
+        };
+
+        /*
 		super.connectedAfterOnlyOneCallback = () => {
 			let nextLine = this.parentEditor.getNextLine(this.parentLine);
 			if( ! nextLine){
@@ -115,6 +128,5 @@ export default class NumericPoint extends FreedomInterface {
 			}
         }
 		*/
-	}
-
+    }
 }

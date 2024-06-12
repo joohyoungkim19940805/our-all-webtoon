@@ -1,26 +1,26 @@
-import Line from './component/Line';
-import FreeWiilHandler from './module/FreeWiilHandler';
-import UndoManager from './fragment/UndoManager';
+import Line from './component/Line.js';
+import FreeWiilHandler from './module/FreeWiilHandler.js';
+import UndoManager from './fragment/UndoManager.js';
 
-import Strong from './tools/Strong';
-import Color from './tools/Color';
-import Background from './tools/Background';
-import Strikethrough from './tools/Strikethrough';
-import Underline from './tools/Underline';
-import FontFamily from './tools/FontFamily';
-import Quote from './tools/Quote';
-import NumericPoint from './tools/NumericPoint';
-import BulletPoint from './tools/BulletPoint';
-import Sort from './tools/Sort';
-import FontSize from './tools/FontSize';
-import Italic from './tools/Italic';
-import Image from './tools/Image';
-import Video from './tools/Video';
-import Resources from './tools/Resources';
-import Code from './tools/Code';
-import Hyperlink from './tools/Hyperlink';
+import Strong from './tools/Strong.js';
+import Color from './tools/Color.js';
+import Background from './tools/Background.js';
+import Strikethrough from './tools/Strikethrough.js';
+import Underline from './tools/Underline.js';
+import FontFamily from './tools/FontFamily.js';
+import Quote from './tools/Quote.js';
+import NumericPoint from './tools/NumericPoint.js';
+import BulletPoint from './tools/BulletPoint.js';
+import Sort from './tools/Sort.js';
+import FontSize from './tools/FontSize.js';
+import Italic from './tools/Italic.js';
+import Image from './tools/Image.js';
+import Video from './tools/Video.js';
+import Resources from './tools/Resources.js';
+import Code from './tools/Code.js';
+import Hyperlink from './tools/Hyperlink.js';
 
-import FreedomInterface from './module/FreedomInterface';
+import FreedomInterface from './module/FreedomInterface.js';
 
 export default class FreeWillEditor extends FreeWiilHandler {
     static componentsMap = {};

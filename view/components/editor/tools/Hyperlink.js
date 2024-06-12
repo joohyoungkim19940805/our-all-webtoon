@@ -1,24 +1,25 @@
-import FreedomInterface from "../module/FreedomInterface"
-import ToolHandler from "../module/ToolHandler"
-import HyperlinkBox from "../component/HyperlinkBox";
+import FreedomInterface from '../module/FreedomInterface.js';
+import ToolHandler from '../module/ToolHandler.js';
+import HyperlinkBox from '../component/HyperlinkBox.js';
 
 export default class Hyperlink extends FreedomInterface {
-	static toolHandler = new ToolHandler(this);
+    static toolHandler = new ToolHandler(this);
 
-	static #defaultStyle = Object.assign(document.createElement('style'), {
-		id: 'free-will-editor-link-style'
-	});
+    static #defaultStyle = Object.assign(document.createElement('style'), {
+        id: 'free-will-editor-link-style',
+    });
 
     static hyperlinkBox;
-	static isDefaultStyle = true;
-	static{
+    static isDefaultStyle = true;
+    static {
+        this.toolHandler.extendsElement = '';
+        this.toolHandler.defaultClass = 'free-will-editor-link';
 
-		this.toolHandler.extendsElement = '';
-		this.toolHandler.defaultClass = 'free-will-editor-link';
-		
-		this.toolHandler.toolButton = Object.assign(document.createElement('button'), {
-            className: `${this.#defaultStyle.id}-button`,
-			innerHTML: `
+        this.toolHandler.toolButton = Object.assign(
+            document.createElement('button'),
+            {
+                className: `${this.#defaultStyle.id}-button`,
+                innerHTML: `
 				<svg class="${this.#defaultStyle.id} css-gg-link-icon"
 				width="0.9rem"
 				height="0.9rem"
@@ -40,50 +41,68 @@ export default class Hyperlink extends FreedomInterface {
 					/>
 				</svg>
 			`,
-			title: 'Hyperlink'
-        });
-		
-		this.hyperlinkBox = new HyperlinkBox();
-		
-		this.toolHandler.toolButton.onclick = ()=>{
-			if(this.toolHandler.toolButton.dataset.tool_status == 'active' || this.toolHandler.toolButton.dataset.tool_status == 'connected'){
-				this.toolHandler.toolButton.dataset.tool_status = 'cancel';
-			}else if(this.hyperlinkBox.hyperlinkBox.isConnected){
-				this.hyperlinkBox.close();
-			}else{
-				this.hyperlinkBox.open().then(()=>{
-					super.processingElementPosition(this.hyperlinkBox.hyperlinkBox, this.toolHandler.toolButton);
-				});
-			}
-		}
+                title: 'Hyperlink',
+            },
+        );
 
-		document.addEventListener("scroll", () => {
-			if(this.hyperlinkBox.hyperlinkBox.isConnected){
-				super.processingElementPosition(this.hyperlinkBox.hyperlinkBox, this.toolHandler.toolButton);
-			}
-		});
-        window.addEventListener('resize', (event) => {
-            if(this.hyperlinkBox.hyperlinkBox.isConnected){
-				super.processingElementPosition(this.hyperlinkBox.hyperlinkBox, this.toolHandler.toolButton);
+        this.hyperlinkBox = new HyperlinkBox();
+
+        this.toolHandler.toolButton.onclick = () => {
+            if (
+                this.toolHandler.toolButton.dataset.tool_status == 'active' ||
+                this.toolHandler.toolButton.dataset.tool_status == 'connected'
+            ) {
+                this.toolHandler.toolButton.dataset.tool_status = 'cancel';
+            } else if (this.hyperlinkBox.hyperlinkBox.isConnected) {
+                this.hyperlinkBox.close();
+            } else {
+                this.hyperlinkBox.open().then(() => {
+                    super.processingElementPosition(
+                        this.hyperlinkBox.hyperlinkBox,
+                        this.toolHandler.toolButton,
+                    );
+                });
             }
-		})
+        };
 
-		this.hyperlinkBox.applyCallback = (event) => {
-			this.toolHandler.toolButton.dataset.tool_status = 'active'
-			this.hyperlinkBox.close();
-		}
+        document.addEventListener('scroll', () => {
+            if (this.hyperlinkBox.hyperlinkBox.isConnected) {
+                super.processingElementPosition(
+                    this.hyperlinkBox.hyperlinkBox,
+                    this.toolHandler.toolButton,
+                );
+            }
+        });
+        window.addEventListener('resize', (event) => {
+            if (this.hyperlinkBox.hyperlinkBox.isConnected) {
+                super.processingElementPosition(
+                    this.hyperlinkBox.hyperlinkBox,
+                    this.toolHandler.toolButton,
+                );
+            }
+        });
 
-		super.outClickElementListener(this.hyperlinkBox.hyperlinkBox, ({oldEvent, newEvent, isMouseOut})=>{
-			if(isMouseOut && this.hyperlinkBox.hyperlinkBox.isConnected && ! super.isMouseInnerElement(this.toolHandler.toolButton)){
-				this.hyperlinkBox.close();
-			}
-		});
-		
+        this.hyperlinkBox.applyCallback = (event) => {
+            this.toolHandler.toolButton.dataset.tool_status = 'active';
+            this.hyperlinkBox.close();
+        };
 
-	}
+        super.outClickElementListener(
+            this.hyperlinkBox.hyperlinkBox,
+            ({ oldEvent, newEvent, isMouseOut }) => {
+                if (
+                    isMouseOut &&
+                    this.hyperlinkBox.hyperlinkBox.isConnected &&
+                    !super.isMouseInnerElement(this.toolHandler.toolButton)
+                ) {
+                    this.hyperlinkBox.close();
+                }
+            },
+        );
+    }
 
-	static createDefaultStyle(){
-		this.#defaultStyle.textContent = `
+    static createDefaultStyle() {
+        this.#defaultStyle.textContent = `
 			.${this.#defaultStyle.id}-button{
 			}
 			.${this.#defaultStyle.id}.css-gg-link-icon{
@@ -118,35 +137,35 @@ export default class Hyperlink extends FreedomInterface {
 				width: 50vw;
 				height: 50vh;
 			}
-		`
-		let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
-        if(! defaultStyle){
+		`;
+        let defaultStyle = document.querySelector(`#${this.#defaultStyle.id}`);
+        if (!defaultStyle) {
             document.head.append(this.#defaultStyle);
-        }else{
+        } else {
             this.#defaultStyle?.remove();
             this.#defaultStyle = defaultStyle;
             document.head.append(this.#defaultStyle);
         }
-		return this.#defaultStyle;
-	}
-
-	static get defaultStyle(){
         return this.#defaultStyle;
     }
 
-    static set defaultStyle(style){
+    static get defaultStyle() {
+        return this.#defaultStyle;
+    }
+
+    static set defaultStyle(style) {
         this.#defaultStyle.textContent = style;
     }
 
-	static set insertDefaultStyle(style){
-		this.#defaultStyle.sheet.insertRule(style);
-	}
+    static set insertDefaultStyle(style) {
+        this.#defaultStyle.sheet.insertRule(style);
+    }
 
-	#aTag = Object.assign(document.createElement('a'), {
-		target: '_blank'
-	});
+    #aTag = Object.assign(document.createElement('a'), {
+        target: '_blank',
+    });
 
-	/*
+    /*
 	#previewUrl = Object.assign(document.createElement('iframe'), {
 		className: `${Hyperlink.toolHandler.defaultClass}-preview-url`,
 		//referrerpolicy: 'origin',
@@ -155,7 +174,7 @@ export default class Hyperlink extends FreedomInterface {
 		//height: 100,
 	});
 	*/
-	/*HyperlinkChild = class HyperlinkChild extends HTMLElement{
+    /*HyperlinkChild = class HyperlinkChild extends HTMLElement{
 		constructor(){
 			super();
 			this.className = `${Hyperlink.toolHandler.defaultClass}-child`;
@@ -164,10 +183,10 @@ export default class Hyperlink extends FreedomInterface {
 		}
 	};*/
 
-	//#hyperlinkChild;
-	constructor(dataset){
-		super(Hyperlink, dataset);
-		/*
+    //#hyperlinkChild;
+    constructor(dataset) {
+        super(Hyperlink, dataset);
+        /*
 		if( ! window.customElements.get(`${Hyperlink.toolHandler.defaultClass}-child`)){
 			window.customElements.define(`${Hyperlink.toolHandler.defaultClass}-child`, this.HyperlinkChild);
 		}
@@ -175,118 +194,142 @@ export default class Hyperlink extends FreedomInterface {
 		this.#hyperlinkChild = new this.HyperlinkChild();
 		
 		*/
-		let getUrlMetadataPromise;
+        let getUrlMetadataPromise;
 
-		if( ! dataset && Object.keys(this.dataset).length == 0){
-			this.dataset.href = Hyperlink.hyperlinkBox.lastUrl;
-			getUrlMetadataPromise = fetch(this.dataset.href, {
-				mode: 'no-cors',
-			}).then(response => {
-				return response.text();
-			}).then(htmlText => {
-				let dom = new DOMParser().parseFromString(htmlText, 'text/html');
-				this.dataset.title = dom.querySelector('meta[name="og:title"]')?.getAttribute('content') 
-					|| dom.querySelector('meta[name="twitter:title"]')?.getAttribute('content')
-					|| dom.querySelector('title')?.textContent
-					|| '';
+        if (!dataset && Object.keys(this.dataset).length == 0) {
+            this.dataset.href = Hyperlink.hyperlinkBox.lastUrl;
+            getUrlMetadataPromise = fetch(this.dataset.href, {
+                mode: 'no-cors',
+            })
+                .then((response) => {
+                    return response.text();
+                })
+                .then((htmlText) => {
+                    let dom = new DOMParser().parseFromString(
+                        htmlText,
+                        'text/html',
+                    );
+                    this.dataset.title =
+                        dom
+                            .querySelector('meta[name="og:title"]')
+                            ?.getAttribute('content') ||
+                        dom
+                            .querySelector('meta[name="twitter:title"]')
+                            ?.getAttribute('content') ||
+                        dom.querySelector('title')?.textContent ||
+                        '';
 
-				this.dataset.description = dom.querySelector('meta[name="description"]')?.getAttribute('content') 
-					|| dom.querySelector('meta[name="og:description"]')?.getAttribute('content') 
-					|| dom.querySelector('meta[name="twitter:description"]')?.getAttribute('content')
-					|| ''
-	
-				this.dataset.image = dom.querySelector('meta[name="og:image"]')?.getAttribute('content')
-					|| dom.querySelector('meta[name="twitter:image"]')?.getAttribute('content')
-					|| ''
+                    this.dataset.description =
+                        dom
+                            .querySelector('meta[name="description"]')
+                            ?.getAttribute('content') ||
+                        dom
+                            .querySelector('meta[name="og:description"]')
+                            ?.getAttribute('content') ||
+                        dom
+                            .querySelector('meta[name="twitter:description"]')
+                            ?.getAttribute('content') ||
+                        '';
 
-	
-				this.dataset.favicon = dom.querySelector('link[rel="icon"]')?.getAttribute('href') || '';
+                    this.dataset.image =
+                        dom
+                            .querySelector('meta[name="og:image"]')
+                            ?.getAttribute('content') ||
+                        dom
+                            .querySelector('meta[name="twitter:image"]')
+                            ?.getAttribute('content') ||
+                        '';
 
-				this.dataset.siteName = new URL(this.dataset.href).hostname;
-	
-				let p = document.createElement('p')
-				//this.parentEditor.createLine();
-				//this.#hyperlinkChild.shadowRoot.append(line);
-				//this.append(line);
-				return p;
-			}).catch(error=>{
-				console.error(error);
-				//this.style.color = 'red';
-				//this.title = 'unknown site';
-				return undefined
-			});
-        }else{
-			getUrlMetadataPromise = Promise.resolve().then(()=>{
-				//let line = this.parentEditor.createLine();
-				//line.contenteditable = false;
-				//this.#hyperlinkChild.shadowRoot.append(line);
-				//this.append(line);
-				//let p = document.createElement('p')
-				//return p
-			});
-		}
-		this.#aTag.href = this.dataset.href
-		super.connectedAfterOnlyOneCallback = () => {
-			getUrlMetadataPromise.then(p => {
-				if(! p){
-					p = this.querySelector(`[data-hyperlink_child="${Hyperlink.toolHandler.defaultClass}-child"]`);
-					if( ! p){
-						return;
-					}
-				}
-				let title;
-				if(this.dataset.title != ''){
-					title = Object.assign(document.createElement('p'), {
-						textContent: this.dataset.title
-					})
-					title.style.fontWeight = 'bold';
-				}
-				let description;
-				if(this.dataset.description != ''){
-					description = Object.assign(document.createElement('p'),{
-						textContent: this.dataset.description
-					})
-				}
-				let image;
-				if(this.dataset.image != ''){
-					image = Object.assign(document.createElement('p'),{
-						innerHTML: `
+                    this.dataset.favicon =
+                        dom
+                            .querySelector('link[rel="icon"]')
+                            ?.getAttribute('href') || '';
+
+                    this.dataset.siteName = new URL(this.dataset.href).hostname;
+
+                    let p = document.createElement('p');
+                    //this.parentEditor.createLine();
+                    //this.#hyperlinkChild.shadowRoot.append(line);
+                    //this.append(line);
+                    return p;
+                })
+                .catch((error) => {
+                    console.error(error);
+                    //this.style.color = 'red';
+                    //this.title = 'unknown site';
+                    return undefined;
+                });
+        } else {
+            getUrlMetadataPromise = Promise.resolve().then(() => {
+                //let line = this.parentEditor.createLine();
+                //line.contenteditable = false;
+                //this.#hyperlinkChild.shadowRoot.append(line);
+                //this.append(line);
+                //let p = document.createElement('p')
+                //return p
+            });
+        }
+        this.#aTag.href = this.dataset.href;
+        super.connectedAfterOnlyOneCallback = () => {
+            getUrlMetadataPromise.then((p) => {
+                if (!p) {
+                    p = this.querySelector(
+                        `[data-hyperlink_child="${Hyperlink.toolHandler.defaultClass}-child"]`,
+                    );
+                    if (!p) {
+                        return;
+                    }
+                }
+                let title;
+                if (this.dataset.title != '') {
+                    title = Object.assign(document.createElement('p'), {
+                        textContent: this.dataset.title,
+                    });
+                    title.style.fontWeight = 'bold';
+                }
+                let description;
+                if (this.dataset.description != '') {
+                    description = Object.assign(document.createElement('p'), {
+                        textContent: this.dataset.description,
+                    });
+                }
+                let image;
+                if (this.dataset.image != '') {
+                    image = Object.assign(document.createElement('p'), {
+                        innerHTML: `
 							<img data-image src="${this.dataset.image}"/>
-						`
-					});
-				}
-				let favicon;
-				if(this.dataset.favicon != ''){
-					favicon = Object.assign(document.createElement('span'), {
-						innerHTML: `
+						`,
+                    });
+                }
+                let favicon;
+                if (this.dataset.favicon != '') {
+                    favicon = Object.assign(document.createElement('span'), {
+                        innerHTML: `
 							<img data-favicon src="${this.dataset.favicon}" style="width: 1.1em; vertical-align: text-bottom;"/>
-						`
-					})
-				}
-				let siteName = Object.assign(document.createElement('span'), {
-					textContent: this.dataset.siteName
-				});
-				siteName.style.fontSize = '12px';
-				siteName.style.fontWeight = 'bold';
-				//this.#hyperlinkChild.shadowRoot.append(line);
-				this.append(p);
-				p.dataset.hyperlink_child = `${Hyperlink.toolHandler.defaultClass}-child`;
-				p.contenteditable = false;
-				p.replaceChildren(...[
-					favicon, siteName,
-					title,
-					description,
-					image
-				].filter(e=>e!=undefined))
+						`,
+                    });
+                }
+                let siteName = Object.assign(document.createElement('span'), {
+                    textContent: this.dataset.siteName,
+                });
+                siteName.style.fontSize = '12px';
+                siteName.style.fontWeight = 'bold';
+                //this.#hyperlinkChild.shadowRoot.append(line);
+                this.append(p);
+                p.dataset.hyperlink_child = `${Hyperlink.toolHandler.defaultClass}-child`;
+                p.contenteditable = false;
+                p.replaceChildren(
+                    ...[favicon, siteName, title, description, image].filter(
+                        (e) => e != undefined,
+                    ),
+                );
 
-				this.onclick = (event) => {
-					if( ! event.composedPath().some(e=>e==p)){
-						this.#aTag.click();
-					}
-				}
-			}) 
-		}
-
-	}
-
+                this.onclick = (event) => {
+                    if (!event.composedPath().some((e) => e == p)) {
+                        this.#aTag.click();
+                    }
+                };
+            });
+        };
+    }
 }
