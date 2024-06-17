@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.service.AccountService;
+import com.our.all.webtoon.service.S3Service;
 import com.our.all.webtoon.util.ResponseWrapper;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
 import reactor.core.publisher.Flux;
@@ -28,6 +29,9 @@ public class WebtoonHandler {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private S3Service s3Service;
 
 	protected static record GenreListResponse(
 		String name,
@@ -53,22 +57,24 @@ public class WebtoonHandler {
 		String webtoonTitle,
 		List<String> genre,
 		String summary,
-		List<Editor> synopsisEditor
+		List<Editor> synopsisEditor,
+		String webtoon
 	) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
 
+		
+		Mono.zip( accountService.convertRequestToAccount( request ), request.bodyToMono( WebtoonRegistRequest.class ) );
+
+		// .zipWith( (accunt, t2) -> new Tuple2<>( accunt, request.bodyToMono( WebtoonRegistRequest ) ) );
+//			.flatMap( account -> {
+//
+//				return s3Service.putObjectPresignedUrl( "webtoon/%s ".formatted( account.getId() ) );
+//
+//			} );
 		// request.bodyToMono( WebtoonRequest. )
 		return null;
-	}
-
-	public Mono<ServerResponse> registWebtoonThumbnail(
-		ServerRequest request
-	) {
-
-		return null;
-
 	}
 
 	// private static record WebtoonSynopsisOneLineSummaryRequest(String synopsis){}

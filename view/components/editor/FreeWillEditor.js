@@ -107,6 +107,7 @@ export default class FreeWillEditor extends FreeWiilHandler {
         target,
         json,
         { beforeCallback = (json) => {}, afterCallback = (node) => {} } = {},
+        isReplace = false,
     ) {
         return new Promise((resolve) => {
             let jsonObj = json;
@@ -122,9 +123,15 @@ export default class FreeWillEditor extends FreeWiilHandler {
                             afterCallback,
                         }),
                     ).then((htmlList) => {
-                        target.append(
-                            ...htmlList.filter((e) => e != undefined),
-                        );
+                        if (isReplace) {
+                            target.replaceChildren(
+                                ...htmlList.filter((e) => e != undefined),
+                            );
+                        } else {
+                            target.append(
+                                ...htmlList.filter((e) => e != undefined),
+                            );
+                        }
                         return htmlList;
                     }),
                 );

@@ -82,7 +82,6 @@ export const PaintingWebtoonContainer = () => {
     useEffect(() => {
         const subscribe = getGenreService.subscribe({
             next: (genre) => {
-                console.log(1, genre);
                 if (genre) setGenre(genre);
             },
         });

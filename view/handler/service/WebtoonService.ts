@@ -60,6 +60,7 @@ export const postWebtoonService = ({
     webtoonTitle: string;
     genre: Array<string>;
     synopsis: Editor[];
+    thumbnail?: string;
 }) => {
     ajax<ResponseWrapper<unknown>>({
         url: '/api/webtoon/regist/',

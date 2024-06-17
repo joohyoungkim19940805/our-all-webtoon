@@ -210,7 +210,6 @@ export class FlexLayout extends HTMLElement {
         this.remain();
     }
     connectedCallback() {
-        console.log([this]);
         /*
         if (!this.#isLoaded) {
             this.#isLoaded = true;
@@ -698,7 +697,6 @@ export class FlexContainer extends HTMLElement {
     }
     constructor(attribute: any = {}) {
         super();
-        console.log(this, attribute);
 
         /*if (attribute.hasOwnProperty('className')) {
             this.classList.add(attribute.className);

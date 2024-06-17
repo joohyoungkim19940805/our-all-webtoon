@@ -12,6 +12,12 @@ import Sort from '@components/editor/tools/Sort';
 import Italic from '@components/editor/tools/Italic';
 import { useEffect, useRef, useState } from 'react';
 import { getWebtoonTermsOfService } from '@handler/service/TermsService';
+import {
+    distinctUntilChanged,
+    distinctUntilKeyChanged,
+    first,
+    take,
+} from 'rxjs';
 
 interface WebtoonTermsOfServiceEditorHTMLAttributes<WebtoonTermsOfServiceEditor>
     extends React.HTMLAttributes<WebtoonTermsOfServiceEditor> {}
@@ -69,18 +75,20 @@ export const WebtoonTermsOfService = () => {
         webtoonTermsOfServiceEditorRef.current.contentEditable = 'false';
         const subscribe = getWebtoonTermsOfService.subscribe({
             next: (terms) => {
-                if (!webtoonTermsOfServiceEditorRef.current) return;
                 if (terms) {
+                    setTermsTitle(terms.name);
                     FreeWillEditor.parseLowDoseJSON(
                         webtoonTermsOfServiceEditorRef.current,
                         terms.content,
+                        undefined,
+                        true,
                     );
-                    setTermsTitle(terms.name);
                 }
             },
         });
 
         return () => {
+            webtoonTermsOfServiceEditorRef.current?.replaceChildren();
             subscribe.unsubscribe();
         };
     }, [webtoonTermsOfServiceEditorRef]);

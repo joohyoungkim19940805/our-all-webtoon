@@ -1,6 +1,6 @@
 import { Editor } from '@type/Editor';
 
-export type WebtoonTermsOfService = {
+export type WebtoonTermsOfServiceType = {
     name: string;
     content: Editor[];
 };

@@ -4,7 +4,10 @@ import {
     Subject,
     catchError,
     concatMap,
+    distinctUntilChanged,
+    first,
     map,
+    mergeMap,
     of,
     shareReplay,
     take,
@@ -15,10 +18,10 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Account } from '@type/service/AccountType';
 import { ResponseWrapper } from '@type/ReesponseWrapper';
-import { WebtoonTermsOfService } from '@type/service/TermsOfServiceType';
+import { WebtoonTermsOfServiceType } from '@type/service/TermsOfServiceType';
 
 const webtoonTermsOfService = () =>
-    ajax<ResponseWrapper<WebtoonTermsOfService>>(
+    ajax<ResponseWrapper<WebtoonTermsOfServiceType>>(
         '/api/terms/search/webtoon-terms',
     ).pipe(
         map((result) => {
@@ -31,7 +34,7 @@ const getWebtoonTermsOfCaCheService = new BehaviorSubject(
     webtoonTermsOfService(),
 );
 export const getWebtoonTermsOfService = getWebtoonTermsOfCaCheService.pipe(
-    concatMap((shared) =>
+    mergeMap((shared) =>
         shared.pipe(
             tap({
                 complete: () =>
