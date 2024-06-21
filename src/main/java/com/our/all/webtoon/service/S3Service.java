@@ -4,12 +4,15 @@ package com.our.all.webtoon.service;
 import java.net.URL;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.our.all.webtoon.util.properties.S3Properties;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
+
+@Service
 public class S3Service {
 
 	@Autowired

@@ -53,19 +53,23 @@ public class WebtoonHandler {
 	}
 
 	protected static record WebtoonRegistRequest(
+		String id,
 		Boolean agree,
 		String webtoonTitle,
 		List<String> genre,
 		String summary,
 		List<Editor> synopsisEditor,
+		String thumbnail,
 		String webtoon
 	) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
-
 		
-		Mono.zip( accountService.convertRequestToAccount( request ), request.bodyToMono( WebtoonRegistRequest.class ) );
+
+		Mono.zip( accountService.convertRequestToAccount( request ), request.bodyToMono( WebtoonRegistRequest.class ) )
+		// .map( null )
+		;
 
 		// .zipWith( (accunt, t2) -> new Tuple2<>( accunt, request.bodyToMono( WebtoonRegistRequest ) ) );
 //			.flatMap( account -> {
@@ -85,6 +89,7 @@ public class WebtoonHandler {
 	) {
 
 		return null;
-
 	}
+
+	// public Mono<ServerResponse> get
 }
