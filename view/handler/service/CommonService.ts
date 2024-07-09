@@ -23,7 +23,7 @@ export interface ServiceArguments<T, R> {
     endpoint: string;
     method: keyof typeof methodsMapper;
     body?: T;
-    responseType?: R | void;
+    responseType: R | void;
     resultHandler?: (response: ResponseWrapper<R>) => Promise<void>;
 }
 export interface CacheForService {
@@ -33,7 +33,7 @@ export interface CacheForService {
 
 const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
     return ajax<ResponseWrapper<R>>({
-        url: `/api/${serviceArguments}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
+        url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
         body: serviceArguments.body,
         method: serviceArguments.method,
     }).pipe(
@@ -47,28 +47,40 @@ const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
         map((result) => result.response.data),
     );
 };
-
+const callApiForCache = <T, R>(
+    serviceArguments: ServiceArguments<T, R>,
+    cacheForService: CacheForService,
+) => {
+    return ajax<ResponseWrapper<R>>({
+        url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
+        body: serviceArguments.body,
+        method: serviceArguments.method,
+    }).pipe(
+        tap((result) => {
+            if (!serviceArguments.resultHandler) return;
+            const { response } = result;
+            serviceArguments
+                .resultHandler(response)
+                .catch((err) => console.error(err));
+        }),
+        map((result) => result.response.data),
+        shareReplay(cacheForService.cacheSize, cacheForService.cacheTime),
+    );
+};
 export const callApiCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,
 ) => {
     const cacheSubject = new BehaviorSubject(
-        callApi(serviceArguments).pipe(
-            shareReplay(cacheForService.cacheSize, cacheForService.cacheTime),
-        ),
+        callApiForCache(serviceArguments, cacheForService),
     );
     return cacheSubject.pipe(
-        mergeMap((shared) =>
+        concatMap((shared) =>
             shared.pipe(
                 tap({
                     complete: () =>
                         cacheSubject.next(
-                            callApi(serviceArguments).pipe(
-                                shareReplay(
-                                    cacheForService.cacheSize,
-                                    cacheForService.cacheTime,
-                                ),
-                            ),
+                            callApiForCache(serviceArguments, cacheForService),
                         ),
                 }),
             ),
@@ -81,6 +93,7 @@ export const callApiCache = <T, R>(
     );
 };
 
+//test
 export const callApiCache2 = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,

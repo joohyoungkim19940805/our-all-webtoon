@@ -19,6 +19,7 @@ import { getGenreService } from '@handler/service/WebtoonService';
 import { Genre } from '@type/service/WebtoonType';
 import genreStyles from '@components/genre/genre.module.css';
 import { WebtoonTermsOfService } from '@components/terms/WebtoonTermsOfService';
+import { callApiCache } from '@handler/service/CommonService';
 
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}

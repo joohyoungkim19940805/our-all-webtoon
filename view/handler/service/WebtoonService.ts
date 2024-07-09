@@ -9,6 +9,7 @@ import {
     concatMap,
     map,
     merge,
+    mergeMap,
     of,
     shareReplay,
     switchMap,
@@ -29,7 +30,7 @@ const genreService = () =>
     );
 const genreCacheService = new BehaviorSubject(genreService());
 export const getGenreService = genreCacheService.pipe(
-    concatMap((shared) =>
+    mergeMap((shared) =>
         shared.pipe(
             tap({ complete: () => genreCacheService.next(genreService()) }),
         ),
