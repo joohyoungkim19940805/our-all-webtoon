@@ -23,7 +23,6 @@ export interface ServiceArguments<T, R> {
     endpoint: string;
     method: keyof typeof methodsMapper;
     body?: T;
-    responseType: R | void;
     resultHandler?: (response: ResponseWrapper<R>) => Promise<void>;
 }
 export interface CacheForService {
@@ -67,6 +66,7 @@ const callApiForCache = <T, R>(
         shareReplay(cacheForService.cacheSize, cacheForService.cacheTime),
     );
 };
+
 export const callApiCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,

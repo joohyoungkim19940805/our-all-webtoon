@@ -72,7 +72,7 @@ type PaintingWebtoonFormData = {
 export const PaintingWebtoonContainer = () => {
     const synopsisEditorRef = useRef<SynopsisEditor>(null);
     const toolbarRef = useRef<HTMLDivElement>(null);
-    const [genre, setGenre] = useState<Genre[]>([]);
+    const [genre, setGenre] = useState<Array<Genre>>([]);
     const [genreSelectCount, setGenreSelectCount] = useState<number>(0);
     useEffect(() => {
         if (!synopsisEditorRef.current || !toolbarRef.current) return;
@@ -81,11 +81,22 @@ export const PaintingWebtoonContainer = () => {
         );
     }, [synopsisEditorRef, toolbarRef]);
     useEffect(() => {
-        const subscribe = getGenreService.subscribe({
+        const subscribe = callApiCache<void, Array<Genre>>(
+            {
+                method: 'GET',
+                path: 'webtoon',
+                endpoint: 'genre',
+            },
+            { cacheSize: 1, cacheTime: 1000 * 60 * 5 },
+        ).subscribe({
             next: (genre) => {
-                if (genre) setGenre(genre);
+                if (genre) {
+                    console.log(genre);
+                    setGenre(genre);
+                }
             },
         });
+
         return () => {
             subscribe.unsubscribe();
         };
