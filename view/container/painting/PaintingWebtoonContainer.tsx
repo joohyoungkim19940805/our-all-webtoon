@@ -87,7 +87,7 @@ export const PaintingWebtoonContainer = () => {
                 path: 'webtoon',
                 endpoint: 'genre',
             },
-            { cacheSize: 1, cacheTime: 1000 * 60 * 5 },
+            { cacheTime: 1000 * 60 * 5, cacheName: 'genreList' },
         ).subscribe({
             next: (genre) => {
                 if (genre) {

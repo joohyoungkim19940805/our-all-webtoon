@@ -1,6 +1,7 @@
 import { ResponseWrapper } from '@type/ReesponseWrapper';
 import {
     BehaviorSubject,
+    Observable,
     catchError,
     concatMap,
     map,
@@ -26,8 +27,9 @@ export interface ServiceArguments<T, R> {
     resultHandler?: (response: ResponseWrapper<R>) => Promise<void>;
 }
 export interface CacheForService {
+    cacheName: string;
     cacheTime: number;
-    cacheSize: number;
+    cacheSize?: number;
 }
 
 const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
@@ -46,6 +48,7 @@ const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
         map((result) => result.response.data),
     );
 };
+
 const callApiForCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,
@@ -63,17 +66,34 @@ const callApiForCache = <T, R>(
                 .catch((err) => console.error(err));
         }),
         map((result) => result.response.data),
-        shareReplay(cacheForService.cacheSize, cacheForService.cacheTime),
+        shareReplay(cacheForService.cacheSize || 1, cacheForService.cacheTime),
     );
 };
 
+interface CacheMap<T> {
+    [key: string]: BehaviorSubject<Observable<T>>;
+}
+
+export const cacheMap: CacheMap<unknown> = {};
 export const callApiCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,
 ) => {
-    const cacheSubject = new BehaviorSubject(
-        callApiForCache(serviceArguments, cacheForService),
-    );
+    let cacheSubject = cacheMap[cacheForService.cacheName] as BehaviorSubject<
+        Observable<R>
+    >;
+    console.log(cacheSubject);
+    if (!cacheSubject) {
+        cacheSubject = new BehaviorSubject(
+            callApiForCache(serviceArguments, cacheForService),
+        );
+        cacheMap[cacheForService.cacheName] = cacheSubject as BehaviorSubject<
+            Observable<unknown>
+        >;
+    }
+    // const cacheSubject = new BehaviorSubject(
+    //     callApiForCache(serviceArguments, cacheForService),
+    // );
     return cacheSubject.pipe(
         concatMap((shared) =>
             shared.pipe(
