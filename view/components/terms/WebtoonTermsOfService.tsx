@@ -11,13 +11,14 @@ import BulletPoint from '@components/editor/tools/BulletPoint';
 import Sort from '@components/editor/tools/Sort';
 import Italic from '@components/editor/tools/Italic';
 import { useEffect, useRef, useState } from 'react';
-import { getWebtoonTermsOfService } from '@handler/service/TermsService';
 import {
     distinctUntilChanged,
     distinctUntilKeyChanged,
     first,
     take,
 } from 'rxjs';
+import { callApiCache } from '@handler/service/CommonService';
+import { WebtoonTermsOfServiceType } from '@type/service/TermsOfServiceType';
 
 interface WebtoonTermsOfServiceEditorHTMLAttributes<WebtoonTermsOfServiceEditor>
     extends React.HTMLAttributes<WebtoonTermsOfServiceEditor> {}
@@ -73,7 +74,14 @@ export const WebtoonTermsOfService = () => {
     useEffect(() => {
         if (!webtoonTermsOfServiceEditorRef.current) return;
         webtoonTermsOfServiceEditorRef.current.contentEditable = 'false';
-        const subscribe = getWebtoonTermsOfService.subscribe({
+        const subscribe = callApiCache<void, WebtoonTermsOfServiceType>(
+            {
+                method: 'GET',
+                path: 'terms',
+                endpoint: 'webtoon-terms',
+            },
+            { cacheTime: 1000 * 60 * 5, cacheName: 'webtoonTerms' },
+        ).subscribe({
             next: (terms) => {
                 if (terms) {
                     setTermsTitle(terms.name);
@@ -86,6 +94,19 @@ export const WebtoonTermsOfService = () => {
                 }
             },
         });
+        /*const subscribe = getWebtoonTermsOfService.subscribe({
+            next: (terms) => {
+                if (terms) {
+                    setTermsTitle(terms.name);
+                    FreeWillEditor.parseLowDoseJSON(
+                        webtoonTermsOfServiceEditorRef.current,
+                        terms.content,
+                        undefined,
+                        true,
+                    );
+                }
+            },
+        });*/
 
         return () => {
             webtoonTermsOfServiceEditorRef.current?.replaceChildren();

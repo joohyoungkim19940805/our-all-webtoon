@@ -15,11 +15,10 @@ import toolBarStyles from '@components/editor/toolBar.module.css';
 import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
 import styles from './PaintingWebtoonContainer.module.css';
-import { getGenreService } from '@handler/service/WebtoonService';
 import { Genre } from '@type/service/WebtoonType';
 import genreStyles from '@components/genre/genre.module.css';
 import { WebtoonTermsOfService } from '@components/terms/WebtoonTermsOfService';
-import { callApiCache } from '@handler/service/CommonService';
+import { callApi, callApiCache } from '@handler/service/CommonService';
 
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
@@ -115,7 +114,6 @@ export const PaintingWebtoonContainer = () => {
                 summary,
             } as PaintingWebtoonFormData;
         })();
-        console.log();
         if (!agree.checked) {
             alert('이용 약관에 동의해주세요.');
             agree.focus();
@@ -128,8 +126,10 @@ export const PaintingWebtoonContainer = () => {
             alert('장르는 최소 1개 최대 3개 선택해주십시오.');
             genre[0].focus();
             return;
-        } else if (!thumbnail.files || thumbnail.files?.length == 0) {
-            alert('웹툰의 대표 이미지를 선택해주십시오.');
+        } else if (
+            (!thumbnail.files || thumbnail.files?.length == 0) &&
+            !confirm('웹툰의 대표 이미지가 없습니다.\n그대로 진행하시겠습니까?')
+        ) {
             return;
         } else if (
             !synopsisEditorRef.current?.textContent ||
@@ -139,7 +139,47 @@ export const PaintingWebtoonContainer = () => {
             alert('시눕시스를 작성해주십시오.');
             return;
         }
-        // 썸네일 먼저 업로드하고 pipe. mergeMap or concat or concatMap
+        callApi<Readonly<Record<string, unknown>>, string>({
+            method: 'POST',
+            path: 'webtoon',
+            endpoint: '/',
+            body: {
+                agree: agree.checked,
+                webtoonTitle: webtoonTitle.value,
+                genre: genre.filter((e) => e.checked).map((e) => e.value),
+            },
+        })
+            .subscribe({
+                next: (thumbnailUploadUrl) => {
+                    console.log(thumbnailUploadUrl);
+                    const file =
+                        (thumbnail.files && thumbnail.files[0]) || undefined;
+                    if (file) {
+                        fetch(thumbnailUploadUrl, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Encoding': 'base64',
+                                'Content-Type': 'application/octet-stream',
+                            },
+                            body: file,
+                        }).then((res) => {
+                            if (!(res.status == 200 || res.status == 201)) {
+                                alert(
+                                    '썸네일 이미지 업로드에 실패하였습니다.\n다음에 다시 시도해주십시오.',
+                                );
+                            }
+                        });
+                    }
+                },
+                complete: () => {
+                    console.log('aa');
+                },
+                error: (error) => {
+                    console.log(error);
+                },
+            })
+            .unsubscribe();
+        // 인서트 먼저하고, s3 key 넘겨줘서 url 저장하고, response에 url 객체 넣고 클라이언트에서 업로드
     };
 
     return (

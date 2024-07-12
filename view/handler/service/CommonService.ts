@@ -25,6 +25,7 @@ export interface ServiceArguments<T, R> {
     method: keyof typeof methodsMapper;
     body?: T;
     resultHandler?: (response: ResponseWrapper<R>) => Promise<void>;
+    headers?: Readonly<Record<string, string>>;
 }
 export interface CacheForService {
     cacheName: string;
@@ -32,11 +33,12 @@ export interface CacheForService {
     cacheSize?: number;
 }
 
-const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
+export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
     return ajax<ResponseWrapper<R>>({
         url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
         body: serviceArguments.body,
         method: serviceArguments.method,
+        headers: serviceArguments.headers || undefined,
     }).pipe(
         tap((result) => {
             if (!serviceArguments.resultHandler) return;
@@ -57,6 +59,7 @@ const callApiForCache = <T, R>(
         url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
         body: serviceArguments.body,
         method: serviceArguments.method,
+        headers: serviceArguments.headers || undefined,
     }).pipe(
         tap((result) => {
             if (!serviceArguments.resultHandler) return;
@@ -82,7 +85,6 @@ export const callApiCache = <T, R>(
     let cacheSubject = cacheMap[cacheForService.cacheName] as BehaviorSubject<
         Observable<R>
     >;
-    console.log(cacheSubject);
     if (!cacheSubject) {
         cacheSubject = new BehaviorSubject(
             callApiForCache(serviceArguments, cacheForService),
