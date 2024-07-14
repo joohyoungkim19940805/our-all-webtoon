@@ -2,6 +2,7 @@ package com.our.all.webtoon;
 
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -83,11 +84,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 							.type( 1 )
 							.name( "HTMLDivElement" )
 							.tagName( "div" )
-							.data( """
-									{
-										"is_line": ""
-									}
-								""" )
+							.data( Map.of( "is_line", "" ) )
 							.childs(
 								List
 									.of(
@@ -105,11 +102,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 							.type( 1 )
 							.name( "HTMLDivElement" )
 							.tagName( "div" )
-							.data( """
-									{
-										"is_line": ""
-									}
-								""" )
+							.data( Map.of( "is_line", "" ) )
 							.childs(
 								List
 									.of(

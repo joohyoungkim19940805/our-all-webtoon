@@ -1,25 +1,23 @@
 package com.our.all.webtoon.entity.webtoon;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.our.all.webtoon.dto.Editor;
+import com.our.all.webtoon.entity.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.With;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @With
@@ -27,24 +25,15 @@ import lombok.With;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "webtoon")
-public class WebtoonEntity {
-
-	@Id
-	private String id;
+public class WebtoonEntity extends BaseEntity {
 
 	private String title;
 
-	private String synopsis;
+	private List<Editor> synopsis;
 
-	private String authorId;
+	private String accountId;
 
 	private List<String> genre;
 
 	private String thumbnail;
-
-	@CreatedDate
-	private LocalDateTime createAt;
-
-	@LastModifiedDate
-	private LocalDateTime updateAt;
 }

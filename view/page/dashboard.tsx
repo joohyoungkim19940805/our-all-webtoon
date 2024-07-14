@@ -21,15 +21,22 @@ styles;
 FlexLayout;
 
 const html = document.body.parentElement;
+const covertFontSize = (html: HTMLElement) => {
+    //크기별로 100 나누기 200 나누기 300 나누기 순차적으로 가야함 --내일 수정 예정-- //2024 07 14
+    if (window.innerWidth <= 500) {
+        html.style.fontSize = 25 / (window.innerWidth / 200) + 'px';
+    } else if (window.innerWidth >= 501 && window.innerWidth >= 900) {
+        html.style.fontSize = 25 / (window.innerWidth / 600) + 'px';
+    } else {
+        html.style.fontSize = 25 / (window.innerWidth / 300) + 'px';
+    }
+};
 if (html) {
-    html.style.fontSize = Math.max(0.5, 5 / (window.innerWidth / 200)) + 'vmax';
+    covertFontSize(html);
     windowResize.subscribe(() => {
-        console.log(4.5 / (window.innerWidth / 200));
-        html.style.fontSize =
-            Math.max(0.5, 5 / (window.innerWidth / 200)) + 'vmax';
+        covertFontSize(html);
     });
 }
-document.body.dataset.mode = 'black';
 const root = document.createElement('main');
 root.id = styles.root;
 

@@ -3,6 +3,7 @@ package com.our.all.webtoon.web.handler;
 
 import static com.our.all.webtoon.util.ResponseWrapper.response;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.dto.Editor;
+import com.our.all.webtoon.entity.webtoon.WebtoonEntity;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
+import com.our.all.webtoon.repository.webtoon.WebtoonRepository;
 import com.our.all.webtoon.service.AccountService;
 import com.our.all.webtoon.service.S3Service;
 import com.our.all.webtoon.util.ResponseWrapper;
@@ -29,6 +32,9 @@ public class WebtoonHandler {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private WebtoonRepository webtoonRepository;
 
 	@Autowired
 	private S3Service s3Service;
@@ -58,27 +64,61 @@ public class WebtoonHandler {
 		String webtoonTitle,
 		List<String> genre,
 		String summary,
-		List<Editor> synopsisEditor,
-		String thumbnail,
-		String webtoon
+		List<Editor> synopsis,
+		String webtoon,
+		String thumbnailExtension
 	) {}
+
+	protected static record WebtoonRegistResponse(URL url) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
 		
 
-		Mono.zip( accountService.convertRequestToAccount( request ), request.bodyToMono( WebtoonRegistRequest.class ) )
-		// .map( null )
-		;
-
-		// .zipWith( (accunt, t2) -> new Tuple2<>( accunt, request.bodyToMono( WebtoonRegistRequest ) ) );
-//			.flatMap( account -> {
-//
-//				return s3Service.putObjectPresignedUrl( "webtoon/%s ".formatted( account.getId() ) );
-//
-//			} );
-		// request.bodyToMono( WebtoonRequest. )
-		return null;
+		Mono<URL> result = Mono
+			.zip(
+				accountService.convertRequestToAccount( request ),
+				request.bodyToMono( WebtoonRegistRequest.class ) )
+			.flatMap(
+				t -> t.getT2().id != null ? webtoonRepository.findByIdAndAccountId(
+					t.getT2().id,
+					t.getT1()
+						.getId() //
+				)
+					.map(
+						e -> e.withTitle( t.getT2().webtoonTitle )
+							.withSynopsis( t.getT2().synopsis )
+							.withGenre( t.getT2().genre )
+							.withThumbnail(
+								t.getT2().thumbnailExtension == null ? e.getThumbnail()
+									: t.getT2().thumbnailExtension ) )
+					: Mono.just(
+						WebtoonEntity.builder()
+							.accountId(
+								t.getT1()
+									.getId() )
+							.title( t.getT2().webtoonTitle )
+							.synopsis( t.getT2().synopsis )
+							.genre( t.getT2().genre )
+							.thumbnail( t.getT2().thumbnailExtension )
+							.build() //
+					)//
+			)
+			.flatMap( e -> webtoonRepository.save( e ) )
+			.map(
+				e -> 
+					s3Service.putObjectPresignedUrlForPublic(
+					"%s/%s/%s/%s".formatted(
+						e.getAccountId(),
+						e.getId(),
+						"thumbnail",
+						e.getId() + e.getThumbnail() //
+					)//
+				) //
+			);
+		return ok()
+			.contentType( MediaType.APPLICATION_JSON )
+			.body( response( Result._0, result ), ResponseWrapper.class );
 	}
 
 	// private static record WebtoonSynopsisOneLineSummaryRequest(String synopsis){}

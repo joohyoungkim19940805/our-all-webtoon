@@ -15,10 +15,13 @@
             flex-direction: column;
             gap: 3dvh;
             & > div {
+                & > label {
+                    font-weight: bold;
+                }
                 &.submit-container {
                     align-items: flex-end;
                     & [type='submit'] {
-                        background-color: rgb(227 227 227 / 69%);
+                        background-color: rgba(227, 227, 227, 0.932);
                         border-radius: 5px;
                         font-weight: 700;
                         padding: 1% 2%;
@@ -48,7 +51,7 @@
                 & .genre-list {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 0.9vw;
+                    gap: 1.1rem;
                 }
             }
         }

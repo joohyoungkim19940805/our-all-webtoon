@@ -101,7 +101,8 @@ export const PaintingWebtoonContainer = () => {
         };
     }, []);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
-    const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+        if (!synopsisEditorRef.current) return;
         ev.preventDefault();
         const { agree, webtoonTitle, genre, thumbnail, summary } = (() => {
             const { agree, webtoonTitle, genre, thumbnail, summary } =
@@ -114,6 +115,9 @@ export const PaintingWebtoonContainer = () => {
                 summary,
             } as PaintingWebtoonFormData;
         })();
+        const isThumbnail =
+            (thumbnail.files && thumbnail.files?.length != 0) ||
+            (tempThumbnailUrl && tempThumbnailUrl != '');
         if (!agree.checked) {
             alert('이용 약관에 동의해주세요.');
             agree.focus();
@@ -127,7 +131,7 @@ export const PaintingWebtoonContainer = () => {
             genre[0].focus();
             return;
         } else if (
-            (!thumbnail.files || thumbnail.files?.length == 0) &&
+            !isThumbnail &&
             !confirm('웹툰의 대표 이미지가 없습니다.\n그대로 진행하시겠습니까?')
         ) {
             return;
@@ -142,43 +146,53 @@ export const PaintingWebtoonContainer = () => {
         callApi<Readonly<Record<string, unknown>>, string>({
             method: 'POST',
             path: 'webtoon',
-            endpoint: '/',
+            endpoint: 'content',
             body: {
                 agree: agree.checked,
                 webtoonTitle: webtoonTitle.value,
-                genre: genre.filter((e) => e.checked).map((e) => e.value),
+                synopsis: await FreeWillEditor.getLowDoseJSON(
+                    synopsisEditorRef.current,
+                ),
+                genre: [...genre].filter((e) => e.checked).map((e) => e.value),
+                thumbnailExtension:
+                    (isThumbnail &&
+                        thumbnail.files &&
+                        thumbnail.files[0].name.substring(
+                            thumbnail.files[0].name.lastIndexOf('.'),
+                        )) ||
+                    undefined,
             },
-        })
-            .subscribe({
-                next: (thumbnailUploadUrl) => {
-                    console.log(thumbnailUploadUrl);
-                    const file =
-                        (thumbnail.files && thumbnail.files[0]) || undefined;
-                    if (file) {
-                        fetch(thumbnailUploadUrl, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Encoding': 'base64',
-                                'Content-Type': 'application/octet-stream',
-                            },
-                            body: file,
-                        }).then((res) => {
-                            if (!(res.status == 200 || res.status == 201)) {
-                                alert(
-                                    '썸네일 이미지 업로드에 실패하였습니다.\n다음에 다시 시도해주십시오.',
-                                );
-                            }
-                        });
+        }).subscribe({
+            next: (thumbnailUploadUrl) => {
+                console.log(thumbnailUploadUrl);
+                if (!thumbnailUploadUrl) return;
+                const file =
+                    (thumbnail.files && thumbnail.files[0]) || undefined;
+                if (!file) return;
+
+                fetch(thumbnailUploadUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Encoding': 'base64',
+                        'Content-Type': 'application/octet-stream',
+                    },
+                    body: file,
+                }).then((res) => {
+                    console.log(res);
+                    if (!(res.status == 200 || res.status == 201)) {
+                        alert(
+                            '썸네일 이미지 업로드에 실패하였습니다.\n다음에 다시 시도해주십시오.',
+                        );
                     }
-                },
-                complete: () => {
-                    console.log('aa');
-                },
-                error: (error) => {
-                    console.log(error);
-                },
-            })
-            .unsubscribe();
+                });
+            },
+            complete: () => {
+                console.log('aa');
+            },
+            error: (error) => {
+                console.log(error);
+            },
+        });
         // 인서트 먼저하고, s3 key 넘겨줘서 url 저장하고, response에 url 객체 넣고 클라이언트에서 업로드
     };
 
@@ -204,12 +218,6 @@ export const PaintingWebtoonContainer = () => {
                 className={`${styles['painting-webtoon-content']}`}
             >
                 <div className={`${styles['webtoon-detail']}`}>
-                    <div
-                        data-info="등록 버튼"
-                        className={`${styles['submit-container']}`}
-                    >
-                        <button type="submit">등록</button>
-                    </div>
                     <div data-info="작품명">
                         <label>작품 이름</label>
                         <input
@@ -303,6 +311,12 @@ export const PaintingWebtoonContainer = () => {
                             tabIndex={-1}
                             className={`${inputStyles.input} ${inputStyles['bright-purple']}`}
                         ></input>
+                    </div>
+                    <div
+                        data-info="등록 버튼"
+                        className={`${styles['submit-container']}`}
+                    >
+                        <button type="submit">등록</button>
                     </div>
                     <div
                         data-info="줄거리"

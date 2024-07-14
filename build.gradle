@@ -53,7 +53,16 @@ dependencies {
 	implementation 'software.amazon.awssdk:netty-nio-client:2.21.10'
 	implementation 'software.amazon.awssdk:s3:2.21.10'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
 	implementation 'com.google.guava:guava:32.1.1-jre'
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+        force 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+        force 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
+    }
+}
