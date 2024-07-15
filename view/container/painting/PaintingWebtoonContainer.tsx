@@ -15,10 +15,12 @@ import toolBarStyles from '@components/editor/toolBar.module.css';
 import { useEffect, useRef, useState } from 'react';
 import { FlexLayout } from '@wrapper/FlexLayout';
 import styles from './PaintingWebtoonContainer.module.css';
-import { Genre } from '@type/service/WebtoonType';
+import { Genre } from '@type/service/Genre';
 import genreStyles from '@components/genre/genre.module.css';
 import { WebtoonTermsOfService } from '@components/terms/WebtoonTermsOfService';
 import { callApi, callApiCache } from '@handler/service/CommonService';
+import { useNavigate } from 'react-router-dom';
+import { WebtoonRegistRqeust } from '@type/service/WebtoonType';
 
 interface SynopsisEditorHTMLAttributes<SynopsisEditor>
     extends React.HTMLAttributes<SynopsisEditor> {}
@@ -73,6 +75,7 @@ export const PaintingWebtoonContainer = () => {
     const toolbarRef = useRef<HTMLDivElement>(null);
     const [genre, setGenre] = useState<Array<Genre>>([]);
     const [genreSelectCount, setGenreSelectCount] = useState<number>(0);
+    const navigate = useNavigate();
     useEffect(() => {
         if (!synopsisEditorRef.current || !toolbarRef.current) return;
         toolbarRef.current.append(
@@ -101,8 +104,10 @@ export const PaintingWebtoonContainer = () => {
         };
     }, []);
     const [tempThumbnailUrl, setTempThumbnailUrl] = useState<string>();
+    let isSubmiting = false;
     const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
-        if (!synopsisEditorRef.current) return;
+        if (!synopsisEditorRef.current || isSubmiting) return;
+        isSubmiting = false;
         ev.preventDefault();
         const { agree, webtoonTitle, genre, thumbnail, summary } = (() => {
             const { agree, webtoonTitle, genre, thumbnail, summary } =
@@ -121,19 +126,23 @@ export const PaintingWebtoonContainer = () => {
         if (!agree.checked) {
             alert('이용 약관에 동의해주세요.');
             agree.focus();
+            isSubmiting = false;
             return;
         } else if (!webtoonTitle.value || webtoonTitle.value.trim() == '') {
             alert('웹툰 제목을 입력해주세요.');
             webtoonTitle.focus();
+            isSubmiting = false;
             return;
         } else if ([...genre].filter((e) => e.checked).length == 0) {
             alert('장르는 최소 1개 최대 3개 선택해주십시오.');
             genre[0].focus();
+            isSubmiting = false;
             return;
         } else if (
             !isThumbnail &&
             !confirm('웹툰의 대표 이미지가 없습니다.\n그대로 진행하시겠습니까?')
         ) {
+            isSubmiting = false;
             return;
         } else if (
             !synopsisEditorRef.current?.textContent ||
@@ -141,9 +150,10 @@ export const PaintingWebtoonContainer = () => {
         ) {
             synopsisEditorRef?.current?.focus();
             alert('시눕시스를 작성해주십시오.');
+            isSubmiting = false;
             return;
         }
-        callApi<Readonly<Record<string, unknown>>, string>({
+        const subscribe = callApi<WebtoonRegistRqeust, string>({
             method: 'POST',
             path: 'webtoon',
             endpoint: 'content',
@@ -168,7 +178,11 @@ export const PaintingWebtoonContainer = () => {
                 if (!thumbnailUploadUrl) return;
                 const file =
                     (thumbnail.files && thumbnail.files[0]) || undefined;
-                if (!file) return;
+                if (!file) {
+                    navigate('/dashboard');
+                    isSubmiting = false;
+                    return;
+                }
 
                 fetch(thumbnailUploadUrl, {
                     method: 'PUT',
@@ -177,23 +191,30 @@ export const PaintingWebtoonContainer = () => {
                         'Content-Type': 'application/octet-stream',
                     },
                     body: file,
-                }).then((res) => {
-                    console.log(res);
-                    if (!(res.status == 200 || res.status == 201)) {
-                        alert(
-                            '썸네일 이미지 업로드에 실패하였습니다.\n다음에 다시 시도해주십시오.',
-                        );
-                    }
-                });
+                })
+                    .then((res) => {
+                        console.log('res???', res);
+                        if (!(res.status == 200 || res.status == 201)) {
+                            alert(
+                                '썸네일 이미지 업로드에 실패하였습니다.\n수정 화면에서 다시 시도해주십시오.',
+                            );
+                        }
+                        isSubmiting = false;
+                        navigate('/dashboard');
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
             },
             complete: () => {
                 console.log('aa');
+                isSubmiting = false;
+                subscribe.unsubscribe();
             },
             error: (error) => {
                 console.log(error);
             },
         });
-        // 인서트 먼저하고, s3 key 넘겨줘서 url 저장하고, response에 url 객체 넣고 클라이언트에서 업로드
     };
 
     return (

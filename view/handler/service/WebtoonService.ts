@@ -1,4 +1,4 @@
-import { Genre } from '@type/service/WebtoonType';
+import { Genre } from '@type/service/Genre';
 import { ResponseWrapper } from '@type/ReesponseWrapper';
 import {
     BehaviorSubject,

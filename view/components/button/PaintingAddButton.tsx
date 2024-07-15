@@ -31,7 +31,6 @@ export const PaintingAddButton = () => {
             .pipe(filter(({ emissionDirection }) => emissionDirection === 'in'))
             .subscribe((event) => {
                 if (event.isBack) {
-                    console.log(isSpinning);
                     setIsSpinning(false);
                 }
             });

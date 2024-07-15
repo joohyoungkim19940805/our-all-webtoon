@@ -1,8 +1,18 @@
 import { Link } from 'react-router-dom';
 import styles from './MyWebtoonListContainer.module.css';
 import anchorStyles from '@components/anchor/Anchor.module.css';
+import { useEffect } from 'react';
+import { callApi } from '@handler/service/CommonService';
 
 export const MyWebtoonListContainer = () => {
+    useEffect(() => {
+        const subscribe = callApi<unknown, string>({
+            method: 'GET',
+            path: 'webtoon',
+            endpoint: 'genre',
+        });
+        return () => {};
+    }, []);
     return (
         <flex-layout data-direction="column">
             <flex-container

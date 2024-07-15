@@ -5,7 +5,7 @@ import {
 } from '@container/genre/GenreListContainer';
 import { WebtoonEpisodeList } from '@container/webtoon/WebtoonEpisodeList';
 import { WebtoonFilterBar } from '@container/webtoon/WebtoonFilterBar';
-import { Genre } from '@type/service/WebtoonType';
+import { Genre } from '@type/service/Genre';
 import { WebtoonEpisodeType } from '@type/service/WebtoonEpisodeType';
 import { useEffect } from 'react';
 
