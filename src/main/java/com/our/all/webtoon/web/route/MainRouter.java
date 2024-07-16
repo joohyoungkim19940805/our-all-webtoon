@@ -106,6 +106,7 @@ public class MainRouter {
 						path( "search" ),
 						searchPathBuilder -> searchPathBuilder
 							.GET( "/genre", accept( MediaType.APPLICATION_JSON ), webtoonHandler::getGenreList )
+							.GET( "/list", accept( MediaType.TEXT_EVENT_STREAM ), webtoonHandler::searchMyWebtoonList )
 							.build()
 					)
 					/* .nest(path("/create"), createPathBuilder -> createPathBuilder .build()) */

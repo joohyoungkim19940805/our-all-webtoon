@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.terms.TermsOfServiceEntity;
-import com.our.all.webtoon.entity.terms.TermsOfServiceNames;
+import com.our.all.webtoon.entity.terms.code.TermsOfServiceNames;
 import com.our.all.webtoon.entity.webtoon.GenreEntity;
 import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
@@ -75,7 +75,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 		String name = "웹툰 운영원칙";
 		var empty = TermsOfServiceEntity.builder().build();
 		return termsRepository
-			.existsByName( name )
+			.existsByTermsOfServiceName( TermsOfServiceNames.웹툰_운영원칙 )
 			.filter( e -> ! e )
 			.flatMap( exists -> {
 				List<Editor> termsContent = List

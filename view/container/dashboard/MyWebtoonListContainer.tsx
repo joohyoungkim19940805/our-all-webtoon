@@ -2,17 +2,41 @@ import { Link } from 'react-router-dom';
 import styles from './MyWebtoonListContainer.module.css';
 import anchorStyles from '@components/anchor/Anchor.module.css';
 import { useEffect } from 'react';
-import { callApi } from '@handler/service/CommonService';
+import { callApi, createSSEObservable } from '@handler/service/CommonService';
 
 export const MyWebtoonListContainer = () => {
+    useEffect(() => {
+        const subscribe = createSSEObservable(
+            'http://localhost:4568/api/webtoon/search/list',
+        ).subscribe({
+            next: (data) => console.log(data),
+            error: (err) => console.error('Error:', err),
+            complete: () => console.log('Stream complete'),
+        });
+        return () => {
+            subscribe.unsubscribe();
+        };
+    });
+    /*
     useEffect(() => {
         const subscribe = callApi<unknown, string>({
             method: 'GET',
             path: 'webtoon',
-            endpoint: 'genre',
+            endpoint: 'list',
+            headers: {
+                'Content-Type': 'text/event-stream',
+            },
+        }).subscribe({
+            next: (result) => {
+                console.log(result);
+            },
+            complete: () => {},
         });
-        return () => {};
-    }, []);
+        return () => {
+            subscribe.unsubscribe();
+        };
+    });
+    */
     return (
         <flex-layout data-direction="column">
             <flex-container

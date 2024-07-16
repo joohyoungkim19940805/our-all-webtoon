@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.BaseEntity;
+import com.our.all.webtoon.entity.terms.code.TermsOfServiceNames;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

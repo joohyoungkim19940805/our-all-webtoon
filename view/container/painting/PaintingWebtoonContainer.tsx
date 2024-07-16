@@ -175,10 +175,17 @@ export const PaintingWebtoonContainer = () => {
         }).subscribe({
             next: (thumbnailUploadUrl) => {
                 console.log(thumbnailUploadUrl);
-                if (!thumbnailUploadUrl || thumbnailUploadUrl == '') return;
+                if (!thumbnailUploadUrl || thumbnailUploadUrl == '') {
+                    navigate('/dashboard');
+                    isSubmiting = false;
+                    return;
+                }
                 const file =
                     (thumbnail.files && thumbnail.files[0]) || undefined;
                 if (!file) {
+                    alert(
+                        '썸네일 이미지 업로드에 실패하였습니다.\n수정 화면에서 다시 시도해주십시오.',
+                    );
                     navigate('/dashboard');
                     isSubmiting = false;
                     return;

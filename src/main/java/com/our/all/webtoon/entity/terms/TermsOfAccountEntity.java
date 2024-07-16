@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection = "terms_of_service")
+@Document(collection = "terms_of_account")
 public class TermsOfAccountEntity extends BaseEntity {
 
 	private String accountId;

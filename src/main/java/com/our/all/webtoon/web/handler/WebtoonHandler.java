@@ -3,6 +3,7 @@ package com.our.all.webtoon.web.handler;
 
 import static com.our.all.webtoon.util.ResponseWrapper.response;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.terms.TermsOfAccountEntity;
-import com.our.all.webtoon.entity.terms.TermsOfServiceNames;
+import com.our.all.webtoon.entity.terms.code.TermsOfServiceNames;
 import com.our.all.webtoon.entity.webtoon.WebtoonEntity;
 import com.our.all.webtoon.repository.terms.TermOfAccountRepository;
 import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
@@ -23,8 +24,10 @@ import com.our.all.webtoon.service.AccountService;
 import com.our.all.webtoon.service.S3Service;
 import com.our.all.webtoon.util.ResponseWrapper;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
+import lombok.Builder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 
 @Component
@@ -117,10 +120,14 @@ public class WebtoonHandler {
 							.build() //
 					);//
 
-				return webtoonEntity.zipWith( Mono.just( t.getT2().thumbnailExtension ) );
+				return webtoonEntity.zipWith( Mono.just( t.getT2().thumbnailExtension == null ? "" : t.getT2().thumbnailExtension ) );
 
 			} )
 			.flatMap( e -> {
+
+				if (e.getT2().isBlank())
+					return webtoonRepository.save( e.getT1() ).zipWith( Mono.just( false ) );
+
 				String key = "%s/%s/%s/%s".formatted(
 					e.getT1().getAccountId(),
 					e.getT1().getId(),
@@ -144,6 +151,7 @@ public class WebtoonHandler {
 			.body( response( Result._0, result ), ResponseWrapper.class );
 	}
 
+	@Builder
 	protected static record MyWebtoonListResponse(
 		String id,
 		String webtoonTitle,
@@ -156,14 +164,34 @@ public class WebtoonHandler {
 	public Mono<ServerResponse> searchMyWebtoonList(
 		ServerRequest request
 	) {
+
+		Sinks.Many<MyWebtoonListResponse> sinks = Sinks.many().unicast().onBackpressureBuffer();
 		
-		Flux<MyWebtoonListResponse> result = accountService
+		// Flux<MyWebtoonListResponse> result =
+		accountService
 			.convertRequestToAccount( request )
 			.flatMapMany( account -> webtoonRepository.findAllByAccountId( account.getId() ) )
-			.map( e -> new MyWebtoonListResponse( e.getId(), e.getTitle(), e.getGenre(), e.getSynopsis(), e.getThumbnail() ) );
+			.map(
+				e -> MyWebtoonListResponse
+					.builder()
+					.id( e.getId() )
+					.webtoonTitle( e.getTitle() )
+					.genre( e.getGenre() )
+					.synopsis( e.getSynopsis() )
+					.thumbnail( e.getThumbnail() )
+					.build()
+			)
+			.doOnNext( e -> {
+				sinks.tryEmitNext( e );
+			} )
+			.delayElements( Duration.ofMillis( 1000 ) )
+			.doFinally( e -> {
+				sinks.tryEmitComplete();
+			} )
+			.subscribe();
 		return ok()
-			.contentType( MediaType.APPLICATION_JSON )
-			.body( response( Result._0, result ), ResponseWrapper.class );
+			.contentType( MediaType.TEXT_EVENT_STREAM )
+			.body( sinks.asFlux(), MyWebtoonListResponse.class );
 	}
 
 }
