@@ -41,13 +41,14 @@ export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
         headers: serviceArguments.headers || undefined,
     }).pipe(
         tap((result) => {
+            console.log(result);
             if (!serviceArguments.resultHandler) return;
             const { response } = result;
             serviceArguments
                 .resultHandler(response)
                 .catch((err) => console.error(err));
         }),
-        map((result) => result.response.data),
+        map((result) => result.response?.data),
     );
 };
 
@@ -148,3 +149,26 @@ export const callApiCache2 = <T, R>(
         }),
     );
 };
+
+export function createSSEObservable(url: string) {
+    return new Observable((observer) => {
+        const eventSource = new EventSource(url, {
+            withCredentials: true,
+        });
+
+        eventSource.onmessage = (event) => {
+            console.log(event);
+            observer.next(event.data);
+        };
+
+        eventSource.onerror = (error) => {
+            console.log(error);
+            observer.error(error);
+            eventSource.close();
+        };
+
+        return () => {
+            eventSource.close();
+        };
+    });
+}
