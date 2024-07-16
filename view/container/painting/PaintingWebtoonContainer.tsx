@@ -175,7 +175,7 @@ export const PaintingWebtoonContainer = () => {
         }).subscribe({
             next: (thumbnailUploadUrl) => {
                 console.log(thumbnailUploadUrl);
-                if (!thumbnailUploadUrl) return;
+                if (!thumbnailUploadUrl || thumbnailUploadUrl == '') return;
                 const file =
                     (thumbnail.files && thumbnail.files[0]) || undefined;
                 if (!file) {

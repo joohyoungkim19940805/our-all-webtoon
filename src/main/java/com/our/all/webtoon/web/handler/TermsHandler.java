@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.dto.Editor;
-import com.our.all.webtoon.repository.terms.TermsRepository;
+import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
 import com.our.all.webtoon.util.ResponseWrapper;
 import com.our.all.webtoon.util.exception.BirdPlusException.Result;
 import reactor.core.publisher.Mono;
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 public class TermsHandler {
 
 	@Autowired
-	private TermsRepository termsRepository;
+	private TermOfServiceRepository termsRepository;
 
 	private static record TermsResponse(
 		String name,

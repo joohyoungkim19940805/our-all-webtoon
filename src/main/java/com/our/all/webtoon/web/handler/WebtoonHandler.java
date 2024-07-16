@@ -3,7 +3,6 @@ package com.our.all.webtoon.web.handler;
 
 import static com.our.all.webtoon.util.ResponseWrapper.response;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.dto.Editor;
+import com.our.all.webtoon.entity.terms.TermsOfAccountEntity;
+import com.our.all.webtoon.entity.terms.TermsOfServiceNames;
 import com.our.all.webtoon.entity.webtoon.WebtoonEntity;
+import com.our.all.webtoon.repository.terms.TermOfAccountRepository;
+import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.repository.webtoon.WebtoonRepository;
 import com.our.all.webtoon.service.AccountService;
@@ -38,6 +41,12 @@ public class WebtoonHandler {
 
 	@Autowired
 	private S3Service s3Service;
+
+	@Autowired
+	private TermOfAccountRepository termOfAccountRepository;
+
+	@Autowired
+	private TermOfServiceRepository termOfServiceRepository;
 
 	protected static record GenreListResponse(
 		String name,
@@ -65,22 +74,29 @@ public class WebtoonHandler {
 		List<String> genre,
 		String summary,
 		List<Editor> synopsis,
-		String webtoon,
 		String thumbnailExtension
 	) {}
 
-	protected static record WebtoonRegistResponse(URL url) {}
 	public Mono<ServerResponse> registWebtoon(
 		ServerRequest request
 	) {
 		
-
-		Mono<URL> result = Mono
+		Mono<String> result = Mono
 			.zip(
 				accountService.convertRequestToAccount( request ),
 				request.bodyToMono( WebtoonRegistRequest.class ) )
-			.flatMap(
-				t -> t.getT2().id != null ? webtoonRepository.findByIdAndAccountId(
+			.filter( e -> e.getT2().agree )
+			.switchIfEmpty( Mono.error( new Exception( "TOTD need create termsException class " ) ) )
+			.doOnNext( e -> {
+				// 웹툰 운영 원칙 저장
+				termOfServiceRepository
+					.findByTermsOfServiceName( TermsOfServiceNames.웹툰_운영원칙 )
+					.map( termsService -> TermsOfAccountEntity.builder().accountId( e.getT1().getId() ).termsOfServiceId( termsService.getId() ).build() )
+					.flatMap( termOfAccountRepository::save )
+					.subscribe();
+			} )
+			.flatMap(t -> {
+				Mono<WebtoonEntity> webtoonEntity = t.getT2().id != null ? webtoonRepository.findByIdAndAccountId(
 					t.getT2().id,
 					t.getT1()
 						.getId() //
@@ -89,9 +105,7 @@ public class WebtoonHandler {
 						e -> e.withTitle( t.getT2().webtoonTitle )
 							.withSynopsis( t.getT2().synopsis )
 							.withGenre( t.getT2().genre )
-							.withThumbnail(
-								t.getT2().thumbnailExtension == null ? e.getThumbnail()
-									: t.getT2().thumbnailExtension ) )
+					)
 					: Mono.just(
 						WebtoonEntity.builder()
 							.accountId(
@@ -100,36 +114,56 @@ public class WebtoonHandler {
 							.title( t.getT2().webtoonTitle )
 							.synopsis( t.getT2().synopsis )
 							.genre( t.getT2().genre )
-							.thumbnail( t.getT2().thumbnailExtension )
 							.build() //
-					)//
-			)
-			.flatMap( e -> webtoonRepository.save( e ) )
+					);//
+
+				return webtoonEntity.zipWith( Mono.just( t.getT2().thumbnailExtension ) );
+
+			} )
+			.flatMap( e -> {
+				String key = "%s/%s/%s/%s".formatted(
+					e.getT1().getAccountId(),
+					e.getT1().getId(),
+					"thumbnail",
+					e.getT1().getId() + e.getT2()
+				);
+				boolean isNewFile = ! key.equals( e.getT1().getThumbnail() );
+				if(isNewFile) 
+					e.getT1().withThumbnail( key );
+				
+				return webtoonRepository.save( e.getT1() ).zipWith( Mono.just( isNewFile ) );
+
+			} )
+			.filter( e -> e.getT2() )
 			.map(
-				e -> 
-					s3Service.putObjectPresignedUrlForPublic(
-					"%s/%s/%s/%s".formatted(
-						e.getAccountId(),
-						e.getId(),
-						"thumbnail",
-						e.getId() + e.getThumbnail() //
-					)//
-				) //
-			);
+				e -> s3Service.putObjectPresignedUrlForPublic( e.getT1().getThumbnail() ).toString()//
+			)
+			.defaultIfEmpty( "" );
 		return ok()
 			.contentType( MediaType.APPLICATION_JSON )
 			.body( response( Result._0, result ), ResponseWrapper.class );
 	}
 
-	// private static record WebtoonSynopsisOneLineSummaryRequest(String synopsis){}
-	protected static record WebtoonSynopsisOneLineSummaryResponse(String oneLineSummary) {}
+	protected static record MyWebtoonListResponse(
+		String id,
+		String webtoonTitle,
+		List<String> genre,
+		// String summary,
+		List<Editor> synopsis,
+		String thumbnail
+	) {}
 
-	public Mono<ServerResponse> getWebtoonSynopsisOneLineSummary(
+	public Mono<ServerResponse> searchMyWebtoonList(
 		ServerRequest request
 	) {
-
-		return null;
+		
+		Flux<MyWebtoonListResponse> result = accountService
+			.convertRequestToAccount( request )
+			.flatMapMany( account -> webtoonRepository.findAllByAccountId( account.getId() ) )
+			.map( e -> new MyWebtoonListResponse( e.getId(), e.getTitle(), e.getGenre(), e.getSynopsis(), e.getThumbnail() ) );
+		return ok()
+			.contentType( MediaType.APPLICATION_JSON )
+			.body( response( Result._0, result ), ResponseWrapper.class );
 	}
 
-	// public Mono<ServerResponse> get
 }

@@ -6,6 +6,7 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.our.all.webtoon.util.properties.S3Properties;
+import reactor.core.publisher.Mono;
 import software.amazon.awssdk.services.s3.S3AsyncClientBuilder;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -47,5 +48,20 @@ public class S3Service {
 	// public void getHasKey() {
 	// s3AsyncClientBuilder.build().list
 	// }
+	public static void main(
+		String a[]
+	)
+		throws InterruptedException {
 
+		Mono
+			.just( "e" )
+			.filter( e -> e.equals( "ea" ) )
+			.mapNotNull( e -> true )
+			.defaultIfEmpty( false )
+			.subscribe( e -> {
+				System.out.println( e );
+
+			} );
+		Thread.sleep( 99999 );
+	}
 }

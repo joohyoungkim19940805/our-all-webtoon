@@ -14,9 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import com.our.all.webtoon.dto.Editor;
-import com.our.all.webtoon.entity.terms.TermsEntity;
+import com.our.all.webtoon.entity.terms.TermsOfServiceEntity;
+import com.our.all.webtoon.entity.terms.TermsOfServiceNames;
 import com.our.all.webtoon.entity.webtoon.GenreEntity;
-import com.our.all.webtoon.repository.terms.TermsRepository;
+import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.util.properties.S3Properties;
 import reactor.core.publisher.Flux;
@@ -55,7 +56,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 	private S3Presigner.Builder s3PresignerBuilder;
     
 	@Autowired
-	private TermsRepository termsRepository;
+	private TermOfServiceRepository termsRepository;
 
 	@Autowired
 	private GenreRepository genreRepository;
@@ -72,7 +73,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 	private Mono<Boolean> createDefaultPaintingWebtoonTerms() {
 
 		String name = "웹툰 운영원칙";
-
+		var empty = TermsOfServiceEntity.builder().build();
 		return termsRepository
 			.existsByName( name )
 			.filter( e -> ! e )
@@ -118,14 +119,15 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 					);
 				return (Mono<Boolean>) termsRepository
 					.save(
-						TermsEntity
+						TermsOfServiceEntity
 							.builder()
 							.name( name )
 							.content( termsContent )
+							.termsOfServiceName( TermsOfServiceNames.웹툰_운영원칙 )
 							.build()
 					)
-					.defaultIfEmpty( TermsEntity.builder().build() )
-					.map( e -> e.getId() != null );
+					.mapNotNull( e -> e.getId() != null )
+					.defaultIfEmpty( false );
 
 			} );
     }
@@ -146,6 +148,7 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 			.all( e -> e.getId() != null );
 
 	}
+
 
 
 }
