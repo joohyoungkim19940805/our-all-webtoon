@@ -161,6 +161,7 @@ public class WebtoonHandler {
 		String thumbnail
 	) {}
 
+	//
 	public Mono<ServerResponse> searchMyWebtoonList(
 		ServerRequest request
 	) {
