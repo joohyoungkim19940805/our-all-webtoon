@@ -7,7 +7,7 @@ import { callApi, createSSEObservable } from '@handler/service/CommonService';
 export const MyWebtoonListContainer = () => {
     useEffect(() => {
         const subscribe = createSSEObservable(
-            'http://localhost:4568/api/webtoon/search/list',
+            '/api/webtoon/search/list',
         ).subscribe({
             next: (data) => console.log(data),
             error: (err) => console.error('Error:', err),

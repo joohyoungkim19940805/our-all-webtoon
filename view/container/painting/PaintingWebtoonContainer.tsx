@@ -152,7 +152,7 @@ export const PaintingWebtoonContainer = () => {
             alert('시눕시스를 작성해주십시오.');
             isSubmiting = false;
             return;
-        }
+        } //
         const subscribe = callApi<WebtoonRegistRqeust, string>({
             method: 'POST',
             path: 'webtoon',
