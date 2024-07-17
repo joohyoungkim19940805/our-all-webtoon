@@ -149,7 +149,6 @@ public class MainRouter {
 
 			)
 			.build();
-		1
 
 	}
 
