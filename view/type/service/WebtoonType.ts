@@ -8,3 +8,11 @@ export type WebtoonRegistRqeust = {
     genre: string[];
     thumbnailExtension?: string;
 };
+
+export type WebtoonListResponse = {
+    id: string;
+    webtoonTitle: string;
+    genre: string[];
+    synopsis: Editor[];
+    thumbnail: string;
+};

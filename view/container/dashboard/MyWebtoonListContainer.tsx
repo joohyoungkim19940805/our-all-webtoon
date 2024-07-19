@@ -3,10 +3,11 @@ import styles from './MyWebtoonListContainer.module.css';
 import anchorStyles from '@components/anchor/Anchor.module.css';
 import { useEffect } from 'react';
 import { callApi, createSSEObservable } from '@handler/service/CommonService';
+import { WebtoonListResponse } from '@type/service/WebtoonType';
 
 export const MyWebtoonListContainer = () => {
     useEffect(() => {
-        const subscribe = createSSEObservable(
+        const subscribe = createSSEObservable<WebtoonListResponse>(
             '/api/webtoon/search/list',
         ).subscribe({
             next: (data) => console.log(data),

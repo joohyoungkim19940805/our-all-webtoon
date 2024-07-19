@@ -2,6 +2,7 @@ import { ResponseWrapper } from '@type/ReesponseWrapper';
 import {
     BehaviorSubject,
     Observable,
+    Subscriber,
     catchError,
     concatMap,
     map,
@@ -150,25 +151,37 @@ export const callApiCache2 = <T, R>(
     );
 };
 
-export function createSSEObservable(url: string) {
-    return new Observable((observer) => {
-        const eventSource = new EventSource(url, {
-            withCredentials: true,
-        });
+const createSSE = <T>(observer: Subscriber<T>, url: string) => {
+    let eventSource = new EventSource(url, {
+        withCredentials: false,
+    });
 
-        eventSource.onmessage = (event) => {
-            console.log(event);
-            observer.next(event.data);
-        };
+    eventSource.onmessage = (event) => {
+        console.log('message : ', event);
+        observer.next(JSON.parse(event.data) as T);
+    };
 
-        eventSource.onerror = (error) => {
-            console.log(error);
+    eventSource.onerror = (error) => {
+        console.log('error', error);
+        console.log('readyState:', eventSource.readyState); // 추가 디버깅 정보
+
+        if (eventSource.readyState != 0) {
             observer.error(error);
+            setTimeout(() => {
+                eventSource = createSSE(observer, url);
+            }, 3000); // 3초 후 재연결
+        } else {
             eventSource.close();
-        };
+        }
+    };
+    return eventSource;
+};
 
+export const createSSEObservable = <T>(url: string) => {
+    return new Observable<T>((observer) => {
+        let eventSource = createSSE<T>(observer, url);
         return () => {
             eventSource.close();
         };
     });
-}
+};
