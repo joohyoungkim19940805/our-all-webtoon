@@ -86,7 +86,7 @@ public class WebtoonHandler {
 		
 		Mono<String> result = Mono
 			.zip(
-				accountService.convertRequestToAccount( request ),
+				accountService.convertRequestToAccount(),
 				request.bodyToMono( WebtoonRegistRequest.class ) )
 			.filter( e -> e.getT2().agree )
 			.switchIfEmpty( Mono.error( new Exception( "TOTD need create termsException class " ) ) )
@@ -166,33 +166,43 @@ public class WebtoonHandler {
 		ServerRequest request
 	) {
 
-		Sinks.Many<MyWebtoonListResponse> sinks = Sinks.many().unicast().onBackpressureBuffer();
-		
-		// Flux<MyWebtoonListResponse> result =
-		accountService
-			.convertRequestToAccount( request )
-			.flatMapMany( account -> webtoonRepository.findAllByAccountId( account.getId() ) )
-			.map(
-				e -> MyWebtoonListResponse
-					.builder()
-					.id( e.getId() )
-					.webtoonTitle( e.getTitle() )
-					.genre( e.getGenre() )
-					.synopsis( e.getSynopsis() )
-					.thumbnail( e.getThumbnail() )
-					.build()
-			)
-			.doOnNext( e -> {
-				sinks.tryEmitNext( e );
-			} )
-			.delayElements( Duration.ofMillis( 1000 ) )
-			.doFinally( e -> {
-				sinks.tryEmitComplete();
-			} )
-			.subscribe();
+
 		return ok()
 			.contentType( MediaType.TEXT_EVENT_STREAM )
-			.body( sinks.asFlux(), MyWebtoonListResponse.class );
+			.body(
+				accountService
+					.convertRequestToAccount()
+					.flatMapMany( account -> {
+						Sinks.Many<MyWebtoonListResponse> sinks = Sinks.many().unicast().onBackpressureBuffer();
+						webtoonRepository.findAllByAccountId( account.getId() )
+							.map(
+								e -> MyWebtoonListResponse
+									.builder()
+									.id( e.getId() )
+									.webtoonTitle( e.getTitle() )
+									.genre( e.getGenre() )
+									.synopsis( e.getSynopsis() )
+									.thumbnail( e.getThumbnail() )
+									.build()
+							)
+							.doOnNext( e -> {
+								sinks.tryEmitNext( e );
+							} )
+							.delayElements( Duration.ofMillis( 1000 ) )
+							.doOnComplete( () -> {
+								sinks.tryEmitComplete();
+							} )
+							.subscribe();
+
+						return sinks.asFlux();
+					})
+					,
+				MyWebtoonListResponse.class
+			);
+
+		// return ok()
+		// .contentType( MediaType.TEXT_EVENT_STREAM )
+		// .body( sinks.asFlux(), MyWebtoonListResponse.class );
 	}
 
 }

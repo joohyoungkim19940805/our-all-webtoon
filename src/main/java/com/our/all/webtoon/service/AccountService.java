@@ -15,7 +15,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.server.ServerRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.our.all.webtoon.config.security.JwtIssuerType;
 import com.our.all.webtoon.config.security.JwtVerifyHandler;
@@ -146,13 +145,15 @@ public class AccountService {
                 });
     }
 
-    public Mono<AccountEntity> convertRequestToAccount(ServerRequest request) {
+	public Mono<AccountEntity> convertRequestToAccount() {
 
         return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
-                .flatMap(auth -> {
-                    UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-                    return accountRepository.findByEmail(userPrincipal.getId());// .switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
-                });
-    }
+			.flatMap( auth -> {
+				UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+				return accountRepository.findByEmail( userPrincipal.getId() );// .switchIfEmpty(accountRepository.findByAccountName(userPrincipal.getName()));
+
+			} );
+
+	}
 
 }

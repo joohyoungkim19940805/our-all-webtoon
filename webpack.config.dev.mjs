@@ -30,8 +30,13 @@ export default merge(baseConfig, {
             '**': {
                 target: 'http://localhost:8789',
                 secure: false,
+                changeOrigin: true,
             },
         },
+        headers: {
+            Connection: 'keep-alive',
+        },
+        compress: false,
     },
     optimization: {
         minimize: false,
