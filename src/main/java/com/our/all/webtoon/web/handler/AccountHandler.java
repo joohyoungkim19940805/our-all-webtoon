@@ -59,7 +59,7 @@ public class AccountHandler {
 	
 	public Mono<ServerResponse> getAccountInfo(ServerRequest request){
 
-		return accountService.convertRequestToAccount( request )
+		return accountService.convertRequestToAccount()
 			.flatMap(
 				e -> ok().contentType( MediaType.APPLICATION_JSON )
 					.body( response( Result._0, e ), ResponseWrapper.class ) //

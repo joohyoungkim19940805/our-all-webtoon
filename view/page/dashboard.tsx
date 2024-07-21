@@ -21,15 +21,21 @@ styles;
 FlexLayout;
 
 const html = document.body.parentElement;
-const covertFontSize = (html: HTMLElement) => {
-    //크기별로 100 나누기 200 나누기 300 나누기 순차적으로 가야함 --내일 수정 예정-- //2024 07 14
-    if (window.innerWidth <= 500) {
-        html.style.fontSize = 25 / (window.innerWidth / 200) + 'px';
-    } else if (window.innerWidth >= 501 && window.innerWidth >= 900) {
-        html.style.fontSize = 25 / (window.innerWidth / 600) + 'px';
-    } else {
-        html.style.fontSize = 25 / (window.innerWidth / 300) + 'px';
-    }
+
+const covertFontSize = async (html: HTMLElement) => {
+    return new Promise<undefined | number>((resolve) => {
+        let lastFontSizeResult: undefined | number = undefined;
+        for (let i = 100, len = window.innerWidth + 100; i < len; i += 100) {
+            if (window.innerWidth <= i) {
+                lastFontSizeResult = Math.max(
+                    10,
+                    25 / (window.innerWidth / (i * 0.4)),
+                );
+                html.style.fontSize = lastFontSizeResult + 'px';
+            }
+        }
+        resolve(lastFontSizeResult);
+    });
 };
 if (html) {
     covertFontSize(html);
