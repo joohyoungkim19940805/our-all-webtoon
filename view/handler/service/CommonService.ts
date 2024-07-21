@@ -34,6 +34,12 @@ export interface CacheForService {
     cacheSize?: number;
 }
 
+interface CacheMap<T> {
+    [key: string]: BehaviorSubject<Observable<T>>;
+}
+
+export const cacheMap: CacheMap<unknown> = {};
+
 export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
     return ajax<ResponseWrapper<R>>({
         url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
@@ -75,11 +81,6 @@ const callApiForCache = <T, R>(
     );
 };
 
-interface CacheMap<T> {
-    [key: string]: BehaviorSubject<Observable<T>>;
-}
-
-export const cacheMap: CacheMap<unknown> = {};
 export const callApiCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
     cacheForService: CacheForService,

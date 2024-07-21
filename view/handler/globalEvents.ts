@@ -1,4 +1,6 @@
 import {
+    BehaviorSubject,
+    Observable,
     ReplaySubject,
     Subject,
     auditTime,
@@ -56,6 +58,12 @@ export const accessNavigation = new ReplaySubject<PerformanceEntry>(3);
 performance.getEntriesByType('navigation').forEach((entry) => {
     accessNavigation.next(entry);
 });
+
+interface ServerSentMap<T> {
+    [key: string]: BehaviorSubject<Observable<T>>;
+}
+
+export const serverSentMap: ServerSentMap<unknown> = {};
 
 /*
 const observer = new PerformanceObserver((list) => {
