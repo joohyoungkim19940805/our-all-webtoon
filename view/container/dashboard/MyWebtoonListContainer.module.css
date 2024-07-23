@@ -2,33 +2,22 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    height: 100%;
     .move-painting {
         display: flex;
         align-items: center;
     }
 }
-.my-webtoon-list {
+.my-webtoon-list-item {
     display: flex;
     align-content: center;
-    height: 100%;
     align-items: center;
-    width: 100%;
-    justify-content: space-around;
     font-size: 1.5rem;
     overflow: hidden;
     overflow-wrap: revert;
     gap: 1dvw;
-    &.head {
-    }
-    &.body {
-        align-items: flex-start;
-    }
-    & > div {
-        white-space: nowrap;
-        width: 9999rem;
+    & > .my-webtoon-info {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

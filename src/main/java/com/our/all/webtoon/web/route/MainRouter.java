@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import com.our.all.webtoon.web.handler.AccountHandler;
+import com.our.all.webtoon.web.handler.EventStreamHandler;
 import com.our.all.webtoon.web.handler.IndexHandler;
 import com.our.all.webtoon.web.handler.PageHandler;
 import com.our.all.webtoon.web.handler.TermsHandler;
@@ -148,6 +149,14 @@ public class MainRouter {
 					)
 
 			)
+			.build();
+
+	}
+
+	@Bean
+	public RouterFunction<ServerResponse> eventStream(EventStreamHandler eventStreamHandler) {
+
+		return route().GET( "/api/event", eventStreamHandler::emissionStream )
 			.build();
 
 	}

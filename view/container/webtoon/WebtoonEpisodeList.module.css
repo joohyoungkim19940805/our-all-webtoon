@@ -23,12 +23,6 @@
         }
         & .episode-thumbnail {
             flex: 1 0 18%;
-            img {
-                max-width: 100%;
-                height: auto;
-                aspect-ratio: attr(width) / attr(height);
-                image-rendering: auto;
-            }
         }
         & .episode-title {
             align-items: center;
@@ -87,14 +81,6 @@
                 align-items: center;
                 text-align: center;
                 font-size: 0.88em;
-            }
-            & .views {
-                display: flex;
-                font-size: 0.88em;
-                width: 100%;
-                justify-content: center;
-                color: hsla(0, 0%, 100%, 0.42);
-                gap: 0.4vw;
             }
         }
     }

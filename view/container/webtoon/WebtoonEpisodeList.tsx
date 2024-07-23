@@ -9,6 +9,7 @@ import {
     wayValues,
 } from '@handler/subject/FilterBarEvent';
 import { touchShowScrollHandle } from '@handler/hooks/ScrollHooks';
+import { Counter } from '@components/counter';
 
 const testWebtoonList = [
     [...new Array(20)],
@@ -106,10 +107,10 @@ export const WebtoonEpisodeList = () => {
                                         },
                                     )}
                                 </div>
-                                <div className={`${styles['views']}`}>
-                                    {episode.views || 0}
-                                    <EyeSvg></EyeSvg>
-                                </div>
+                                <Counter
+                                    count={episode.views || 0}
+                                    svg={<EyeSvg />}
+                                ></Counter>
                             </div>
                         </li>
                     );

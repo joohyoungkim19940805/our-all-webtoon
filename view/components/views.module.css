@@ -1,0 +1,11 @@
+.counter {
+    display: flex;
+    font-size: 0.88em;
+    gap: 0.4vw;
+    body[data-mode='black'] && {
+        color: hsla(0, 0%, 100%, 0.42);
+    }
+    body:not([data-mode='black']) && {
+        color: hsl(0deg 0% 0% / 40%);
+    }
+}
