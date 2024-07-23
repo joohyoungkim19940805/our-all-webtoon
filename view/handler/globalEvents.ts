@@ -101,7 +101,14 @@ const globalSseEvent = <T extends Observable<Subscriber<any>>>(
 
 export const eventStream = <T>(key: SseEventKey) => {
     if (!serverSentMap[key]) {
+        serverSentMap[key] = new Observable<T>((observer) => {
+            let eventSource = globalSseEvent<T>(key);
+            return () => {
+                eventSource.close();
+            };
+        }
     }
+    return serverSentMap[key];
 };
 
 /*
