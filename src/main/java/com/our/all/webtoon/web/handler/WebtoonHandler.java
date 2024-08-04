@@ -91,7 +91,7 @@ public class WebtoonHandler {
 			.filter( e -> e.getT2().agree )
 			.switchIfEmpty( Mono.error( new Exception( "TOTD need create termsException class " ) ) )
 			.doOnNext( e -> {
-				// 웹툰 운영 원칙 저장
+				// 웹툰 운영 원칙 동의 여부 저장
 				termOfServiceRepository
 					.findByTermsOfServiceName( TermsOfServiceNames.웹툰_운영원칙 )
 					.map( termsService -> TermsOfAccountEntity.builder().accountId( e.getT1().getId() ).termsOfServiceId( termsService.getId() ).build() )
@@ -99,6 +99,7 @@ public class WebtoonHandler {
 					.subscribe();
 			} )
 			.flatMap(t -> {
+				// 기존 웹툰 정보가 있으면 가져오고 없으면 신규 엔티티 생성
 				Mono<WebtoonEntity> webtoonEntity = t.getT2().id != null ? webtoonRepository.findByIdAndAccountId(
 					t.getT2().id,
 					t.getT1()

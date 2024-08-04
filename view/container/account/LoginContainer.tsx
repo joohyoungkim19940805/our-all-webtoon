@@ -5,8 +5,16 @@ import { FindAccountInfo } from '@container/account/FindAccountInfoContainer';
 import buttonStyles from '@components/button/Button.module.css';
 import inputStyles from '@components/input/Input.module.css';
 import { SnsLoginContainer } from '@container/account/SnsLoginContainer';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const LoginContainer = () => {
+    const location = useLocation();
+    useEffect(() => {
+        const query = new URLSearchParams(location.search);
+        console.log('???', query.get('redirect-url'));
+    }, [location.search]);
+    console.log(location);
     return (
         <form
             className={styles['login-container']}

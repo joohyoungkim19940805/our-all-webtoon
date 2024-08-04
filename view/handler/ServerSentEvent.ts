@@ -26,10 +26,11 @@ const globalSseEvent = (key: SseEventKey) => {
 
         if (eventSource.readyState != 0) {
             serverSentMap[key]?.error(error);
-            setTimeout(() => {
-                eventSource.close();
-                eventSource = globalSseEvent(key);
-            }, 3000); // 3초 후 재연결
+            //setTimeout(() => {
+            // 즉시 재연결로 수정 2024 08 03
+            eventSource.close();
+            eventSource = globalSseEvent(key);
+            //}, 3000); // 3초 후 재연결
         } else {
             eventSource.close();
         }
