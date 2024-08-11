@@ -87,12 +87,5 @@
     },
     "dependencies": {
         "rxjs": "^7.8.1"
-    },
-    "prettier": {
-        "printWidth": 80,
-        "semi": true,
-        "trailingComma": "all",
-        "tabWidth": 4,
-        "singleQuote": true
     }
 }

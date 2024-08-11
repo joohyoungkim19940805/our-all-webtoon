@@ -14,5 +14,10 @@
         "other": true,
         "comments": false,
         "strings": true
-    }
+    },
+    "files.associations": {
+        "*.module.css": "css",
+        "*.module.scss": "scss"
+    },
+    "cssModules.enable": true
 }
