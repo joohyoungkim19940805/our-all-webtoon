@@ -59,7 +59,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("picture");
         String tokenValue = oauth2User.getAttribute("token");
-        // System.out.println("kjh test ::: " + oauth2User);
+		System.out.println( "kjh test ::: " + oauth2User );
         // System.out.println("kjh test ::: " + authentication.getCredentials());
         // System.out.println("kjh test ::: " + authentication.getAuthorities());
         // System.out.println("kjh test ::: " + authentication.getName());
@@ -73,7 +73,7 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
         // System.out.println(name);
         // System.out.println(email);
         // System.out.println(profileImageUrl);
-        // System.out.println(tokenValue);
+		System.out.println( tokenValue );
         // System.out.println("auth ::: " + authentication.getCredentials());
         // System.out.println(webFilterExchange.getExchange().getRequest().getQueryParams());
         // accountEntityMono.flatMap(accountEntity->)
