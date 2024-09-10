@@ -9,6 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.server.DefaultServerRedirectStrategy;
 import org.springframework.security.web.server.ServerRedirectStrategy;
@@ -40,6 +43,12 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
             new DefaultServerRedirectStrategy();
 
     @Autowired
+	private ReactiveOAuth2AuthorizedClientService authorizedClientService;
+
+	@Autowired
+	private InMemoryReactiveOAuth2AuthorizedClientService authorizedClientService2;
+
+	@Autowired
     private AccountService accountService;
 
     @Autowired
@@ -52,15 +61,18 @@ public class OAuth2GoogleLoginSuccessHandler implements ServerAuthenticationSucc
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,
             Authentication authentication) {
         // TODO Auto-generated method stub
+		OAuth2AuthenticationToken oauth2Authentication = (OAuth2AuthenticationToken) authentication;
+		//OAuth2AuthorizedClient authorizedClient = 
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
 
         String userId = oauth2User.getName();
         String name = oauth2User.getAttribute("name");
         String email = oauth2User.getAttribute("email");
         String profileImageUrl = (String) oauth2User.getAttribute("picture");
-        String tokenValue = oauth2User.getAttribute("token");
+		String tokenValue = oauth2User.getAttribute( "id_token" );
 		System.out.println( "kjh test ::: " + oauth2User );
-        // System.out.println("kjh test ::: " + authentication.getCredentials());
+		System.out.println( oauth2Authentication );
+		// System.out.println("kjh test ::: " + authentication.getCredentials());
         // System.out.println("kjh test ::: " + authentication.getAuthorities());
         // System.out.println("kjh test ::: " + authentication.getName());
         // System.out.println("kjh test ::: " + authentication.getDetails());
