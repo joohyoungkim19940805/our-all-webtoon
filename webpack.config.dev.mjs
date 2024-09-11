@@ -25,7 +25,7 @@ export default merge(baseConfig, {
             ],
         },
         host: 'localhost',
-        port: 4569,
+        port: 4545,
         proxy: {
             '**': {
                 target: 'http://localhost:8787',
