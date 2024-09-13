@@ -1,0 +1,96 @@
+server:
+  port: 8078
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(V7uxaUx7c/nB0jbDj09kKJXw2Zm6ho7Mhsb5EXvO8N4=)
+    password: ENC(e07I3QPBo5RYqFX/dKyry4cFCtQog3/5kZ5mXZYAw4I=)
+    default-encoding: UTF-8
+    protocol: smtp
+    properties:
+      mail.smtp:
+        auth: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+        starttls.enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          admin-client:  # OAuth2 클라이언트 ID
+            client-id: admin-client-id
+            client-secret: admin-client-secret
+            scope: openid, profile, email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-authentication-method: basic
+        provider:
+          auth-server:  # 인증 서버 정보
+            authorization-uri: https://auth-server.com/oauth2/authorize
+            token-uri: https://auth-server.com/oauth2/token
+            user-info-uri: https://auth-server.com/oauth2/userinfo
+            jwk-set-uri: https://auth-server.com/oauth2/jwks  # JWT 검증을 위한 공개 키 URI
+
+mail:
+  from: oozu1994@gmail.com
+  base-url: https://mozu.co.kr
+  forgot-password:
+    subject: Account Recovery - RADCNS
+    template-name: content/mail/forgotPasswordTemplate
+  account-verify:
+    subject: Account Verify - RADCNS
+    template-name: content/mail/accountVerifyTemplate
+
+logging:
+  config: classpath:logback/logback-prd.xml
+  level:
+    org:
+      springframework:
+        r2dbc: ERROR
+
+mongo:
+  username: ENC(rfCjq/fvgGJZIBPu4TF1C9E0qEboaAQg)
+  password: ENC(bdOwFie/fMdXq22I+5P6Xtmi0LchCGfB8YdmW1xcJ7A=)
+  url: ENC(qFsTPlFDy9Q1WKskaXThpoEiicMouV1dv0TN/F8aQLvJnG1apISJq/TIFaTX6Xm5NWX8udGOZVXlg23o5wmgzvcZkFE2KibOJ2UDApFDhIsRThxFW+hcA5NxG/eqLMb+Je30AQtq/ZY=)
+
+password:
+  encoder:
+    secret: ENC(BKaJLa11O92aid+x7pa3GrtzW8iGTTjjMxmeFQ3C+C0SPX8/LB3L3LEbChCBTgnlFC7v85oC1L3Rns5rVT7ThsvxMk8Jv/yBNwdubIT5L2Y=)
+    iteration: 1000
+    keylength: 256
+
+key:
+  jwt:
+    file:
+      dir:
+    public:
+      name: npl-auction-jwt.pub
+      s3-key: ENC(ERGBt5XmyiJA+MATTj8t4wsx6cxwvi7eDkQaUvFxVctB2644ZJN3B+kgkaU6wPVBmUZWjbNtGdiw8HKk1xqzM+gPwJIExgnEI/PpPLRg51V8uAOdIc9379A3KB1jhp5QZ6SU9fx4OXG4B0ujNpAIxDjnSa90VpYm)
+      s3-slat: ENC(l1LxE4XLD8rnfnB0mcX6Mhf/mlkA4+eAdPAtVH8jGPuSwTV1Dki9PH7yXnQQvW9kNFQ/1vHnsfAVNi4LjJKqliZyjzszwlwXwRuoPkqUL2Y=)
+    private:
+      name: npl-auction-jwt.key
+      s3-key: ENC(i7WDPxmANFgPhx3oeQvUDTtEBLRQYIB+SpYsz0sCLxZtKAvpIiTzzu9WPUky2zYi6OOde4K9ZdMAV1cfowJ+vbrkX45634/H9C6HETvRfrjh6cJqinIxeMGy+cZiXzVGKagYIUDhLnQ9oFJ5w+A3N/j7HbeYu1EW)
+      s3-slat: ENC(dA9UOEWNcCcEThYCZxahYV+Jm3wh4yO23Yofalf5J7ftKOL1PKiYpvkkYjyS8tJDsJUqUvO3zM1zv+43DWmm4fnf4EiQryljfx7kN6FZLSE=)
+  privacy:
+    file:
+      dir:
+    public:
+      name: npl-auction-privacy.pub
+      s3-key: ENC(47udyzMO4UG8Lk0YOYT3/F+IlD+MZtNfGCuym8GcbGXMIiZHQKZ1C+sWF2room+lT4WSs6EPl93Y0O61MTuS4HElxFAbQHMVUHEq64Yye6lh20n2r2ndhYCyPtw+5HOfkSVpmNfewdoNd84NczSQIzmPHnqgOrw/)
+      s3-slat: ENC(3LJlPphLPYZK1caGa7FTJ8RpJJbOuWuKJ7SN8z9kUgGfRqqT2QNoyNlPoL2NMolyUiITDnyjr4mfXtIQ3TZb0AuOPwMTyZp6q7I6OL5p2cA=)
+    private:
+      name: npl-auction-privacy.key
+      s3-key: ENC(h3eMSmJtYm+Ko0tRwF2foghtbMwSRE/y00RX5d0hJQDVeQyxlEfz18yKk01I6VJfC4+f2XPFAWTNZ/HgnYQ6izidd2YAPO7A1P8gxTCB0X4vgP94wtHY/DA+TZ7fcc75Qu8VwyjwiriRHFj4CXjHXOzBx+4DSeoa)
+      s3-slat: ENC(dWpEaG/7MyeueMNbwRGta1XuQe27T74bWpoURMi48hRrJyGIKr/weNgOoxTQ6hPlT/M5mXbreJDsJ0LmKRA0JFWXyD1bMrZ980o/iG21jtk=)
+
+s3:
+  access-key: ENC(5pj5D+soHZATHUGjaDc7p3Uuc8DNi1bdv75hYfEVa9Q=)
+  security-key: ENC(zxDmKLw+mL++w/Dlh9FDeG3KdAr75jNw4mZAy+1uj1O9HzELyb1cFnpZ8rNEISoDbmY8l9FDwUg=)
+  region: ap-northeast-2
+  bucket: bird-plus-s3
+  bucket-public: bird-plus-s3-public
+  key:
+    account: account

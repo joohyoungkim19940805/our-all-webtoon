@@ -8,6 +8,7 @@ import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -33,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.our.all.webtoon.config.security.JwtVerifyHandler;
 import com.our.all.webtoon.util.CreateRandomCodeUtil;
 import com.our.all.webtoon.util.KeyPairUtil;
+import com.our.all.webtoon.util.S3Util;
 import com.our.all.webtoon.util.properties.S3Properties;
 import com.our.all.webtoon.util.properties.SseCProperties;
 import io.netty.resolver.DefaultAddressResolverGroup;
@@ -140,37 +142,114 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
 
 
     /**
-     * S3Handler.java 참조 SecretKey key; byte[] mdDigestHash; try { key =
-     * S3Util.generateKey(keyString,
-     * "{\"account_name\":\"%s\",\"slat\":\"%s\"}".formatted(sseCustomerKeyRequest.getAccountName(),
-     * s3SseCSlat)); mdDigestHash = S3Util.getMd5Digest(key.getEncoded()); } catch
-     * (NoSuchAlgorithmException | InvalidKeySpecException e) { return Mono.error(new
-     * S3ApiException(Result._501)); } String base64Key =
-     * BaseEncoding.base64().encode(key.getEncoded()); String base64Md =
-     * BaseEncoding.base64().encode(mdDigestHash);
-     * 
-     * @return
-     * @throws Exception
-     */
-    @Bean
-    @DependsOn
-    public KeyPair keyPair(S3AsyncClientBuilder s3AsyncClientBuilder, S3Properties s3Properties,
-            SseCProperties sseCProperties) throws Exception {
-        if (keyPairFileDir == null || keyPairFileDir.isEmpty()) {
-            keyPairFileDir = System.getProperty("user.home");
-        }
-        s3Properties.setSseCProperties(sseCProperties);
-        var keyPairUtil = KeyPairUtil.builder().keyPairFileDir(keyPairFileDir)
-                .keyPublicName(keyPublicName).keyPrivateName(keyPrivateName)
-                .s3Properties(s3Properties).s3AsyncClientBuilder(s3AsyncClientBuilder).build();
-        keyPairUtil.saveAndSetVariableKeyPair();
-        return keyPairUtil.getKeyPair();
-        // return keyPair;//Keys.keyPairFor(SignatureAlgorithm.RS256);
+	 * S3Handler.java 참조 SecretKey key; byte[] mdDigestHash; try { key =
+	 * S3Util.generateKey(keyString,
+	 * "{\"account_name\":\"%s\",\"slat\":\"%s\"}".formatted(sseCustomerKeyRequest.getAccountName(),
+	 * s3SseCSlat)); mdDigestHash = S3Util.getMd5Digest(key.getEncoded()); } catch
+	 * (NoSuchAlgorithmException | InvalidKeySpecException e) { return Mono.error(new
+	 * S3ApiException(Result._501)); } String base64Key =
+	 * BaseEncoding.base64().encode(key.getEncoded()); String base64Md =
+	 * BaseEncoding.base64().encode(mdDigestHash);
+	 * 
+	 * @return
+	 * 
+	 * @throws Exception
+	 */
+	@Bean("jwtKeyPair")
+	@DependsOn 
+	public KeyPair jwtKeyPair(
+		S3AsyncClientBuilder s3AsyncClientBuilder, //
+		S3Properties s3Properties, //
+		@Value("${key.jwt.file.dir}") String keyPairFileDir, //
+
+		@Value("${key.jwt.public.name}") String keyPublicName, //
+		@Value("${key.jwt.public.s3-key}") String publicS3KeyStr, //
+		@Value("${key.jwt.public.s3-slat}") String publicS3Slat, //
+
+		@Value("${key.jwt.private.name}") String keyPrivateName, //
+		@Value("${key.jwt.private.s3-key}") String privateS3KeyStr, //
+		@Value("${key.jwt.private.s3-slat}") String privateS3Slat//
+	)
+		throws Exception {
+
+		if (keyPairFileDir == null || keyPairFileDir.isEmpty()) {
+			keyPairFileDir = System.getProperty( "user.home" );
     }
 
+		var publicS3Key = S3Util.generateKey( publicS3KeyStr, publicS3Slat );
+		var privateS3Key = S3Util.generateKey( privateS3KeyStr, privateS3Slat );
+		
+		var keyPairUtil = KeyPairUtil
+			.builder()
+			.keyPairFileDir( keyPairFileDir )
+
+			.keyPublicName( keyPublicName )
+			.publicS3Key( publicS3Key )
+			.publicMdDigestHash( S3Util.getMd5Digest( publicS3Key.getEncoded() ) )
+
+			.keyPrivateName( keyPrivateName )
+			.privateS3Key( privateS3Key )
+			.privateMdDigestHash( S3Util.getMd5Digest( privateS3Key.getEncoded() ) )
+
+			.s3Properties( s3Properties )
+			.s3AsyncClientBuilder( s3AsyncClientBuilder )
+			.build();
+		keyPairUtil.saveAndSetVariableKeyPair();
+		return keyPairUtil.getKeyPair();
+
+	}
+
+	@Bean("privacyKeyPair")
+	@DependsOn
+	public KeyPair privacyKeyPair(
+		S3AsyncClientBuilder s3AsyncClientBuilder, //
+		S3Properties s3Properties, //
+		@Value("${key.privacy.file.dir}") String keyPairFileDir, //
+
+		@Value("${key.privacy.public.name}") String keyPublicName, //
+		@Value("${key.privacy.public.s3-key}") String publicS3KeyStr, //
+		@Value("${key.privacy.public.s3-slat}") String publicS3Slat, //
+
+		@Value("${key.privacy.private.name}") String keyPrivateName, //
+		@Value("${key.privacy.private.s3-key}") String privateS3KeyStr, //
+		@Value("${key.privacy.private.s3-slat}") String privateS3Slat//
+	)
+		throws Exception {
+
+		if (keyPairFileDir == null || keyPairFileDir.isEmpty()) {
+			keyPairFileDir = System.getProperty( "user.home" );
+
+		}
+
+		var publicS3Key = S3Util.generateKey( publicS3KeyStr, publicS3Slat );
+		var privateS3Key = S3Util.generateKey( privateS3KeyStr, privateS3Slat );
+
+		var keyPairUtil = KeyPairUtil
+			.builder()
+			.keyPairFileDir( keyPairFileDir )
+
+			.keyPublicName( keyPublicName )
+			.publicS3Key( publicS3Key )
+			.publicMdDigestHash( S3Util.getMd5Digest( publicS3Key.getEncoded() ) )
+
+			.keyPrivateName( keyPrivateName )
+			.privateS3Key( privateS3Key )
+			.privateMdDigestHash( S3Util.getMd5Digest( privateS3Key.getEncoded() ) )
+
+			.s3Properties( s3Properties )
+			.s3AsyncClientBuilder( s3AsyncClientBuilder )
+			.build();
+		keyPairUtil.saveAndSetVariableKeyPair();
+		return keyPairUtil.getKeyPair();
+
+	}
+    
     @Bean
-    public JwtVerifyHandler jwtVerifyHandler(KeyPair keyPair, ObjectMapper objectMapper) {
-        return new JwtVerifyHandler(keyPair, objectMapper);
+	public JwtVerifyHandler jwtVerifyHandler(
+		@Qualifier("jwtKeyPair") KeyPair jwtKeyPair, ObjectMapper objectMapper
+	) {
+
+		return new JwtVerifyHandler( jwtKeyPair, objectMapper );
     }
 
     @Bean
@@ -247,58 +326,6 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
     }
 
 
-    /*
-     * @Bean public KeyPair keyPair2() throws NoSuchAlgorithmException, InvalidKeySpecException,
-     * NoSuchKeyException, InvalidObjectStateException, S3Exception, AwsServiceException,
-     * SdkClientException, IOException { System.out.println("kjh test 444 <<<< "); if(keyPairFileDir
-     * == null || keyPairFileDir.isEmpty()) { keyPairFileDir = System.getProperty("user.home"); }
-     * KeyPairUtil keyPairUtil = new KeyPairUtil(); KeyPair keyPair;
-     * 
-     * String path = "password"; S3Client s3Client = s3ClientBuilder.build(); ListObjectsV2Request
-     * listObjectsV2Request = ListObjectsV2Request.builder() .bucket(s3Bucket) .prefix(path)
-     * .build(); ListObjectsV2Response listObjectsV2Response =
-     * s3Client.listObjectsV2(listObjectsV2Request); List<S3Object> contents =
-     * listObjectsV2Response.contents();
-     * 
-     * System.out.println("test111 >>> "); System.out.println(contents);
-     * 
-     * SecretKey secretKey = S3Util.generateKey(s3SseCKey,s3SseCSlat); byte[] mdDigestHash =
-     * S3Util.getMd5Digest(secretKey.getEncoded()); String base64Key =
-     * BaseEncoding.base64().encode(secretKey.getEncoded()); String base64Md =
-     * BaseEncoding.base64().encode(mdDigestHash);
-     * 
-     * if(contents.size() == 0) { keyPairUtil.saveAndSetVariableKeyPair(keyPairFileDir,
-     * keyPublicName, keyPrivateName); keyPair = keyPairUtil.getKeyPair();
-     * 
-     * PutObjectRequest requestPrivate = PutObjectRequest.builder() .bucket(s3Bucket) .key(path)
-     * .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString()) .sseCustomerKey(base64Key)
-     * .sseCustomerKeyMD5(base64Md) .build();
-     * 
-     * s3Client.putObject(requestPrivate, Paths.get(keyPairFileDir + "\\\\" + keyPrivateName));
-     * 
-     * PutObjectRequest requestPublic = PutObjectRequest.builder() .bucket(s3Bucket) .key(path)
-     * .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString()) .sseCustomerKey(base64Key)
-     * .sseCustomerKeyMD5(base64Md) .build(); s3Client.putObject(requestPublic,
-     * Paths.get(keyPairFileDir + "\\\\" + keyPublicName)); return keyPair; }
-     * 
-     * GetObjectRequest requestPrivate = GetObjectRequest.builder() .bucket(s3Bucket) .key(path)
-     * .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString()) .sseCustomerKey(base64Key)
-     * .sseCustomerKeyMD5(base64Md) .build(); GetObjectRequest requestPublic =
-     * GetObjectRequest.builder() .bucket(s3Bucket) .key(path)
-     * .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString()) .sseCustomerKey(base64Key)
-     * .sseCustomerKeyMD5(base64Md) .build();
-     * 
-     * String privateKeyString = new String(s3Client.getObject(requestPrivate).readAllBytes(),
-     * StandardCharsets.UTF_8); String publicKeyString = new
-     * String(s3Client.getObject(requestPublic).readAllBytes(),StandardCharsets.UTF_8);
-     * System.out.println("kjh test load key <<<< "); System.out.println(privateKeyString);
-     * System.out.println(publicKeyString);
-     * 
-     * PrivateKey privateKey = KeyPairUtil.loadPrivateKey(privateKeyString.split("\n")[1]);
-     * PublicKey publicKey = KeyPairUtil.loadPublicKey(publicKeyString.split("\n")[1]);
-     * 
-     * s3Client.close(); return new KeyPair(publicKey, privateKey); }
-     */
 }
 
 

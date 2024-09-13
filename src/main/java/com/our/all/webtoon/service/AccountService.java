@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +51,8 @@ public class AccountService {
     private ObjectMapper om;
 
     @Autowired
-    private KeyPair keyPair;
+	@Qualifier("jwtKeyPair")
+    private KeyPair jwtKeyPair;
 
     @Autowired
     private JwtVerifyHandler jwtVerifyHandler;
@@ -76,8 +78,8 @@ public class AccountService {
                 .header()
                 .add(Map.of("typ", "jwt", "alg", "RS256", "name", tokenTemplate.getName(),
                         "jwtIssuerType", type.name()))
-                .and().signWith(keyPair.getPrivate(),
-                        StandardSecureDigestAlgorithms.findBySigningKey(keyPair.getPrivate()))//
+                .and().signWith(jwtKeyPair.getPrivate(),
+                        StandardSecureDigestAlgorithms.findBySigningKey(jwtKeyPair.getPrivate()))//
         ;
         Date expirationDate = null;
         if (type.equals(JwtIssuerType.BOT)) {

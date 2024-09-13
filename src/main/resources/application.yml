@@ -1,0 +1,78 @@
+spring:
+  web:
+    resources:
+      static-locations: classpath:/static/
+  profiles:
+    include: ${MY_SERVER_PROFILES:local}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  main:
+    banner-mode: off
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+
+# Spring Security OAuth2 Google Login 설정 주석 처리됨
+# spring:
+#   security:
+#     oauth2:
+#       client:
+#         registration:
+#           google-login:
+#             provider: google
+#             client-id: ENC(vwTGZKqcNMGUGkRzbGbrF663PbXAVJyuSvArG80gmZh1HnAy9/5fSkxEtE2VTPLV6GS2+e1NOlmxnbKyv2FoukVzzD2psCM1xBKS/qjQGz3g6LcGzGjXPA==)
+#             client-secret: ENC(OKfUrp0aOUDXDfi7AuhQp/xvIw3gTMCbue9tuv4plh73hxYSgIHbJ79MyDKD/Rz5)
+#             client:
+#               scope: email
+
+# Redis 주석 처리됨
+# spring:
+#   redis:
+#     host: localhost
+#     port: 6379
+
+# Tomcat 설정 주석 처리됨
+# server:
+#   tomcat:
+#     threads:
+#       max: 200
+#       min: 10
+
+# R2DBC 설정 주석 처리됨
+# spring:
+#   r2dbc:
+#     pool:
+#       enabled: true
+#       max-size: 100
+
+# Swagger 설정
+springdoc:
+  swagger-ui:
+    path: /v3/api-docs
+
+# Jasypt Encryptor 설정
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorDES
+
+# MongoDB Logging 설정
+logging:
+  level:
+    org:
+      mongodb:
+        driver: INFO
+        async:
+          client: INFO
+# Google 로그인 설정
+login:
+  google:
+    client-id: ENC(vwTGZKqcNMGUGkRzbGbrF663PbXAVJyuSvArG80gmZh1HnAy9/5fSkxEtE2VTPLV6GS2+e1NOlmxnbKyv2FoukVzzD2psCM1xBKS/qjQGz3g6LcGzGjXPA==)
+    client-secret: ENC(OKfUrp0aOUDXDfi7AuhQp/xvIw3gTMCbue9tuv4plh73hxYSgIHbJ79MyDKD/Rz5)
+
+# Google GPT 설정
+gpt:
+  google:
+    key: ENC(YNS2UFXBGHZkjSyosOOTjfvtGvCtu7wGX6cJG2JFYiuBwr132L+8hzGBuYLi0Ux/)
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent

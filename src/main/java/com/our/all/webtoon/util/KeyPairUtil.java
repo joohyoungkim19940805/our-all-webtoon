@@ -69,8 +69,14 @@ public class KeyPairUtil {
 
     private final KeyPairUtilBuilder builder;
 
-    private final SecretKey key;
-    private final byte[] mdDigestHash;
+	private final SecretKey privateS3Key;
+
+	private final SecretKey publicS3Key;
+
+	private final byte[] publicMdDigestHash;
+
+	private final byte[] privateMdDigestHash;
+
     private final Path dirPath;
     private final Path publicPath;
     private final Path privatePath;
@@ -78,20 +84,39 @@ public class KeyPairUtil {
     protected KeyPairUtil(KeyPairUtilBuilder builder)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         this.builder = builder;
-        key = S3Util.generateKey(builder.s3Properties.getSseCProperties().getCustomProvidedKey(),
-                builder.s3Properties.getSseCProperties().getSlat());
-        mdDigestHash = S3Util.getMd5Digest(key.getEncoded());
+
+		privateS3Key = builder.privateS3Key;
+
+		publicS3Key = builder.publicS3Key;
+
+		publicMdDigestHash = builder.publicMdDigestHash;
+
+		privateMdDigestHash = builder.privateMdDigestHash;
+
         dirPath = Paths.get(builder.keyPairFileDir);
         publicPath = Paths.get(builder.keyPairFileDir + "\\\\" + builder.keyPublicName);
         privatePath = Paths.get(builder.keyPairFileDir + "\\\\" + builder.keyPrivateName);
     }
 
     public static class KeyPairUtilBuilder {
-        private String keyPairFileDir;
-        private String keyPublicName;
-        private String keyPrivateName;
-        private S3Properties s3Properties;
-        private S3AsyncClientBuilder s3AsyncClientBuilder;
+
+		private String keyPairFileDir;
+
+		private String keyPublicName;
+
+		private String keyPrivateName;
+
+		private S3Properties s3Properties;
+
+		private S3AsyncClientBuilder s3AsyncClientBuilder;
+
+		private SecretKey privateS3Key;
+
+		private SecretKey publicS3Key;
+
+		private byte[] publicMdDigestHash;
+
+		private byte[] privateMdDigestHash;
 
         public KeyPairUtilBuilder keyPairFileDir(String keyPairFileDir) {
             this.keyPairFileDir = keyPairFileDir;
@@ -112,6 +137,41 @@ public class KeyPairUtil {
             this.s3Properties = s3Properties;
             return this;
         }
+
+		public KeyPairUtilBuilder privateS3Key(
+			SecretKey privateS3Key
+		) {
+
+			this.privateS3Key = privateS3Key;
+			return this;
+		}
+
+		public KeyPairUtilBuilder publicS3Key(
+			SecretKey publicS3Key
+		) {
+
+			this.publicS3Key = publicS3Key;
+			return this;
+
+		}
+
+		public KeyPairUtilBuilder publicMdDigestHash(
+			byte[] publicMdDigestHash
+		) {
+
+			this.publicMdDigestHash = publicMdDigestHash;
+			return this;
+
+		}
+
+		public KeyPairUtilBuilder privateMdDigestHash(
+			byte[] privateMdDigestHash
+		) {
+
+			this.privateMdDigestHash = privateMdDigestHash;
+			return this;
+
+		}
 
         public KeyPairUtilBuilder s3AsyncClientBuilder(S3AsyncClientBuilder s3AsyncClientBuilder) {
             this.s3AsyncClientBuilder = s3AsyncClientBuilder;
@@ -175,19 +235,22 @@ public class KeyPairUtil {
 
     public void putS3KeyPair(Path dirPath, Path publicPath, Path privatePath) throws Exception {
 
-        String base64Key = BaseEncoding.base64().encode(key.getEncoded());
-        String base64Md = BaseEncoding.base64().encode(mdDigestHash);
-
-        PutObjectRequest publicKeyPutObjectReuqest =
-                PutObjectRequest.builder().bucket(builder.s3Properties.getBucket())
-                        .key("secret/%s".formatted(builder.keyPublicName))
-                        .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString())
-                        .sseCustomerKey(base64Key).sseCustomerKeyMD5(base64Md).build();
-        PutObjectRequest privateKeyPutObjectReuqest =
-                PutObjectRequest.builder().bucket(builder.s3Properties.getBucket())
-                        .key("secret/%s".formatted(builder.keyPrivateName))
-                        .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString())
-                        .sseCustomerKey(base64Key).sseCustomerKeyMD5(base64Md).build();
+		PutObjectRequest publicKeyPutObjectReuqest = PutObjectRequest
+				.builder()
+				.bucket( builder.s3Properties.getBucket() )
+				.key( "secret/%s".formatted( builder.keyPublicName ) )
+				.sseCustomerAlgorithm( ServerSideEncryption.AES256.toString() )
+				.sseCustomerKey( BaseEncoding.base64().encode( publicS3Key.getEncoded() ) )
+				.sseCustomerKeyMD5( BaseEncoding.base64().encode( publicMdDigestHash ) )
+				.build();
+		PutObjectRequest privateKeyPutObjectReuqest = PutObjectRequest
+			.builder()
+			.bucket( builder.s3Properties.getBucket() )
+			.key( "secret/%s".formatted( builder.keyPrivateName ) )
+			.sseCustomerAlgorithm( ServerSideEncryption.AES256.toString() )
+			.sseCustomerKey( BaseEncoding.base64().encode( privateS3Key.getEncoded() ) )
+			.sseCustomerKeyMD5( BaseEncoding.base64().encode( privateMdDigestHash ) )
+			.build();
 
         var s3Client = builder.s3AsyncClientBuilder.build();
 
@@ -207,20 +270,26 @@ public class KeyPairUtil {
     }
 
     public void getS3KeyPair() throws InterruptedException, ExecutionException {
-        String base64Key = BaseEncoding.base64().encode(key.getEncoded());
-        String base64Md = BaseEncoding.base64().encode(mdDigestHash);
         var s3Client = builder.s3AsyncClientBuilder.build();
 
-        GetObjectRequest getPublicKeyObjectReuqest =
-                GetObjectRequest.builder().bucket(builder.s3Properties.getBucket())
-                        .key("secret/%s".formatted(builder.keyPublicName))
-                        .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString())
-                        .sseCustomerKey(base64Key).sseCustomerKeyMD5(base64Md).build();
-        GetObjectRequest getPrivateKeyObjectReuqest =
-                GetObjectRequest.builder().bucket(builder.s3Properties.getBucket())
-                        .key("secret/%s".formatted(builder.keyPublicName))
-                        .sseCustomerAlgorithm(ServerSideEncryption.AES256.toString())
-                        .sseCustomerKey(base64Key).sseCustomerKeyMD5(base64Md).build();
+		GetObjectRequest getPublicKeyObjectReuqest = GetObjectRequest
+			.builder()
+			.bucket( builder.s3Properties.getBucket() )
+			.key( "secret/%s".formatted( builder.keyPublicName ) )
+			.sseCustomerAlgorithm( ServerSideEncryption.AES256.toString() )
+			.sseCustomerKey( BaseEncoding.base64().encode( publicS3Key.getEncoded() ) )
+			.sseCustomerKeyMD5( BaseEncoding.base64().encode( publicMdDigestHash ) )
+			.build();
+
+		GetObjectRequest getPrivateKeyObjectReuqest = GetObjectRequest
+			.builder()
+			.bucket( builder.s3Properties.getBucket() )
+			.key( "secret/%s".formatted( builder.keyPublicName ) )
+			.sseCustomerAlgorithm( ServerSideEncryption.AES256.toString() )
+			.sseCustomerKey( BaseEncoding.base64().encode( privateS3Key.getEncoded() ) )
+			.sseCustomerKeyMD5( BaseEncoding.base64().encode( privateMdDigestHash ) )
+			.build();
+
         var publicKeyFuture = s3Client.getObject(getPublicKeyObjectReuqest,
                 AsyncResponseTransformer.toPublisher());
         var privateKeyFuture = s3Client.getObject(getPrivateKeyObjectReuqest,
