@@ -3,8 +3,8 @@ package com.our.all.webtoon;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+
 import com.our.all.webtoon.dto.Editor;
 import com.our.all.webtoon.entity.terms.TermsOfServiceEntity;
 import com.our.all.webtoon.entity.terms.code.TermsOfServiceNames;
@@ -20,6 +21,7 @@ import com.our.all.webtoon.entity.webtoon.GenreEntity;
 import com.our.all.webtoon.repository.terms.TermOfServiceRepository;
 import com.our.all.webtoon.repository.webtoon.GenreRepository;
 import com.our.all.webtoon.util.properties.S3Properties;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -42,12 +44,6 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 		System.setProperty("jasypt.encryptor.password", System.getenv("MY_SERVER_PASSWORD"));
 		SpringApplication.run(OruAllWebtoonApp.class, args);
 	}
-	
-    @Value("${s3.sse-c.key}")
-	private String s3SseCKey;
-	
-    @Value("${s3.sse-c.slat}")
-	private String s3SseCSlat;
     
     @Autowired
 	private S3Properties s3Properties;
@@ -73,7 +69,6 @@ public class OruAllWebtoonApp implements ApplicationRunner  {
 	private Mono<Boolean> createDefaultPaintingWebtoonTerms() {
 
 		String name = "웹툰 운영원칙";
-		var empty = TermsOfServiceEntity.builder().build();
 		return termsRepository
 			.existsByTermsOfServiceName( TermsOfServiceNames.웹툰_운영원칙 )
 			.filter( e -> ! e )

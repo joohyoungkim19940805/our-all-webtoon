@@ -29,10 +29,9 @@
         "baseUrl": ".",
         "paths": {
             "*": ["./view/node_modules/*"],
-            "@svg/*": ["view/components/svg/*"],
-            "@container/*": ["./view/container/*"],
-            "@components/*": ["./view/components/*"],
-            "@wrapper/*": ["./view/wrapper/*"],
+            "@svg/*": ["view/component/svg/*"],
+            "@component/*": ["./view/component/*"],
+            "@editor/*": ["./view/component/editor/*"],
             "@handler/*": ["./view/handler/*"],
             "@image/*": ["./view/image/*"],
             "@type/*": ["./view/type/*"],

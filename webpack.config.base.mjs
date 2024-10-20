@@ -1,6 +1,6 @@
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'node:path';
 import StylelintPlugin from 'stylelint-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import { fileURLToPath } from 'url';
 
@@ -80,15 +80,16 @@ export default {
         ],
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js', 'jsx', '.css'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
         alias: {
             '@svg': path.resolve(__dirname, './view/svg'),
-            '@components': path.resolve(__dirname, './view/components'),
+            '@component': path.resolve(__dirname, './view/component'),
+            '@editor': path.resolve(__dirname, './view/component/editor'),
             '@container': path.resolve(__dirname, './view/container'),
             '@wrapper': path.resolve(__dirname, './view/wrapper'),
             '@handler': path.resolve(__dirname, './view/handler'),
-            '@image/*': path.resolve(__dirname, './view/image'),
-            '@type/*': path.resolve(__dirname, './view/type'),
+            '@image': path.resolve(__dirname, './view/image'),
+            '@type': path.resolve(__dirname, './view/type'),
             '@root': path.resolve(__dirname, './view'),
         },
         plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],

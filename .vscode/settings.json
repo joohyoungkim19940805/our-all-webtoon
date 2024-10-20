@@ -9,15 +9,27 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "[java]": {
+        "editor.defaultFormatter": "redhat.java"
+    },
     "editor.formatOnSave": true,
+    "editor.formatOnType": true,
     "editor.quickSuggestions": {
         "other": true,
         "comments": false,
         "strings": true
     },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
     "files.associations": {
         "*.module.css": "css",
         "*.module.scss": "scss"
     },
-    "cssModules.enable": true
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.format.settings.url": "file://${workspaceFolder}/googleCustomCodestyle.xml",
+    "java.format.settings.profile": "GoogleStyle",
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.format.enabled": true
 }

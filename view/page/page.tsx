@@ -1,19 +1,15 @@
-import { FlexLayout } from '@wrapper/FlexLayout';
-import { Bottom } from '@wrapper/layout/page/Bottom';
-import { Center } from '@wrapper/layout/page/Center';
-import { Top } from '@wrapper/layout/page/Top';
-import { createRoot } from 'react-dom/client';
-import styles from './index.module.css';
-import { GlobalDimLayer } from '@wrapper/layer/GlobalDimLayer';
-import {
-    createBrowserRouter,
-    Route,
-    RouterProvider,
-    Routes,
-    useRoutes,
-} from 'react-router-dom';
+import { FlexLayout } from '@component/FlexLayout';
+import ConvertFontSize from '@component/FontSizeProvider';
+import { GlobalBottomLayer } from '@component/layer/GlobalBottomLayer';
+import { GlobalDimLayer } from '@component/layer/GlobalDimLayer';
+import { Bottom } from '@component/layout/page/Bottom';
+import { Center } from '@component/layout/page/Center';
+import { Top } from '@component/layout/page/Top';
+import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react';
-import { GlobalBottomLayer } from '@wrapper/layer/GlobalBottomLayer';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import styles from './index.module.css';
 styles;
 FlexLayout;
 document.body.dataset.mode = 'black';
@@ -23,19 +19,27 @@ root.id = styles.root;
 document.body.append(root);
 
 const main = createRoot(root);
+const theme = createTheme({
+    palette: {
+        mode: 'dark', // 다크 모드 설정
+    },
+});
 const router = createBrowserRouter([
     {
         path: '/page/*',
         index: true,
         element: (
             <>
-                <flex-layout data-direction="column">
-                    <Top></Top>
-                    <Center></Center>
-                    <Bottom></Bottom>
-                </flex-layout>
-                <GlobalDimLayer></GlobalDimLayer>
-                <GlobalBottomLayer></GlobalBottomLayer>
+                <ConvertFontSize></ConvertFontSize>
+                <ThemeProvider theme={theme}>
+                    <flex-layout data-direction="column">
+                        <Top></Top>
+                        <Center></Center>
+                        <Bottom></Bottom>
+                    </flex-layout>
+                    <GlobalDimLayer></GlobalDimLayer>
+                    <GlobalBottomLayer></GlobalBottomLayer>
+                </ThemeProvider>
             </>
         ),
     },
@@ -45,7 +49,7 @@ const router = createBrowserRouter([
 main.render(
     <React.StrictMode>
         <RouterProvider router={router} />
-    </React.StrictMode>,
+    </React.StrictMode>
 );
 /*
 main.render(

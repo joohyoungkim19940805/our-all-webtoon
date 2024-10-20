@@ -1,35 +1,26 @@
-import { FlexLayout } from '@wrapper/FlexLayout';
-import { Bottom } from '@wrapper/layout/page/Bottom';
-import { Center } from '@wrapper/layout/page/Center';
-import { Top } from '@wrapper/layout/page/Top';
-import { createRoot } from 'react-dom/client';
-import styles from './index.module.css';
-import { GlobalDimLayer } from '@wrapper/layer/GlobalDimLayer';
-import {
-    createBrowserRouter,
-    Route,
-    RouterProvider,
-    Routes,
-    useRoutes,
-} from 'react-router-dom';
-import React from 'react';
-import { Head } from '@wrapper/layout/dashboard/Head';
-import { Body } from '@wrapper/layout/dashboard/Body';
+import { FlexLayout } from '@component/FlexLayout';
+import { GlobalBottomLayer } from '@component/layer/GlobalBottomLayer';
+import { GlobalDimLayer } from '@component/layer/GlobalDimLayer';
+import { Body } from '@component/layout/dashboard/Body';
+import { Head } from '@component/layout/dashboard/Head';
 import { windowResize } from '@handler/globalEvents';
-import { GlobalBottomLayer } from '@wrapper/layer/GlobalBottomLayer';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import styles from './index.module.css';
 styles;
 FlexLayout;
 
 const html = document.body.parentElement;
 
 const covertFontSize = async (html: HTMLElement) => {
-    return new Promise<undefined | number>((resolve) => {
+    return new Promise<undefined | number>(resolve => {
         let lastFontSizeResult: undefined | number = undefined;
         for (let i = 100, len = window.innerWidth + 100; i < len; i += 100) {
             if (window.innerWidth <= i) {
                 lastFontSizeResult = Math.max(
                     10,
-                    25 / (window.innerWidth / (i * 0.4)),
+                    25 / (window.innerWidth / (i * 0.4))
                 );
                 html.style.fontSize = lastFontSizeResult + 'px';
             }
@@ -74,7 +65,7 @@ const router = createBrowserRouter([
 main.render(
     <React.StrictMode>
         <RouterProvider router={router} />
-    </React.StrictMode>,
+    </React.StrictMode>
 );
 /*
 main.render(

@@ -3,6 +3,7 @@ package com.our.all.webtoon.config;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.time.Duration;
+
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -30,13 +31,14 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.reactive.ThymeleafReactiveViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.our.all.webtoon.config.security.JwtVerifyHandler;
 import com.our.all.webtoon.util.CreateRandomCodeUtil;
 import com.our.all.webtoon.util.KeyPairUtil;
 import com.our.all.webtoon.util.S3Util;
 import com.our.all.webtoon.util.properties.S3Properties;
-import com.our.all.webtoon.util.properties.SseCProperties;
+
 import io.netty.resolver.DefaultAddressResolverGroup;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -61,16 +63,7 @@ public class WebFluxConfig implements ApplicationContextAware, WebFluxConfigurer
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Value("${key.pair.file.dir}")
-    private String keyPairFileDir;
-
-    @Value("${key.public.name}")
-    private String keyPublicName;
-
-    @Value("${key.private.name}")
-    private String keyPrivateName;
-
+    
     @Override
     public void configureHttpMessageCodecs(ServerCodecConfigurer configurer) {
         configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper));
