@@ -1,72 +1,95 @@
 import { windowResize } from '@handler/globalEvents';
 import { useEffect, useRef, useState } from 'react';
 
-export const useHeight = () => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [height, setHeight] = useState<number>();
-
+export const useSize = <T extends HTMLElement>(
+    sizeName: 'height' | 'width'
+) => {
+    const ref = useRef<T>(null);
+    const [size, setSize] = useState<number>();
     useEffect(() => {
         if (!ref.current) return;
+        setSize(ref.current.getBoundingClientRect()[sizeName as keyof DOMRect]);
         const childrenChangeObserver = new MutationObserver(
             (mutationList, observer) => {
-                mutationList.forEach((mutation) => {
-                    if (!ref.current || !height) return;
-                    const newHeight =
-                        ref.current.getBoundingClientRect().height;
-                    if (newHeight === height) return;
-                    setHeight(newHeight);
+                mutationList.forEach(mutation => {
+                    if (!ref.current || !size) return;
+                    const newSize =
+                        ref.current.getBoundingClientRect()[
+                            sizeName as keyof DOMRect
+                        ];
+                    if (
+                        newSize === size ||
+                        Math.abs((newSize as number) - size) < 5
+                    )
+                        return;
+                    setSize(newSize);
                 });
-            },
+            }
         );
         childrenChangeObserver.observe(ref.current, {
             childList: true,
             subtree: true,
         });
-        setHeight(ref.current.getBoundingClientRect().height);
-        const subscribe = windowResize.subscribe((ev) => {
+
+        const subscribe = windowResize.subscribe(ev => {
             if (!ref.current) return;
-            setHeight(ref.current.getBoundingClientRect().height);
+            setSize(
+                ref.current.getBoundingClientRect()[sizeName as keyof DOMRect]
+            );
         });
         return () => {
             subscribe.unsubscribe();
+            //childrenChangeObserver.disconnect();
         };
-    }, [ref]);
+    });
 
-    return { ref, height };
+    return { ref, size };
 };
-export const useFirstChildHeight = () => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [heights, setHeights] = useState<Array<number>>();
+export const useFirstChildSize = <T extends HTMLElement>(sizeName: string) => {
+    const ref = useRef<T>(null);
+    const [sizes, setSizes] = useState<Array<number>>();
 
     useEffect(() => {
-        if (!ref.current) return;
+        if (!ref.current || !ref.current.children[0]) return;
         const childrenChangeObserver = new MutationObserver(
             (mutationList, observer) => {
-                mutationList.forEach((mutation) => {
-                    if (!ref.current || !heights) return;
-                    const newHeight =
-                        ref.current.getBoundingClientRect().height;
-                    if (newHeight === heights[0]) return;
-                    setHeights([
-                        newHeight,
-                        ref.current.children[0].getBoundingClientRect().height,
+                mutationList.forEach(mutation => {
+                    if (!ref.current || !sizes || !ref.current.children[0])
+                        return;
+                    const newSize = ref.current.getBoundingClientRect()[
+                        sizeName as keyof DOMRect
+                    ] as number;
+                    //if (newSize === sizes[0]) return;
+                    setSizes([
+                        newSize,
+                        ref.current.children[0].getBoundingClientRect()[
+                            sizeName as keyof DOMRect
+                        ] as number,
                     ]);
                 });
-            },
+            }
         );
         childrenChangeObserver.observe(ref.current, {
             childList: true,
             subtree: true,
         });
-        setHeights([
-            ref.current.getBoundingClientRect().height,
-            ref.current.children[0].getBoundingClientRect().height,
+        setSizes([
+            ref.current.getBoundingClientRect()[
+                sizeName as keyof DOMRect
+            ] as number,
+            ref.current.children[0].getBoundingClientRect()[
+                sizeName as keyof DOMRect
+            ] as number,
         ]);
-        const subscribe = windowResize.subscribe((ev) => {
-            if (!ref.current) return;
-            setHeights([
-                ref.current.getBoundingClientRect().height,
-                ref.current.children[0].getBoundingClientRect().height,
+        const subscribe = windowResize.subscribe(ev => {
+            if (!ref.current || !ref.current.children[0]) return;
+            setSizes([
+                ref.current.getBoundingClientRect()[
+                    sizeName as keyof DOMRect
+                ] as number,
+                ref.current.children[0].getBoundingClientRect()[
+                    sizeName as keyof DOMRect
+                ] as number,
             ]);
         });
         return () => {
@@ -74,5 +97,5 @@ export const useFirstChildHeight = () => {
             childrenChangeObserver.disconnect();
         };
     }, [ref]);
-    return { ref, heights };
+    return { ref, sizes };
 };

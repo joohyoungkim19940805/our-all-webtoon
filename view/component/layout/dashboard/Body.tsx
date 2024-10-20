@@ -1,9 +1,8 @@
-import { MyProfileContainer } from '@component/account/MyProfileContainer';
+import { WriterProfileContainer } from '@component/account/WriterProfileContainer';
 import { MyWebtoonListContainer } from '@component/dashboard/MyWebtoonListContainer';
 import { Lnb } from '@component/layout/dashboard/Lnb';
 import { PaintingWebtoonContainer } from '@component/painting/PaintingWebtoonContainer';
 import { Route, Routes } from 'react-router-dom';
-import styles from './Body.module.css';
 
 export const Body = () => {
     return (
@@ -12,28 +11,26 @@ export const Body = () => {
                 <Lnb></Lnb>
 
                 <flex-container data-is_resize={true} data-panel_mode="default">
-                    <div className={styles['body-container']}>
-                        <Routes>
-                            <Route
-                                path="/*"
-                                element={
-                                    <MyWebtoonListContainer></MyWebtoonListContainer>
-                                }
-                            ></Route>
-                            <Route
-                                path="/profile"
-                                element={
-                                    <MyProfileContainer></MyProfileContainer>
-                                }
-                            ></Route>
-                            <Route
-                                path="/painting"
-                                element={
-                                    <PaintingWebtoonContainer></PaintingWebtoonContainer>
-                                }
-                            ></Route>
-                        </Routes>
-                    </div>
+                    <Routes>
+                        <Route
+                            path="/*"
+                            element={
+                                <MyWebtoonListContainer></MyWebtoonListContainer>
+                            }
+                        ></Route>
+                        <Route
+                            path="/profile"
+                            element={
+                                <WriterProfileContainer></WriterProfileContainer>
+                            }
+                        ></Route>
+                        <Route
+                            path="/painting"
+                            element={
+                                <PaintingWebtoonContainer></PaintingWebtoonContainer>
+                            }
+                        ></Route>
+                    </Routes>
                 </flex-container>
             </flex-layout>
         </flex-container>

@@ -1,14 +1,16 @@
 import { FlexContainer } from '@component/FlexLayout';
 import { RecommendContainer } from '@component/recommend/RecommendContainer';
 import { SearchAndMenuContainer } from '@component/search/SearchAndMenuContainer';
-import { useHeight } from '@handler/hooks/SizeChangeHooks';
+import { useSize } from '@handler/hooks/SizeChangeHooks';
 import { useEffect, useRef } from 'react';
 import styles from './top.module.css';
 
 export const Top = () => {
     const topRef = useRef<FlexContainer>(null);
-    const { ref: searchAndMenuRef, height: searchAndMenuHeight } = useHeight();
-    const { ref: recommendRef, height: recommendHeight } = useHeight();
+    const { ref: searchAndMenuRef, size: searchAndMenuHeight } =
+        useSize<HTMLDivElement>('height');
+    const { ref: recommendRef, size: recommendHeight } =
+        useSize<HTMLDivElement>('height');
     useEffect(() => {
         if (
             !topRef.current ||

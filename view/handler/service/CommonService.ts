@@ -3,16 +3,13 @@ import {
     BehaviorSubject,
     Observable,
     Subscriber,
-    catchError,
     concatMap,
     map,
-    mergeMap,
-    of,
     shareReplay,
     take,
     tap,
 } from 'rxjs';
-import { AjaxError, ajax } from 'rxjs/ajax';
+import { AjaxResponse, ajax } from 'rxjs/ajax';
 
 const methodsMapper = {
     GET: 'search',
@@ -25,7 +22,7 @@ export interface ServiceArguments<T, R> {
     endpoint: string;
     method: keyof typeof methodsMapper;
     body?: T;
-    resultHandler?: (response: ResponseWrapper<R>) => Promise<void>;
+    resultHandler?: (response: AjaxResponse<ResponseWrapper<R>>) => void;
     headers?: Readonly<Record<string, string>>;
 }
 export interface CacheForService {
@@ -47,21 +44,19 @@ export const callApi = <T, R>(serviceArguments: ServiceArguments<T, R>) => {
         method: serviceArguments.method,
         headers: serviceArguments.headers || undefined,
     }).pipe(
-        tap((result) => {
+        tap(result => {
             console.log(result);
             if (!serviceArguments.resultHandler) return;
-            const { response } = result;
-            serviceArguments
-                .resultHandler(response)
-                .catch((err) => console.error(err));
+            //const { response } = result;
+            serviceArguments.resultHandler(result);
         }),
-        map((result) => result.response?.data),
+        map(result => result.response?.data)
     );
 };
 
 const callApiForCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
-    cacheForService: CacheForService,
+    cacheForService: CacheForService
 ) => {
     return ajax<ResponseWrapper<R>>({
         url: `/api/${serviceArguments.path}/${methodsMapper[serviceArguments.method]}/${serviceArguments.endpoint}`,
@@ -69,28 +64,26 @@ const callApiForCache = <T, R>(
         method: serviceArguments.method,
         headers: serviceArguments.headers || undefined,
     }).pipe(
-        tap((result) => {
+        tap(result => {
             if (!serviceArguments.resultHandler) return;
-            const { response } = result;
-            serviceArguments
-                .resultHandler(response)
-                .catch((err) => console.error(err));
+            //const { response } = result;
+            serviceArguments.resultHandler(result);
         }),
-        map((result) => result.response.data),
-        shareReplay(cacheForService.cacheSize || 1, cacheForService.cacheTime),
+        map(result => result.response.data),
+        shareReplay(cacheForService.cacheSize || 1, cacheForService.cacheTime)
     );
 };
 
 export const callApiCache = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
-    cacheForService: CacheForService,
+    cacheForService: CacheForService
 ) => {
     let cacheSubject = cacheMap[cacheForService.cacheName] as BehaviorSubject<
         Observable<R>
     >;
     if (!cacheSubject) {
         cacheSubject = new BehaviorSubject(
-            callApiForCache(serviceArguments, cacheForService),
+            callApiForCache(serviceArguments, cacheForService)
         );
         cacheMap[cacheForService.cacheName] = cacheSubject as BehaviorSubject<
             Observable<unknown>
@@ -100,36 +93,36 @@ export const callApiCache = <T, R>(
     //     callApiForCache(serviceArguments, cacheForService),
     // );
     return cacheSubject.pipe(
-        concatMap((shared) =>
+        concatMap(shared =>
             shared.pipe(
                 tap({
                     complete: () =>
                         cacheSubject.next(
-                            callApiForCache(serviceArguments, cacheForService),
+                            callApiForCache(serviceArguments, cacheForService)
                         ),
-                }),
-            ),
+                })
+            )
         ),
-        take(1),
-        catchError((error: AjaxError) => {
-            console.error(error);
-            return of(null);
-        }),
+        take(1)
+        // catchError((error: AjaxError) => {
+        //     console.error(error);
+        //     return of(null);
+        // })
     );
 };
 
 //test
 export const callApiCache2 = <T, R>(
     serviceArguments: ServiceArguments<T, R>,
-    cacheForService: CacheForService,
+    cacheForService: CacheForService
 ) => {
     const cacheSubject = new BehaviorSubject(
         callApi(serviceArguments).pipe(
-            shareReplay(cacheForService.cacheSize, cacheForService.cacheTime),
-        ),
+            shareReplay(cacheForService.cacheSize, cacheForService.cacheTime)
+        )
     );
     return cacheSubject.pipe(
-        concatMap((shared) =>
+        concatMap(shared =>
             shared.pipe(
                 tap({
                     complete: () =>
@@ -137,18 +130,18 @@ export const callApiCache2 = <T, R>(
                             callApi(serviceArguments).pipe(
                                 shareReplay(
                                     cacheForService.cacheSize,
-                                    cacheForService.cacheTime,
-                                ),
-                            ),
+                                    cacheForService.cacheTime
+                                )
+                            )
                         ),
-                }),
-            ),
+                })
+            )
         ),
-        take(1),
-        catchError((error: AjaxError) => {
-            console.error(error);
-            return of(null);
-        }),
+        take(1)
+        // catchError((error: AjaxError) => {
+        //     console.error(error);
+        //     return of(null);
+        // })
     );
 };
 
@@ -157,12 +150,12 @@ const createSSE = <T>(observer: Subscriber<T>, url: string) => {
         withCredentials: false,
     });
 
-    eventSource.onmessage = (event) => {
+    eventSource.onmessage = event => {
         console.log('message : ', event);
         observer.next(JSON.parse(event.data) as T);
     };
 
-    eventSource.onerror = (error) => {
+    eventSource.onerror = error => {
         console.log('error', error);
         console.log('readyState:', eventSource.readyState); // 추가 디버깅 정보
 
@@ -179,7 +172,7 @@ const createSSE = <T>(observer: Subscriber<T>, url: string) => {
 };
 
 export const createSSEObservable = <T>(url: string) => {
-    return new Observable<T>((observer) => {
+    return new Observable<T>(observer => {
         let eventSource = createSSE<T>(observer, url);
         return () => {
             eventSource.close();

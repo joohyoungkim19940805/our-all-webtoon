@@ -31,5 +31,6 @@
     "java.format.settings.url": "file://${workspaceFolder}/googleCustomCodestyle.xml",
     "java.format.settings.profile": "GoogleStyle",
     "java.debug.settings.onBuildFailureProceed": true,
-    "java.format.enabled": true
+    "java.format.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

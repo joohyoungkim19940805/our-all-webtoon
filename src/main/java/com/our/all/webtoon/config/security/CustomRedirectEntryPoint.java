@@ -2,7 +2,6 @@ package com.our.all.webtoon.config.security;
 
 import java.net.URI;
 import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -12,12 +11,11 @@ import org.springframework.security.web.server.ServerRedirectStrategy;
 import org.springframework.security.web.server.savedrequest.ServerRequestCache;
 import org.springframework.security.web.server.savedrequest.WebSessionServerRequestCache;
 import org.springframework.web.server.ServerWebExchange;
-
 import reactor.core.publisher.Mono;
 
 public class CustomRedirectEntryPoint implements ServerAuthenticationEntryPoint {
 
-	private static final String DEFAULT_LOCATION = "/login";
+	private static final String DEFAULT_LOCATION = "/page/layer/login-layer";
 
     private ServerRedirectStrategy redirectStrategy = new DefaultServerRedirectStrategy();
 
@@ -34,14 +32,17 @@ public class CustomRedirectEntryPoint implements ServerAuthenticationEntryPoint 
 
         String queryString = exchange.getRequest().getQueryParams().entrySet().stream()
 			.filter( e -> ! "redirect_uri".equals( e.getKey() ) )
-            .flatMap(entry -> entry.getValue().stream().map(e -> entry.getKey() + "=" + e))
-            .collect(Collectors.joining("&"));
+			.flatMap( entry -> entry.getValue().stream().map( e -> entry.getKey() + "=" + e ) )
+			.collect( Collectors.joining( "&" ) );
 
-        String redirectUrl =
-			"?redirect_uri=" + exchange.getRequest().getPath().toString() + "?" + queryString;
+		String redirectUrl = "?redirect_uri=" + exchange.getRequest().getPath().toString() + "?" + queryString;
+
+		System.out.println( "kjh 22222" );
 
         return this.requestCache.saveRequest(exchange).then(this.redirectStrategy.sendRedirect(
-                exchange, URI.create(CustomRedirectEntryPoint.DEFAULT_LOCATION + redirectUrl)));
+			exchange,
+			URI.create( CustomRedirectEntryPoint.DEFAULT_LOCATION + redirectUrl )
+		) );
     }
 
 }

@@ -1,13 +1,14 @@
 import { FlexContainer } from '@component/FlexLayout';
 import { DashboardDetailLnb } from '@component/lnb/DashboardDetailLnb';
 import { DashboardLnb } from '@component/lnb/DashboardLnb';
+import { useSize } from '@handler/hooks/SizeChangeHooks';
 import { $lnbOpenClick } from '@handler/subject/LnbEvent';
 import { useEffect, useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 export const Lnb = () => {
     const lnbWrapeerRef = useRef<FlexContainer>(null);
-    const lnbRef = useRef<HTMLUListElement>(null);
+    const { ref: lnbRef, size } = useSize<HTMLUListElement>('width');
     useEffect(() => {
         if (!lnbWrapeerRef.current || !lnbRef.current) return;
         if (lnbWrapeerRef.current.getRoot) {
@@ -31,6 +32,14 @@ export const Lnb = () => {
             subscribe.unsubscribe();
         };
     }, [lnbWrapeerRef, lnbRef]);
+    useEffect(() => {
+        if (!lnbWrapeerRef.current || !lnbWrapeerRef.current.getRoot || !size)
+            return;
+        lnbWrapeerRef.current.style.maxWidth = size + 'px';
+        // lnbWrapeerRef.current.dataset.grow = lnbWrapeerRef.current.getRoot
+        //     .mathGrow(size)
+        //     .toString();
+    }, [lnbWrapeerRef, lnbRef, size]);
     return (
         <flex-container
             data-is_resize={true}

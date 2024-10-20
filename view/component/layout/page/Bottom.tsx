@@ -1,11 +1,12 @@
 import { FlexContainer } from '@component/FlexLayout';
 import { GnbContainer } from '@component/gnb/GnbContainer';
-import { useFirstChildHeight } from '@handler/hooks/SizeChangeHooks';
+import { useFirstChildSize } from '@handler/hooks/SizeChangeHooks';
 import { useEffect, useRef } from 'react';
 
 export const Bottom = () => {
     const bottomRef = useRef<FlexContainer>(null);
-    const { ref: gnbRef, heights } = useFirstChildHeight();
+    const { ref: gnbRef, sizes: heights } =
+        useFirstChildSize<HTMLDivElement>('height');
 
     useEffect(() => {
         if (!bottomRef.current || !heights || !bottomRef.current.getRoot)

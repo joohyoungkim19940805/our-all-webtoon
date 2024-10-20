@@ -1,5 +1,5 @@
 import { GenreListContainer } from '@component/genre/GenreListContainer';
-import { GenreRankContainer } from '@component/genre/GenreRankContent';
+import { GenreRankContainer } from '@component/recommend/GenreRankContent';
 import { windowResize } from '@handler/globalEvents';
 import { Genre } from '@type/service/Genre';
 import { forwardRef, useEffect, useRef, useState } from 'react';

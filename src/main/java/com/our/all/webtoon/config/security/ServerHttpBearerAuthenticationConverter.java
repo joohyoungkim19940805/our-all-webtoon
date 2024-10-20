@@ -25,11 +25,17 @@ public class ServerHttpBearerAuthenticationConverter implements ServerAuthentica
     public static Mono<String> extract(ServerWebExchange serverWebExchange) {
         // serverWebExchange.getRequest().getCookies().set("", null);
         //
-        /*
-         * System.out.println("kjh test<<< "); System.out.println(serverWebExchange.getRequest()
-         * .getHeaders() .getFirst(HttpHeaders.AUTHORIZATION));
-         * System.out.println(serverWebExchange.getRequest().getCookies());
-         */
+
+		System.out.println( "kjh test<<< " );
+		System.out
+			.println(
+				serverWebExchange
+					.getRequest()
+					.getHeaders()
+					.getFirst( HttpHeaders.AUTHORIZATION )
+			);
+		System.out.println( serverWebExchange.getRequest().getCookies() );
+
         String auth =
                 serverWebExchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (auth == null || auth.isEmpty()) {
@@ -55,9 +61,9 @@ public class ServerHttpBearerAuthenticationConverter implements ServerAuthentica
             }
         }
 
-		// System.out.println("kjh test token !!! : : : " + auth);
-        // System.out.println("kjh test <<< auth");
-        // System.out.println(auth);
+		System.out.println( "kjh test token !!! : : : " + auth );
+		System.out.println( "kjh test <<< auth" );
+		System.out.println( auth );
         // Authorization
         return Mono.justOrEmpty(auth);
     }

@@ -1,39 +1,54 @@
-import { Observable, Subject, catchError, map, of } from 'rxjs';
-import { AjaxError, ajax } from 'rxjs/ajax';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Account } from '@type/service/AccountType';
+import { callApiCache } from '@handler/service/CommonService';
 import { ResponseWrapper } from '@type/ReesponseWrapper';
+import { Account } from '@type/service/AccountType';
+import { useState } from 'react';
+import { catchError, map, of } from 'rxjs';
+import { AjaxError, ajax } from 'rxjs/ajax';
 
-export const useIsLoignService = (moveUrl?: string) => {
-    const navigate = useNavigate();
-    const [subscription, _] = useState<Observable<boolean>>(
-        ajax<Boolean>('/api/account/search/is-login').pipe(
-            map((response) => {
-                if (moveUrl) navigate(moveUrl);
-                return response.status === 200 || response.status === 201;
-            }),
-            catchError((error: AjaxError) => {
-                console.log(error);
-                if (error.status === 401 || error.status === 403) {
-                    navigate('/page/layer/login-layer');
-                }
-                return of(!(error.status === 401 || error.status === 403));
-            }),
-        ),
-    );
-    return subscription;
+export const useIsLogin = () => {
+    const [isLogin, setIsLogin] = useState<boolean>(false);
+
+    const checkLogin = () => {
+        const subscription = callApiCache<void, void>(
+            {
+                method: 'GET',
+                path: 'account',
+                endpoint: 'is-login',
+                resultHandler: response => {
+                    const isLoggedIn =
+                        response.status === 200 || response.status === 201;
+                    setIsLogin(isLoggedIn);
+                },
+            },
+            {
+                cacheTime: 1000 * 30,
+                cacheName: 'isLogin',
+            }
+        )
+            .pipe(
+                catchError((error: AjaxError) => {
+                    console.log(error);
+                    setIsLogin(false);
+                    return of(false);
+                })
+            )
+            .subscribe();
+
+        // Return the subscription to allow cleanup if necessary
+        return subscription;
+    };
+
+    return { isLogin, checkLogin };
 };
-
 export const getAccountInfoService = () => {
     return ajax<ResponseWrapper<Account>>('/api/account/search/get-info').pipe(
-        map((response) => {
+        map(response => {
             console.log(response.response);
             return response.response.data;
         }),
         catchError((error: AjaxError) => {
             console.log(error);
             return of(null);
-        }),
+        })
     );
 };

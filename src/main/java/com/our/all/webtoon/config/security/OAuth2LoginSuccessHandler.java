@@ -1,7 +1,7 @@
 package com.our.all.webtoon.config.security;
 
+import java.net.URI;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -14,17 +14,15 @@ import org.springframework.security.web.server.DefaultServerRedirectStrategy;
 import org.springframework.security.web.server.ServerRedirectStrategy;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.security.web.server.savedrequest.ServerRequestCache;
 import org.springframework.security.web.server.savedrequest.WebSessionServerRequestCache;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import com.our.all.webtoon.entity.account.AccountEntity;
 import com.our.all.webtoon.entity.account.AccountEntity.ProviderInfo;
 import com.our.all.webtoon.repository.account.AccountRepository;
 import com.our.all.webtoon.service.AccountService;
 import com.our.all.webtoon.util.constants.Provider;
-
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 
@@ -44,6 +42,10 @@ public class OAuth2LoginSuccessHandler implements ServerAuthenticationSuccessHan
 
     @Autowired
     private JwtVerifyHandler jwtVerifyHandler;
+
+	@Autowired
+	private ServerSecurityContextRepository securityContextRepository;
+
 
     @Override
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,
@@ -153,42 +155,68 @@ public class OAuth2LoginSuccessHandler implements ServerAuthenticationSuccessHan
 					verificationResult.getToken(),
 					authorities
 				);
+				return Mono.defer( () -> {
+					// 응답에 쿠키 추가
+					webFilterExchange
+						.getExchange()
+						.getResponse()
+						.addCookie(
+							ResponseCookie
+								.fromClientResponse(
+									HttpHeaders.AUTHORIZATION,
+									verificationResult.getToken()
+								)
+								.httpOnly( true )
+								.sameSite( "Lax" )
+								.path( "/" )
+								.build()
+						);
 
-				ReactiveSecurityContextHolder.withAuthentication( auth );
+					// 리다이렉트 처리
+					return OAuth2LoginSuccessHandler.requestCache
+						.getRedirectUri( webFilterExchange.getExchange() )
+						.defaultIfEmpty( URI.create( "/" ) )
+						.flatMap(
+							location -> OAuth2LoginSuccessHandler.redirectStrategy
+								.sendRedirect( webFilterExchange.getExchange(), location )
+						);
 
-				webFilterExchange
-					.getExchange()
-					.getResponse()
-					.addCookie(
-						ResponseCookie
-							.fromClientResponse(
-								HttpHeaders.AUTHORIZATION,
-								verificationResult.getToken()
-							)
-							.httpOnly( false )
-							.sameSite( "Strict" )
-							.path( "/" )
-							.build()
-					);
-
-				return OAuth2LoginSuccessHandler.requestCache
-					.getRedirectUri( webFilterExchange.getExchange() )
-					.doOnNext( e -> {
-						System.out.println( "kjh redirect url ::: " + e );
-
-					} )
-					.defaultIfEmpty(
-						UriComponentsBuilder.newInstance().path( "/" ).build().toUri()
-					)
-					.doOnNext( e -> {
-						System.out.println( "kjh redirect url222 ::: " + e );
-
-					} )
-					.flatMap(
-						location -> OAuth2LoginSuccessHandler.redirectStrategy
-							.sendRedirect( webFilterExchange.getExchange(), location )
-					);
-
+				}).contextWrite( ReactiveSecurityContextHolder.withAuthentication( auth ) );
+				// ReactiveSecurityContextHolder.withAuthentication( auth );
+				//
+				// // SecurityContext 생성
+				// SecurityContextImpl securityContext = new SecurityContextImpl( auth );
+				//
+				// // SecurityContext 저장
+				// return securityContextRepository
+				// .save( webFilterExchange.getExchange(), securityContext )
+				// .then( Mono.defer( () -> {
+				// // 응답에 쿠키 추가
+				// webFilterExchange
+				// .getExchange()
+				// .getResponse()
+				// .addCookie(
+				// ResponseCookie
+				// .fromClientResponse(
+				// HttpHeaders.AUTHORIZATION,
+				// verificationResult.getToken()
+				// )
+				// .httpOnly( true )
+				// .sameSite( "Lax" )
+				// .path( "/" )
+				// .build()
+				// );
+				//
+				// // 리다이렉트 처리
+				// return OAuth2LoginSuccessHandler.requestCache
+				// .getRedirectUri( webFilterExchange.getExchange() )
+				// .defaultIfEmpty( URI.create( "/" ) )
+				// .flatMap(
+				// location -> OAuth2LoginSuccessHandler.redirectStrategy
+				// .sendRedirect( webFilterExchange.getExchange(), location )
+				// );
+				//
+				// } ).contextWrite( ReactiveSecurityContextHolder.withAuthentication( auth ) ) );
 				// return Mono.justOrEmpty(auth);
 			} );
 		//

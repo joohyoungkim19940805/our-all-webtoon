@@ -1,107 +1,87 @@
-import { PaintingListContainer } from '@component/painting/PaintingListContainer';
-import { $pageChange } from '@handler/subject/PageChangeAnimationEvent';
-import { useEffect, useRef, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { filter } from 'rxjs';
+import React, { useEffect, useRef, useState } from 'react';
+import { Subject } from 'rxjs';
 import styles from './GlobalBottomLayer.module.css';
 
+export type GlobalBottomLayerType = {
+    position?: DOMRect;
+    openState: boolean;
+    layerName: string;
+    children?: React.ReactNode;
+};
+
+export const globalBottomLayerSubject = new Subject<GlobalBottomLayerType>();
+export const globalBottomLayerCloseSubject = new Subject<string | null>();
 export const GlobalBottomLayer = () => {
     const layerRef = useRef<HTMLDivElement>(null);
     const layerContainerRef = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
-    const location = useLocation();
-    const navigate = useNavigate();
+    const [layerInfo, setLayerInfo] = useState<GlobalBottomLayerType | null>(
+        null
+    );
+
     useEffect(() => {
-        const subscribe = $pageChange
-            .pipe(
-                filter(({ emissionDirection }) => emissionDirection === 'out')
-            )
-            .subscribe(event => {
-                if (
-                    event.url.pathname === location.pathname &&
-                    event.isBack === true &&
-                    layerContainerRef.current
-                ) {
-                    layerContainerRef.current.classList.remove(styles.open);
-                    $pageChange.next({
-                        url: event.url,
-                        isBack: true,
-                        emissionDirection: 'in',
-                    });
-                } else if (!event.isBack) {
-                    navigate(event.url.pathname + event.url.search);
-                }
-            });
-        return () => {
-            subscribe.unsubscribe();
-        };
-    });
-    useEffect(() => {
-        if (location.pathname.includes('/page/bottom')) {
-            setIsOpen(true);
-            setTimeout(() => {
-                if (!layerContainerRef.current) return;
-                layerContainerRef.current.classList.add(styles.open);
-            }, 10);
-        } else {
-            if (!layerContainerRef.current) return;
-            if (layerContainerRef.current.classList.contains(styles.open)) {
-                layerContainerRef.current.classList.remove(styles.open);
+        const subscription = globalBottomLayerSubject.subscribe(layerData => {
+            if (layerData.openState) {
+                setLayerInfo(layerData);
+                setTimeout(() => {
+                    if (!layerContainerRef.current) return;
+                    layerContainerRef.current.classList.add(styles.open);
+                }, 10);
             } else {
-                setIsOpen(false);
+                if (layerContainerRef.current) {
+                    globalBottomLayerCloseSubject.next(layerData.layerName);
+                    layerContainerRef.current.classList.remove(styles.open);
+                }
             }
-        }
-    }, [isOpen, location, layerContainerRef]);
+        });
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
     return (
         <>
-            {isOpen && (
+            {layerInfo && layerInfo.openState && (
                 <div
                     style={{
-                        bottom: `${new URLSearchParams(location.search).get('positionHeight') || 0}px`,
+                        bottom: `${layerInfo.position?.height || 0}px`,
                     }}
                     className={`${styles.layer}`}
                     ref={layerRef}
                     onClick={event => {
                         if (
                             !layerRef.current ||
-                            event.nativeEvent.composedPath()[0] !==
-                                layerRef.current ||
+                            event.target !== layerRef.current ||
                             !layerContainerRef.current?.classList.contains(
                                 styles.open
                             )
                         )
                             return;
-                        $pageChange.next({
-                            url: new URL('', window.location.origin),
-                            isBack: true,
-                            emissionDirection: 'in',
-                        });
-                        layerContainerRef.current.classList.remove(styles.open);
+
+                        if (layerContainerRef.current) {
+                            globalBottomLayerCloseSubject.next(
+                                layerInfo && layerInfo.layerName
+                            );
+                            layerContainerRef.current.classList.remove(
+                                styles.open
+                            );
+                        }
                     }}
                 >
                     <div
                         className={`${styles['layer-container']}`}
                         ref={layerContainerRef}
-                        onTransitionEnd={ev => {
+                        onTransitionEnd={() => {
                             if (!layerContainerRef.current) return;
                             if (
                                 !layerContainerRef.current.classList.contains(
                                     styles.open
                                 )
                             ) {
-                                //setIsOpen(false);
-                                history.back();
+                                setLayerInfo(null);
                             }
                         }}
                     >
-                        <Routes>
-                            <Route
-                                path={`/bottom/start-painting-menu`}
-                                element={
-                                    <PaintingListContainer></PaintingListContainer>
-                                }
-                            ></Route>
-                        </Routes>
+                        {layerInfo.children}
                     </div>
                 </div>
             )}
